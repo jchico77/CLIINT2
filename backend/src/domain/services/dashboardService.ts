@@ -1,6 +1,7 @@
 import {
   ClientIntelDashboard,
   CreateDashboardInput,
+  CreateOpportunityDashboardInput,
   ClientIntelDashboardSections,
   AccountSnapshotSection,
   OpportunitySummarySection,
@@ -23,16 +24,66 @@ import { FitAndStrategyAgent } from '../../llm/fitAndStrategyAgent';
 import { deepResearchService } from '../../llm/deepResearchService';
 import { llmConfig } from '../../config/llm';
 import { ProgressCallback } from '../types/progress';
-import { NotFoundError, LLMError } from '../errors/AppError';
+import { NotFoundError, ValidationError } from '../errors/AppError';
 import { LLMCache } from './llmCache';
+import { OpportunityService } from './opportunityService';
+import { Opportunity } from '../models/opportunity';
+import { logger } from '../../lib/logger';
 
 // In-memory storage
 const dashboards: Map<string, ClientIntelDashboard> = new Map();
 
 export class DashboardService {
+  static async generateDashboardForOpportunity(
+    input: CreateOpportunityDashboardInput,
+    onProgress?: ProgressCallback
+  ): Promise<ClientIntelDashboard> {
+    const opportunity = OpportunityService.getOpportunityById(input.opportunityId);
+
+    if (!opportunity) {
+      throw new NotFoundError('Opportunity', input.opportunityId);
+    }
+
+    if (opportunity.vendorId !== input.vendorId) {
+      throw new ValidationError('Opportunity does not belong to the provided vendor', {
+        vendorId: input.vendorId,
+        opportunityVendorId: opportunity.vendorId,
+      });
+    }
+
+    const client = ClientService.getById(opportunity.clientId);
+    if (!client) {
+      throw new NotFoundError('Client', opportunity.clientId);
+    }
+
+    const service = ServiceOfferingService.getById(opportunity.serviceOfferingId);
+    if (!service) {
+      throw new NotFoundError('Service', opportunity.serviceOfferingId);
+    }
+
+    const opportunityContext = this.resolveOpportunityContext(
+      input.opportunityContextOverride,
+      opportunity
+    );
+
+    return this.generateDashboard(
+      {
+        vendorId: opportunity.vendorId,
+        clientId: opportunity.clientId,
+        serviceOfferingId: opportunity.serviceOfferingId,
+        opportunityId: opportunity.id,
+        opportunityContext,
+        uploadedDocIds: input.uploadedDocIds,
+      },
+      onProgress,
+      opportunity
+    );
+  }
+
   static async generateDashboard(
     input: CreateDashboardInput,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
+    opportunity?: Opportunity
   ): Promise<ClientIntelDashboard> {
     const vendor = VendorService.getById(input.vendorId);
     const client = ClientService.getById(input.clientId);
@@ -63,7 +114,15 @@ export class DashboardService {
     );
 
     if (cachedSections) {
-      console.log('[DashboardService] Using cached LLM results');
+      logger.info(
+        {
+          vendorId: input.vendorId,
+          clientId: input.clientId,
+          serviceOfferingId: input.serviceOfferingId,
+          opportunityId: input.opportunityId,
+        },
+        'Using cached LLM dashboard sections'
+      );
       sections = cachedSections;
       llmModelUsed = llmConfig.defaultModel;
       onProgress?.({ stepId: 'cache-hit', status: 'completed', message: 'Usando resultados en caché', progress: 100 });
@@ -71,7 +130,15 @@ export class DashboardService {
       // Try to use LLM if API key is available
       if (llmConfig.openaiApiKey) {
         try {
-          console.log('[DashboardService] Using LLM agents to generate dashboard...');
+          logger.info(
+            {
+              vendorId: input.vendorId,
+              clientId: input.clientId,
+              serviceOfferingId: input.serviceOfferingId,
+              opportunityId: input.opportunityId,
+            },
+            'Generating dashboard with LLM agents'
+          );
           sections = await this.generateLLMSections(
             vendor,
             client,
@@ -90,10 +157,27 @@ export class DashboardService {
             sections
           );
           
-          console.log('[DashboardService] ✓ Dashboard generated with LLM and cached');
+          logger.info(
+            {
+              vendorId: input.vendorId,
+              clientId: input.clientId,
+              serviceOfferingId: input.serviceOfferingId,
+              opportunityId: input.opportunityId,
+            },
+            'Dashboard generated with LLM and cached'
+          );
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown LLM error';
-          console.error('[DashboardService] LLM generation failed, falling back to fake data:', errorMessage);
+          logger.error(
+            {
+              vendorId: input.vendorId,
+              clientId: input.clientId,
+              serviceOfferingId: input.serviceOfferingId,
+              opportunityId: input.opportunityId,
+              error: errorMessage,
+            },
+            'LLM generation failed, falling back to fake data'
+          );
           
           // Emit error progress if callback available
           onProgress?.({ 
@@ -106,7 +190,15 @@ export class DashboardService {
           sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
         }
       } else {
-        console.log('[DashboardService] No LLM API key, using fake data');
+        logger.warn(
+          {
+            vendorId: input.vendorId,
+            clientId: input.clientId,
+            serviceOfferingId: input.serviceOfferingId,
+            opportunityId: input.opportunityId,
+          },
+          'No LLM API key configured, using fake data'
+        );
         sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
       }
     }
@@ -116,6 +208,9 @@ export class DashboardService {
       vendorId: input.vendorId,
       clientId: input.clientId,
       serviceOfferingId: input.serviceOfferingId,
+      opportunityId: input.opportunityId,
+      opportunityName: opportunity?.name,
+      opportunityStage: opportunity?.stage,
       opportunityContext: input.opportunityContext,
       generatedAt: now,
       llmModelUsed,
@@ -145,6 +240,7 @@ export class DashboardService {
       vendorId: input.vendorId,
       clientId: input.clientId,
       serviceOfferingId: input.serviceOfferingId,
+      opportunityId: input.opportunityId,
       opportunityContext: input.opportunityContext,
       generatedAt: now,
       llmModelUsed: 'fake-data-generator',
@@ -168,12 +264,15 @@ export class DashboardService {
 
     // Step 1: Deep Research
     onProgress?.({ stepId: 'deep-research', status: 'in-progress', message: `Investigando ${client.name}...`, progress: 10 });
-    console.log('[DashboardService] Step 1: Deep research...');
+    logger.info({ clientId: client.id }, 'Dashboard generation step 1: Deep research');
     
     // Step 2: Run client and vendor research in parallel
     onProgress?.({ stepId: 'client-analysis', status: 'in-progress', message: 'Analizando cliente con GPT-4o...', progress: 20 });
     onProgress?.({ stepId: 'vendor-research', status: 'in-progress', message: 'Extrayendo evidencias del vendor...', progress: 30 });
-    console.log('[DashboardService] Step 2: Running Client & Vendor research...');
+    logger.info(
+      { clientId: client.id, vendorId: vendor.id },
+      'Dashboard generation step 2: Client & Vendor research'
+    );
     
     const [clientResearch, vendorResearch] = await Promise.all([
       clientResearchAgent.research(client, opportunityContext),
@@ -185,11 +284,11 @@ export class DashboardService {
 
     // Step 3: Competitive research
     onProgress?.({ stepId: 'competitive', status: 'in-progress', message: 'Analizando competidores...', progress: 55 });
-    console.log('[DashboardService] Step 3: Competitive research...');
+    logger.info({ clientId: client.id }, 'Dashboard generation step 3: Competitive research');
 
     // Step 4: Generate fit and strategy analysis using results from step 1
     onProgress?.({ stepId: 'fit-strategy', status: 'in-progress', message: 'Generando stakeholder map, vendor fit y plays estratégicos...', progress: 60 });
-    console.log('[DashboardService] Step 4: Generating Fit & Strategy analysis...');
+    logger.info({ clientId: client.id }, 'Dashboard generation step 4: Fit & Strategy analysis');
     
     const fitAndStrategy = await fitAndStrategyAgent.generate(
       vendor,
@@ -205,15 +304,18 @@ export class DashboardService {
 
     // Step 5: News research
     onProgress?.({ stepId: 'news', status: 'in-progress', message: 'Buscando noticias relevantes de los últimos 6 meses...', progress: 90 });
-    console.log('[DashboardService] Step 5: News research...');
+    logger.info({ clientId: client.id }, 'Dashboard generation step 5: News research');
     
     let newsResearch;
     try {
       newsResearch = await deepResearchService.researchNews(client.name, client.sectorHint || clientResearch.accountSnapshot.industry, '6months');
-      console.log('[DashboardService] ✓ Investigación de noticias completada');
+      logger.info({ clientId: client.id }, 'News research completed');
       onProgress?.({ stepId: 'news', status: 'completed', message: 'Noticias encontradas', progress: 95 });
     } catch (error) {
-      console.warn('[DashboardService] ⚠️  Investigación de noticias falló, usando datos fake:', error);
+      logger.warn(
+        { clientId: client.id, error: error instanceof Error ? error.message : error },
+        'News research failed, falling back to fake data'
+      );
       newsResearch = null;
       onProgress?.({ stepId: 'news', status: 'completed', message: 'Usando datos alternativos', progress: 95 });
     }
@@ -266,6 +368,23 @@ export class DashboardService {
 
   static getByVendorId(vendorId: string): ClientIntelDashboard[] {
     return this.getAll().filter((d) => d.vendorId === vendorId);
+  }
+
+  private static resolveOpportunityContext(
+    override: string | undefined,
+    opportunity: Opportunity
+  ): string {
+    const trimmedOverride = override?.trim();
+    if (trimmedOverride && trimmedOverride.length >= 10) {
+      return trimmedOverride;
+    }
+
+    const trimmedNotes = opportunity.notes?.trim();
+    if (trimmedNotes && trimmedNotes.length >= 10) {
+      return trimmedNotes;
+    }
+
+    return `Opportunity ${opportunity.name} (${opportunity.stage}) for client ${opportunity.clientId}`;
   }
 
   private static generateFakeSections(
@@ -397,7 +516,7 @@ export class DashboardService {
   }
 
   private static generateFakeOpportunityRequirements(
-    service: { name: string },
+    service: { name: string; shortDescription?: string },
     opportunityContext: string
   ): OpportunityRequirementsSection {
     return {
@@ -459,7 +578,11 @@ export class DashboardService {
         'Referencias de clientes similares',
         'Capacidad de escalabilidad',
       ],
-      summary: opportunityContext || 'El cliente busca una solución integral que se alinee con sus objetivos estratégicos y requisitos operativos.',
+      summary:
+        opportunityContext ||
+        `El cliente busca una solución integral enfocada en ${service.name}${
+          service.shortDescription ? ` (${service.shortDescription})` : ''
+        } que se alinee con sus objetivos estratégicos y operativos.`,
     };
   }
 

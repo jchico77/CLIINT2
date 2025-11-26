@@ -1,173 +1,263 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getAllDashboards, type DashboardSummary } from '@/lib/api';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  getOpportunities,
+  getClients,
+  getServices,
+} from '@/lib/api';
+import type {
+  Opportunity,
+  ClientAccount,
+  ServiceOffering,
+} from '@/lib/types';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { Briefcase, TrendingUp, Calendar, ArrowRight } from 'lucide-react';
+import {
+  Briefcase,
+  Calendar,
+  ArrowRight,
+  Building2,
+} from 'lucide-react';
 
 export default function OpportunitiesPage() {
   const router = useRouter();
-  const [dashboards, setDashboards] = useState<DashboardSummary[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [vendorInput, setVendorInput] = useState('');
+  const [selectedVendor, setSelectedVendor] = useState<string | null>(null);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [clients, setClients] = useState<Record<string, ClientAccount>>({});
+  const [services, setServices] = useState<Record<string, ServiceOffering>>({});
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAllDashboards()
-      .then(setDashboards)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+    const cachedVendor = typeof window !== 'undefined'
+      ? window.localStorage.getItem('cliint:lastVendorId')
+      : null;
+    if (cachedVendor) {
+      setVendorInput(cachedVendor);
+      setSelectedVendor(cachedVendor);
+    }
   }, []);
 
-  const getFitVariant = (fit: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (fit) {
-      case 'high':
+  useEffect(() => {
+    if (!selectedVendor) {
+      setOpportunities([]);
+      setClients({});
+      setServices({});
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    Promise.all([
+      getOpportunities(selectedVendor),
+      getClients(selectedVendor),
+      getServices(selectedVendor),
+    ])
+      .then(([opps, clientList, serviceList]) => {
+        const clientMap = Object.fromEntries(clientList.map((c) => [c.id, c]));
+        const serviceMap = Object.fromEntries(serviceList.map((s) => [s.id, s]));
+        setOpportunities(opps);
+        setClients(clientMap);
+        setServices(serviceMap);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : 'Error desconocido'))
+      .finally(() => setLoading(false));
+  }, [selectedVendor]);
+
+  const stageVariant = (stage: Opportunity['stage']): "default" | "secondary" | "destructive" | "outline" => {
+    switch (stage) {
+      case 'won':
         return 'default';
-      case 'medium':
-        return 'secondary';
-      case 'low':
+      case 'lost':
         return 'destructive';
+      case 'rfp':
+      case 'shortlist':
+      case 'bafo':
+        return 'secondary';
       default:
         return 'outline';
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-lg text-muted-foreground">Cargando oportunidades...</p>
-        </div>
-      </div>
-    );
-  }
+  const handleVendorSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!vendorInput.trim()) {
+      setSelectedVendor(null);
+      return;
+    }
+    setSelectedVendor(vendorInput.trim());
+    window.localStorage.setItem('cliint:lastVendorId', vendorInput.trim());
+  };
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl font-semibold text-destructive mb-4">Error cargando oportunidades</p>
-          <p className="text-muted-foreground mb-4">{error}</p>
-          <Link href="/">
-            <Button>Volver al inicio</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const headerDescription = useMemo(() => {
+    if (!selectedVendor) {
+      return 'Introduce un vendorId para ver sus oportunidades en memoria.';
+    }
+    if (loading) {
+      return `Cargando oportunidades de ${selectedVendor}...`;
+    }
+    return `${opportunities.length} oportunidad(es) para ${selectedVendor}`;
+  }, [selectedVendor, loading, opportunities.length]);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="w-full flex h-14 items-center px-6">
           <div className="flex-1">
             <h1 className="text-xl font-semibold">Oportunidades</h1>
-            <p className="text-xs text-muted-foreground">
-              Análisis de oportunidades realizados
-            </p>
+            <p className="text-xs text-muted-foreground">{headerDescription}</p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/clients/new">
-              <Button variant="outline" size="sm">Nueva Oportunidad</Button>
+            <Link href="/opportunities/new">
+              <Button variant="outline" size="sm">
+                Nueva oportunidad
+              </Button>
             </Link>
             <ThemeToggle />
             <Link href="/">
-              <Button variant="outline" size="sm">Inicio</Button>
+              <Button variant="outline" size="sm">
+                Inicio
+              </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="w-full px-6 py-6">
-        {dashboards.length === 0 ? (
+      <main className="w-full px-6 py-6 space-y-6">
+        <Card>
+          <CardHeader className="flex flex-col gap-2">
+            <CardTitle>Vendor</CardTitle>
+            <CardDescription>Trabajamos en memoria, así que indica el vendorId que quieras consultar.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleVendorSubmit} className="flex flex-col gap-3 sm:flex-row">
+              <div className="flex-1">
+                <LabelInput value={vendorInput} onChange={setVendorInput} />
+              </div>
+              <Button type="submit" className="gap-2" disabled={loading}>
+                <Building2 className="h-4 w-4" />
+                {loading ? 'Cargando...' : 'Cargar oportunidades'}
+              </Button>
+            </form>
+            {error && (
+              <p className="text-sm text-destructive mt-3">{error}</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {!selectedVendor ? (
           <div className="max-w-2xl mx-auto text-center py-12">
             <Briefcase className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">No hay oportunidades aún</h2>
-            <p className="text-muted-foreground mb-6">
-              Crea tu primer análisis de oportunidad para comenzar
+            <h2 className="text-2xl font-semibold mb-2">Selecciona un vendor</h2>
+            <p className="text-muted-foreground">
+              Una vez creado tu vendor (desde “Nueva oportunidad”), podrás ver todas sus oportunidades aquí.
             </p>
-            <Link href="/clients/new">
-              <Button size="lg">Crear Nueva Oportunidad</Button>
-            </Link>
           </div>
+        ) : loading ? (
+          <div className="flex items-center justify-center py-12 text-muted-foreground">
+            Cargando oportunidades...
+          </div>
+        ) : opportunities.length === 0 ? (
+          <Card className="max-w-3xl mx-auto">
+            <CardContent className="py-12 text-center space-y-3">
+              <Briefcase className="h-12 w-12 text-muted-foreground mx-auto" />
+              <h3 className="text-xl font-semibold">No hay oportunidades registradas</h3>
+              <p className="text-muted-foreground text-sm">
+                Crea una nueva oportunidad para {selectedVendor} y aparecerá aquí.
+              </p>
+              <Link href="/opportunities/new">
+                <Button>Registrar oportunidad</Button>
+              </Link>
+            </CardContent>
+          </Card>
         ) : (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-semibold">Análisis de Oportunidades</h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {dashboards.length} {dashboards.length === 1 ? 'oportunidad' : 'oportunidades'} encontradas
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {dashboards.map((dashboard) => (
-                <Card
-                  key={dashboard.id}
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => router.push(`/dashboard/${dashboard.id}`)}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-1">{dashboard.clientName}</CardTitle>
-                        <CardDescription className="text-xs">
-                          {dashboard.industry}
-                        </CardDescription>
-                      </div>
-                      <Badge variant={getFitVariant(dashboard.overallFit)} className="text-xs">
-                        {dashboard.overallFit.toUpperCase()}
-                      </Badge>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {opportunities.map((opportunity) => (
+              <Card key={opportunity.id} className="flex flex-col border bg-card shadow-sm">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg">{opportunity.name}</CardTitle>
+                      <CardDescription className="text-xs">
+                        {clients[opportunity.clientId]?.name ?? opportunity.clientId}
+                      </CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {dashboard.opportunityBrief}
+                    <Badge variant={stageVariant(opportunity.stage)} className="text-xs">
+                      {opportunity.stage.toUpperCase()}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-3 text-sm">
+                  <div>
+                    <p className="text-muted-foreground text-xs">Servicio</p>
+                    <p className="font-medium">
+                      {services[opportunity.serviceOfferingId]?.name ?? opportunity.serviceOfferingId}
                     </p>
-
-                    <div className="flex items-center justify-between pt-2 border-t">
-                      <div className="flex items-center gap-4 text-xs">
-                        <div className="flex items-center gap-1">
-                          <TrendingUp className="h-3 w-3 text-muted-foreground" />
-                          <span className="font-semibold">{dashboard.fitScore}%</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-muted-foreground">
-                            {new Date(dashboard.generatedAt).toLocaleDateString('es-ES', {
-                              day: '2-digit',
-                              month: 'short',
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/dashboard/${dashboard.id}`);
-                        }}
-                      >
-                        Ver <ArrowRight className="h-3 w-3 ml-1" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Calendar className="h-3 w-3" />
+                    Creada el{' '}
+                    {new Date(opportunity.createdAt).toLocaleDateString('es-ES', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </div>
+                  <p className="text-muted-foreground text-xs line-clamp-3">
+                    {opportunity.notes || 'Sin notas registradas.'}
+                  </p>
+                  <div className="pt-3 border-t flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1"
+                      onClick={() => router.push(`/opportunities/${opportunity.id}`)}
+                    >
+                      Ver detalle
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+interface LabelInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function LabelInput({ value, onChange }: LabelInputProps) {
+  return (
+    <div className="space-y-1">
+      <label className="text-xs font-medium text-muted-foreground">
+        Vendor ID
+      </label>
+      <Input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="vendor_123..."
+        className="text-sm"
+      />
     </div>
   );
 }

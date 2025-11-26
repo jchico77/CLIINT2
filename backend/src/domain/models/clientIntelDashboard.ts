@@ -1,3 +1,5 @@
+import { OpportunityStage } from './opportunity';
+
 // Base types
 export type FitLevel = 'high' | 'medium' | 'low';
 export type Stance = 'champion' | 'supporter' | 'neutral' | 'skeptic' | 'blocker';
@@ -222,12 +224,14 @@ export interface ClientIntelDashboardSections {
   criticalDates: CriticalDatesSection;
 }
 
-// Complete Dashboard
 export interface ClientIntelDashboard {
   id: string;
   vendorId: string;
   clientId: string;
   serviceOfferingId: string;
+  opportunityId: string;
+  opportunityName?: string;
+  opportunityStage?: OpportunityStage;
   opportunityContext: string;
   generatedAt: string;
   llmModelUsed: string;
@@ -238,7 +242,15 @@ export interface CreateDashboardInput {
   vendorId: string;
   clientId: string;
   serviceOfferingId: string;
+  opportunityId: string;
   opportunityContext: string;
+  uploadedDocIds?: string[];
+}
+
+export interface CreateOpportunityDashboardInput {
+  vendorId: string;
+  opportunityId: string;
+  opportunityContextOverride?: string;
   uploadedDocIds?: string[];
 }
 

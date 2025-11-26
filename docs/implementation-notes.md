@@ -458,3 +458,176 @@ LLM_TEMPERATURE=0.4
 - **Validación Robusta**: Los datos se validan antes de procesar, evitando errores en runtime
 - **Fallback Automático**: Si LLM falla, se usa fake data automáticamente (no rompe el flujo)
 
+## Fase 6 - Pivot a oportunidades (WIP)
+
+### Subfase F1.1 – Backend: modelo y endpoints Opportunity ✅
+
+1. **Dominio**
+   - `src/domain/models/opportunity.ts` define `OpportunityStage`, `Opportunity` y `CreateOpportunityInput`.
+   - `src/domain/services/opportunityService.ts` mantiene un repositorio en memoria con creación/listado y logging centralizado (`pino`).
+   - `src/domain/validators/opportunityValidators.ts` valida payloads con Zod (name, stage, deadlines ISO, currency ISO-4217, etc.).
+
+2. **Infraestructura**
+   - Nuevo logger central en `src/lib/logger.ts` con `pino` + `pino-pretty` (timestamps ISO y levels configurables).
+   - `backend/package.json` incorpora `pino` y `pino-pretty`.
+   - `src/http/server.ts` usa el logger para arranque y manejo global de errores.
+
+3. **HTTP API**
+   - `src/http/routes/opportunities.ts` añade:
+     - `POST /api/vendors/:vendorId/opportunities`
+     - `GET /api/vendors/:vendorId/opportunities`
+     - `GET /api/opportunities/:opportunityId`
+   - Validaciones:
+     - El vendor debe existir.
+     - `clientId` y `serviceOfferingId` deben pertenecer al vendor.
+     - Payload validado con Zod y errores tratados vía `AppError`.
+
+### Cómo probar la subfase
+
+```bash
+# 1) Crear vendor, client y service (reutiliza endpoints existentes)
+curl -X POST http://localhost:3001/api/vendors \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Vendor Test","websiteUrl":"https://vendor.test","description":"Demo"}'
+
+curl -X POST http://localhost:3001/api/vendors/VENDOR_ID/clients \
+  -H "Content-Type: application/json" \
+  -d '{"vendorId":"VENDOR_ID","name":"Cliente Demo","websiteUrl":"https://cliente.test"}'
+
+curl -X POST http://localhost:3001/api/vendors/VENDOR_ID/services \
+  -H "Content-Type: application/json" \
+  -d '{"vendorId":"VENDOR_ID","name":"Servicio Demo","shortDescription":"Desc","categoryTags":["demo"]}'
+
+# 2) Crear oportunidad
+curl -X POST http://localhost:3001/api/vendors/VENDOR_ID/opportunities \
+  -H "Content-Type: application/json" \
+  -d '{
+    "clientId": "CLIENT_ID",
+    "serviceOfferingId": "SERVICE_ID",
+    "name": "Oportunidad Piloto",
+    "stage": "early",
+    "estimatedValue": 150000,
+    "currency": "eur",
+    "deadline": "2025-01-31T00:00:00.000Z",
+    "notes": "Contexto inicial"
+  }'
+
+# 3) Listar oportunidades del vendor
+curl http://localhost:3001/api/vendors/VENDOR_ID/opportunities
+
+# 4) Consultar una oportunidad concreta
+curl http://localhost:3001/api/opportunities/OPPORTUNITY_ID
+```
+
+> Logs: `logger` imprime (con timestamp) la creación de oportunidades y cualquier error validado.
+
+### Subfase F1.2 – Backend: dashboard ligado a Opportunity ✅
+
+1. **Modelo y tipos**
+   - `src/domain/models/clientIntelDashboard.ts` introduce `opportunityId`, `opportunityName?` y `opportunityStage?`.
+   - `CreateDashboardInput` ahora requiere `opportunityId`; se añade `CreateOpportunityDashboardInput`.
+   - `frontend/lib/types.ts` refleja estos campos y define `OpportunityStage`.
+
+2. **Servicios**
+   - `DashboardService.generateDashboardForOpportunity()` usa `OpportunityService` para resolver cliente y servicio, además de construir el contexto (override opcional).
+   - `resolveOpportunityContext()` garantiza mínimo de texto; todos los pasos usan `logger`.
+
+3. **HTTP API**
+   - Nuevo endpoint `POST /api/vendors/:vendorId/opportunities/:opportunityId/dashboard` (con SSE opcional).
+   - Endpoint legacy `/api/vendors/:vendorId/dashboard` devuelve `410 LEGACY_ENDPOINT`.
+   - `GET /api/dashboards` expone `opportunityId`, `opportunityStage` y `opportunityName`.
+
+4. **Frontend API (pre-F1.3)**
+   - `frontend/lib/api.ts` añade los helpers `createOpportunityDashboard*`.
+
+### Cómo probar la subfase
+
+```bash
+# Backend en marcha + Opportunity creada (ver F1.1)
+curl -X POST \
+  http://localhost:3001/api/vendors/VENDOR_ID/opportunities/OPPORTUNITY_ID/dashboard \
+  -H "Content-Type: application/json" \
+  -d '{
+    "opportunityContextOverride": "Notas adicionales (opcional)",
+    "uploadedDocIds": []
+  }'
+
+# Streaming con SSE
+curl -N -H "Accept: text/event-stream" \
+  -X POST \
+  http://localhost:3001/api/vendors/VENDOR_ID/opportunities/OPPORTUNITY_ID/dashboard?stream=true \
+  -H "Content-Type: application/json" \
+  -d '{}'
+
+# Consultar dashboard resultante
+curl http://localhost:3001/api/dashboard/DASHBOARD_ID
+```
+
+> La terminal del backend mostrará cada fase (cache, LLM, news) con metadata de la oportunidad.
+
+### Subfase F1.3 – Frontend: flujo opportunity-first ✅
+
+1. **Páginas Next.js**
+   - `app/opportunities/new/page.tsx`: formulario para vendor + cliente + servicio + metadatos de oportunidad; crea la entidad y redirige al detalle.
+   - `app/opportunities/[id]/page.tsx`: vista con metadatos, notas, botón “Generar Strategy Dashboard” (SSE) y placeholder de dossier.
+   - `app/opportunities/page.tsx`: listado de oportunidades filtrado por vendorId (se guarda en `localStorage`).
+   - `app/page.tsx`: CTA principal orientada a crear/ver oportunidades.
+
+2. **API Frontend**
+   - `lib/types.ts` añade `Opportunity` / `CreateOpportunityInput` y actualiza `ClientIntelDashboard`.
+   - `lib/api.ts` expone `createOpportunity`, `getOpportunity`, `getOpportunities` y los helpers SSE para oportunidades.
+
+3. **UX**
+   - Formularios con shadcn/ui, cero CSS inline, validación básica y mensajes claros.
+   - `AnalysisProgress` se reutiliza para el progreso LLM (texto actualizado a GPT-5.1).
+   - Listado muestra stage, cliente y notas; botón directo al detalle.
+
+### Cómo probar la subfase
+
+```bash
+# Backend y frontend levantados (npm run dev en cada carpeta)
+
+# 1) Crear una oportunidad
+#    - http://localhost:3000 → "Crear oportunidad"
+#    - Completa vendor/client/service + datos de la oportunidad
+#    - Tras guardar, la app redirige a /opportunities/[id]
+
+# 2) Generar Strategy Dashboard
+#    - En la vista de la oportunidad, pulsa "Generar Strategy Dashboard"
+#    - Observa la tarjeta de progreso (SSE) y espera la redirección a /dashboard/[dashboardId]
+
+# 3) Listado
+#    - http://localhost:3000/opportunities
+#    - Introduce el vendorId (auto guardado tras la creación) y pulsa "Cargar oportunidades"
+#    - Verifica que la nueva oportunidad aparece en la lista
+```
+
+> Como el backend está en memoria, recuerda copiar el `vendorId` que devuelve el backend para poder listar sus oportunidades en la UI.
+
+
+
+### Subfase F2.1 – Backend: OpportunityDossier básico ✅
+
+1. **Dominio**
+   - `src/domain/models/opportunityDossier.ts` define `DossierSourceType`, `DossierTextChunk`, `OpportunityDossier` y `CreateDossierTextChunkInput`.
+
+2. **Servicio**
+   - `src/domain/services/opportunityDossierService.ts` mantiene un repositorio en memoria por `opportunityId`.
+   - Métodos principales:
+     - `getDossier`/`listTextChunks` devuelven y crean el dossier si no existía.
+     - `appendTextChunk` valida contenido no vacío, genera IDs únicos y actualiza `updatedAt`.
+     - `attachFileId` almacena `file_id` de OpenAI evitando duplicados.
+   - Usa `OpportunityService` para asegurar que la oportunidad existe y deja trazas con `logger`.
+
+3. **Script de verificación**
+   - `scripts/demoOpportunityDossier.ts` crea vendor/client/service/opportunity y demuestra cómo añadir notas y asociar `file_id`.
+
+### Cómo probar la subfase
+
+```bash
+cd backend
+npx tsx scripts/demoOpportunityDossier.ts
+# Debe imprimir el dossier con sus textChunks y openAiFileIds
+```
+
+> Los endpoints HTTP llegarán en F2.2; por ahora el script actúa como prueba unitaria del servicio en memoria.

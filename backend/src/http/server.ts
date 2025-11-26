@@ -7,6 +7,8 @@ import clientsRouter from './routes/clients';
 import servicesRouter from './routes/services';
 import { dashboardCreateRouter, dashboardGetRouter } from './routes/dashboard';
 import { cacheRouter } from './routes/cache';
+import { vendorOpportunitiesRouter, opportunityRouter } from './routes/opportunities';
+import { logger } from '../lib/logger';
 
 const app = express();
 
@@ -28,12 +30,15 @@ app.use('/api/services', servicesRouter);
 // Dashboard routes
 app.use('/api/vendors', dashboardCreateRouter); // POST /api/vendors/:vendorId/dashboard
 app.use('/api', dashboardGetRouter); // GET /api/dashboard/:dashboardId
+// Opportunities routes
+app.use('/api/vendors/:vendorId/opportunities', vendorOpportunitiesRouter);
+app.use('/api/opportunities', opportunityRouter);
 // Cache routes
 app.use('/api/cache', cacheRouter); // GET /api/cache/stats, DELETE /api/cache
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error('[Server] Unhandled error:', err);
+  logger.error({ err }, 'Unhandled error');
   
   // Check if it's an AppError with status code
   if ('statusCode' in err && typeof (err as { statusCode: number }).statusCode === 'number') {
@@ -55,7 +60,7 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 const PORT = parseInt(env.PORT, 10);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+  logger.info({ port: PORT }, 'Server running');
+  logger.info({ url: `http://localhost:${PORT}/api/health` }, 'Health check available');
 });
 

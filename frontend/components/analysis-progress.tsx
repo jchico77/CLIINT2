@@ -51,13 +51,13 @@ export function AnalysisProgress({ steps, currentStep }: AnalysisProgressProps) 
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Análisis en Progreso</CardTitle>
+          <CardTitle className="text-base">Análisis en progreso</CardTitle>
           <Badge variant="secondary" className="text-xs">
             {completedSteps}/{steps.length}
           </Badge>
         </div>
         <CardDescription className="text-xs">
-          Generando dashboard con investigación profunda usando GPT-4o
+          Generando dashboard con investigación profunda usando GPT-5.1
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

@@ -1,21 +1,22 @@
 import { Router, Request, Response } from 'express';
 import { LLMCache } from '../../domain/services/llmCache';
+import { logger } from '../../lib/logger';
 
 export const cacheRouter = Router();
 
 // GET /api/cache/stats - Get cache statistics
-cacheRouter.get('/stats', (req: Request, res: Response) => {
+cacheRouter.get('/stats', (_req: Request, res: Response) => {
   try {
     const stats = LLMCache.getStats();
     return res.json(stats);
   } catch (error) {
-    console.error('[CacheRoute] Error getting cache stats:', error);
+    logger.error({ error }, '[CacheRoute] Error getting cache stats');
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 // DELETE /api/cache - Clear all cache
-cacheRouter.delete('/', (req: Request, res: Response) => {
+cacheRouter.delete('/', (_req: Request, res: Response) => {
   try {
     LLMCache.clearAll();
     const cleared = LLMCache.clearExpired();
@@ -24,7 +25,7 @@ cacheRouter.delete('/', (req: Request, res: Response) => {
       clearedEntries: cleared,
     });
   } catch (error) {
-    console.error('[CacheRoute] Error clearing cache:', error);
+    logger.error({ error }, '[CacheRoute] Error clearing cache');
     return res.status(500).json({ error: 'Internal server error' });
   }
 });

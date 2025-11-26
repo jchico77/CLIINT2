@@ -68,13 +68,24 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <div className="flex gap-4">
-            <Link href="/clients/new">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Crear nuevo análisis de cliente
-              </Button>
-            </Link>
-          </div>
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Próximos pasos</CardTitle>
+              <CardDescription>Trabaja siempre a partir de una oportunidad B2B.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 sm:flex-row">
+              <Link href="/opportunities/new" className="flex-1">
+                <Button size="lg" className="w-full gap-2 justify-center">
+                  Crear oportunidad
+                </Button>
+              </Link>
+              <Link href="/opportunities" className="flex-1">
+                <Button variant="outline" size="lg" className="w-full gap-2 justify-center">
+                  Ver oportunidades
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

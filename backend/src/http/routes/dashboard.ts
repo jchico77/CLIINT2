@@ -1,108 +1,134 @@
 import { Router, Request, Response } from 'express';
 import { DashboardService } from '../../domain/services/dashboardService';
-import { CreateDashboardInput } from '../../domain/models/clientIntelDashboard';
-import { CreateDashboardInputSchema } from '../../domain/validators/dashboardValidators';
+import { CreateOpportunityDashboardInput } from '../../domain/models/clientIntelDashboard';
+import { CreateOpportunityDashboardInputSchema } from '../../domain/validators/dashboardValidators';
 import { ValidationError, NotFoundError } from '../../domain/errors/AppError';
+import { logger } from '../../lib/logger';
 
 // Router for POST /api/vendors/:vendorId/dashboard
 export const dashboardCreateRouter = Router();
 
-// POST /api/vendors/:vendorId/dashboard - Generate dashboard with progress streaming
-dashboardCreateRouter.post('/:vendorId/dashboard', async (req: Request, res: Response) => {
-  try {
-    const { vendorId } = req.params;
-    
-    // Validate input with Zod
-    const validationResult = CreateDashboardInputSchema.safeParse({
-      ...req.body,
-      vendorId,
-    });
+// POST /api/vendors/:vendorId/dashboard (legacy - disabled)
+dashboardCreateRouter.post('/:vendorId/dashboard', (_req: Request, res: Response) => {
+  return res.status(410).json({
+    error: 'Este endpoint ha sido reemplazado. Usa /api/vendors/:vendorId/opportunities/:opportunityId/dashboard',
+    code: 'LEGACY_ENDPOINT',
+  });
+});
 
-    if (!validationResult.success) {
-      const errors = validationResult.error.errors.map((err) => ({
-        field: err.path.join('.'),
-        message: err.message,
-      }));
-      return res.status(400).json({
-        error: 'Validation failed',
-        code: 'VALIDATION_ERROR',
-        details: errors,
-      });
+const streamProgress = (
+  res: Response,
+  handler: (onProgress: (event: { stepId: string; status: string; message?: string; progress?: number }) => void) => Promise<unknown>
+) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  const onProgress = (event: { stepId: string; status: string; message?: string; progress?: number }) => {
+    try {
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
+    } catch (err) {
+      logger.error({ err }, 'Error writing progress SSE event');
     }
+  };
 
-    const input: CreateDashboardInput = validationResult.data;
+  handler(onProgress)
+    .then((result) => {
+      if (result && typeof result === 'object' && 'dashboard' in (result as Record<string, unknown>)) {
+        const { dashboardId, dashboard } = result as { dashboardId: string; dashboard: unknown };
+        res.write(`data: ${JSON.stringify({ type: 'complete', dashboardId, dashboard })}\n\n`);
+      }
+      res.end();
+    })
+    .catch((error) => {
+      logger.error({ error }, 'Dashboard generation failed during streaming');
+      res.write(`data: ${JSON.stringify({ type: 'error', error: error instanceof Error ? error.message : 'Unknown error' })}\n\n`);
+      res.end();
+    });
+};
 
-    // Check if client wants streaming progress
-    const useStreaming = req.headers.accept?.includes('text/event-stream') || req.query.stream === 'true';
+const handleDashboardError = (error: unknown, res: Response) => {
+  logger.error({ error }, '[DashboardRoute] Error generating dashboard');
 
-    if (useStreaming) {
-      // Set streaming headers
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-      res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
-      res.setHeader('Access-Control-Allow-Origin', '*'); // For CORS
+  if (error instanceof ValidationError) {
+    return res.status(error.statusCode).json({
+      error: error.message,
+      code: error.code,
+      details: error.details,
+    });
+  }
 
-      // Progress callback
-      const onProgress = (event: { stepId: string; status: string; message?: string; progress?: number }) => {
-        try {
-          res.write(`data: ${JSON.stringify(event)}\n\n`);
-        } catch (err) {
-          console.error('Error writing progress event:', err);
-        }
+  if (error instanceof NotFoundError) {
+    return res.status(error.statusCode).json({
+      error: error.message,
+      code: error.code,
+    });
+  }
+
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+  const isLLMError = errorMessage.includes('LLM') || errorMessage.includes('OpenAI') || errorMessage.includes('API');
+
+  return res.status(500).json({
+    error: isLLMError
+      ? 'Error durante el análisis de IA. Comprueba la configuración del modelo.'
+      : 'Internal server error',
+    code: isLLMError ? 'LLM_ERROR' : 'INTERNAL_ERROR',
+    message: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+  });
+};
+
+dashboardCreateRouter.post(
+  '/:vendorId/opportunities/:opportunityId/dashboard',
+  async (req: Request, res: Response) => {
+    try {
+      const { vendorId, opportunityId } = req.params;
+      const validationResult = CreateOpportunityDashboardInputSchema.safeParse(req.body ?? {});
+
+      if (!validationResult.success) {
+        const errors = validationResult.error.errors.map((err) => ({
+          field: err.path.join('.'),
+          message: err.message,
+        }));
+        return res.status(400).json({
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: errors,
+        });
+      }
+
+      const body = validationResult.data;
+      const input: CreateOpportunityDashboardInput = {
+        vendorId,
+        opportunityId,
+        opportunityContextOverride: body.opportunityContextOverride,
+        uploadedDocIds: body.uploadedDocIds,
       };
 
-      try {
-        const dashboard = await DashboardService.generateDashboard(input, onProgress);
-        
-        // Send final result
-        res.write(`data: ${JSON.stringify({ type: 'complete', dashboardId: dashboard.id, dashboard })}\n\n`);
-        res.end();
-      } catch (error) {
-        res.write(`data: ${JSON.stringify({ type: 'error', error: error instanceof Error ? error.message : 'Unknown error' })}\n\n`);
-        res.end();
+      const useStreaming =
+        req.headers.accept?.includes('text/event-stream') || req.query.stream === 'true';
+
+      if (useStreaming) {
+        return streamProgress(res, async (onProgress) => {
+          const dashboard = await DashboardService.generateDashboardForOpportunity(
+            input,
+            onProgress
+          );
+          return { dashboardId: dashboard.id, dashboard };
+        });
       }
-    } else {
-      // Standard request without progress
-      const dashboard = await DashboardService.generateDashboard(input);
-      
+
+      const dashboard = await DashboardService.generateDashboardForOpportunity(input);
       return res.status(201).json({
         dashboardId: dashboard.id,
         dashboard,
       });
+    } catch (error) {
+      return handleDashboardError(error, res);
     }
-  } catch (error) {
-    console.error('[DashboardRoute] Error generating dashboard:', error);
-    
-    // Handle specific error types
-    if (error instanceof ValidationError) {
-      return res.status(error.statusCode).json({
-        error: error.message,
-        code: error.code,
-        details: error.details,
-      });
-    }
-    
-    if (error instanceof NotFoundError) {
-      return res.status(error.statusCode).json({
-        error: error.message,
-        code: error.code,
-      });
-    }
-    
-    // Generic error handling
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    const isLLMError = errorMessage.includes('LLM') || errorMessage.includes('OpenAI') || errorMessage.includes('API');
-    
-    return res.status(500).json({
-      error: isLLMError 
-        ? 'Error during AI analysis. Please try again or check your API configuration.'
-        : 'Internal server error',
-      code: isLLMError ? 'LLM_ERROR' : 'INTERNAL_ERROR',
-      message: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
-    });
   }
-});
+);
 
 // Router for GET /api/dashboard/:dashboardId and GET /api/dashboards
 export const dashboardGetRouter = Router();
@@ -125,6 +151,9 @@ dashboardGetRouter.get('/dashboards', (req: Request, res: Response) => {
       vendorId: d.vendorId,
       clientId: d.clientId,
       serviceOfferingId: d.serviceOfferingId,
+      opportunityId: d.opportunityId,
+      opportunityStage: d.opportunityStage,
+      opportunityName: d.opportunityName,
       clientName: d.sections.accountSnapshot.companyName,
       industry: d.sections.accountSnapshot.industry,
       opportunityBrief: d.sections.opportunitySummary?.opportunityBrief || d.opportunityContext.substring(0, 150) + '...',
@@ -136,7 +165,7 @@ dashboardGetRouter.get('/dashboards', (req: Request, res: Response) => {
 
     return res.json({ dashboards: summaries });
   } catch (error) {
-    console.error('Error getting dashboards:', error);
+    logger.error({ error }, 'Error getting dashboards');
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -153,7 +182,7 @@ dashboardGetRouter.get('/dashboard/:dashboardId', (req: Request, res: Response) 
 
     return res.json(dashboard);
   } catch (error) {
-    console.error('Error getting dashboard:', error);
+    logger.error({ error }, 'Error getting dashboard');
     return res.status(500).json({ error: 'Internal server error' });
   }
 });

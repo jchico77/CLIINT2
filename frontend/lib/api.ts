@@ -5,8 +5,11 @@ import {
   CreateServiceOfferingInput,
   ClientAccount,
   CreateClientAccountInput,
+  Opportunity,
+  CreateOpportunityInput,
   ClientIntelDashboard,
   CreateDashboardInput,
+  CreateOpportunityDashboardInput,
   CreateDashboardResponse,
 } from './types';
 
@@ -127,6 +130,41 @@ export async function createDashboard(
   });
 }
 
+// Opportunities
+export async function createOpportunity(
+  vendorId: string,
+  input: CreateOpportunityInput
+): Promise<Opportunity> {
+  return fetchAPI<Opportunity>(`/vendors/${vendorId}/opportunities`, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function getOpportunities(vendorId: string): Promise<Opportunity[]> {
+  return fetchAPI<Opportunity[]>(`/vendors/${vendorId}/opportunities`);
+}
+
+export async function getOpportunity(opportunityId: string): Promise<Opportunity> {
+  return fetchAPI<Opportunity>(`/opportunities/${opportunityId}`);
+}
+
+export async function createOpportunityDashboard(
+  input: CreateOpportunityDashboardInput
+): Promise<CreateDashboardResponse> {
+  const { vendorId, opportunityId, opportunityContextOverride, uploadedDocIds } = input;
+  return fetchAPI<CreateDashboardResponse>(
+    `/vendors/${vendorId}/opportunities/${opportunityId}/dashboard`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        opportunityContextOverride,
+        uploadedDocIds,
+      }),
+    }
+  );
+}
+
 export interface ProgressEvent {
   stepId: string;
   status: 'pending' | 'in-progress' | 'completed' | 'error';
@@ -213,6 +251,89 @@ export function createDashboardWithProgress(
                   return;
                 } else {
                   // Progress event
+                  onProgress(data as ProgressEvent);
+                }
+              } catch (e) {
+                console.error('Error parsing SSE data:', e);
+              }
+            }
+          }
+        }
+      })
+      .catch(reject);
+  });
+}
+
+export function createOpportunityDashboardWithProgress(
+  input: CreateOpportunityDashboardInput,
+  onProgress: (event: ProgressEvent) => void
+): Promise<{ dashboardId: string; dashboard: ClientIntelDashboard }> {
+  return new Promise((resolve, reject) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
+    fetch(
+      `${API_BASE_URL}/vendors/${input.vendorId}/opportunities/${input.opportunityId}/dashboard?stream=true`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream',
+        },
+        body: JSON.stringify({
+          opportunityContextOverride: input.opportunityContextOverride,
+          uploadedDocIds: input.uploadedDocIds,
+        }),
+      }
+    )
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData: APIError = await response.json().catch(() => ({
+            error: 'Unknown error',
+            code: 'UNKNOWN_ERROR',
+          }));
+
+          let errorMessage = errorData.error || `HTTP error! status: ${response.status}`;
+
+          if (errorData.code === 'LLM_ERROR') {
+            errorMessage = `Error en el análisis con IA: ${errorMessage}`;
+          } else if (errorData.code === 'VALIDATION_ERROR') {
+            errorMessage = `Error de validación: ${errorMessage}`;
+          }
+
+          const error = new Error(errorMessage);
+          (error as Error & { code?: string }).code = errorData.code;
+          throw error;
+        }
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+
+        if (!reader) {
+          throw new Error('No response body');
+        }
+
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+
+                if (data.type === 'complete') {
+                  resolve({ dashboardId: data.dashboardId, dashboard: data.dashboard });
+                  return;
+                } else if (data.type === 'error') {
+                  reject(new Error(data.error));
+                  return;
+                } else {
                   onProgress(data as ProgressEvent);
                 }
               } catch (e) {

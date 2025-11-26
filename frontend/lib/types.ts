@@ -4,6 +4,41 @@ export type Stance = 'champion' | 'supporter' | 'neutral' | 'skeptic' | 'blocker
 export type InfluenceLevel = 'high' | 'medium' | 'low';
 export type EvidenceType = 'case_study' | 'kpi' | 'testimonial' | 'award' | 'certification';
 export type GapImpact = 'high' | 'medium' | 'low';
+export type OpportunityStage =
+  | 'early'
+  | 'rfp'
+  | 'shortlist'
+  | 'bafo'
+  | 'won'
+  | 'lost';
+
+export interface Opportunity {
+  id: string;
+  vendorId: string;
+  clientId: string;
+  serviceOfferingId: string;
+  name: string;
+  stage: OpportunityStage;
+  estimatedValue?: number;
+  currency?: string;
+  deadline?: string;
+  ownerUserId?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateOpportunityInput {
+  clientId: string;
+  serviceOfferingId: string;
+  name: string;
+  stage?: OpportunityStage;
+  estimatedValue?: number;
+  currency?: string;
+  deadline?: string;
+  ownerUserId?: string;
+  notes?: string;
+}
 
 // Vendor
 export interface Vendor {
@@ -284,6 +319,9 @@ export interface ClientIntelDashboard {
   vendorId: string;
   clientId: string;
   serviceOfferingId: string;
+  opportunityId?: string;
+  opportunityName?: string;
+  opportunityStage?: OpportunityStage;
   opportunityContext: string;
   generatedAt: string;
   llmModelUsed: string;
@@ -295,6 +333,13 @@ export interface CreateDashboardInput {
   clientId: string;
   serviceOfferingId: string;
   opportunityContext: string;
+  uploadedDocIds?: string[];
+}
+
+export interface CreateOpportunityDashboardInput {
+  vendorId: string;
+  opportunityId: string;
+  opportunityContextOverride?: string;
   uploadedDocIds?: string[];
 }
 
