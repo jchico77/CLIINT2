@@ -1,35 +1,41 @@
+import type { Vendor as PrismaVendor } from '@prisma/client';
+import { prisma } from '../../lib/prisma';
 import { Vendor, CreateVendorInput } from '../models/vendor';
 
-// In-memory storage (will be replaced with DB in future)
-const vendors: Map<string, Vendor> = new Map();
+const mapVendor = (record: PrismaVendor): Vendor => ({
+  id: record.id,
+  name: record.name,
+  websiteUrl: record.websiteUrl,
+  description: record.description ?? undefined,
+  createdAt: record.createdAt.toISOString(),
+  updatedAt: record.updatedAt.toISOString(),
+});
 
 export class VendorService {
-  static create(input: CreateVendorInput): Vendor {
+  static async create(input: CreateVendorInput): Promise<Vendor> {
     const id = `vendor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date().toISOString();
-    
-    const vendor: Vendor = {
-      id,
-      name: input.name,
-      websiteUrl: input.websiteUrl,
-      description: input.description,
-      createdAt: now,
-      updatedAt: now,
-    };
-    
-    vendors.set(id, vendor);
-    return vendor;
+    const vendor = await prisma.vendor.create({
+      data: {
+        id,
+        name: input.name,
+        websiteUrl: input.websiteUrl,
+        description: input.description,
+      },
+    });
+    return mapVendor(vendor);
   }
 
-  static getById(id: string): Vendor | null {
-    return vendors.get(id) || null;
+  static async getById(id: string): Promise<Vendor | null> {
+    const vendor = await prisma.vendor.findUnique({ where: { id } });
+    return vendor ? mapVendor(vendor) : null;
   }
 
-  static getAll(): Vendor[] {
-    return Array.from(vendors.values());
+  static async getAll(): Promise<Vendor[]> {
+    const vendors = await prisma.vendor.findMany({ orderBy: { createdAt: 'desc' } });
+    return vendors.map(mapVendor);
   }
 
-  static getByVendorId(vendorId: string): Vendor | null {
+  static async getByVendorId(vendorId: string): Promise<Vendor | null> {
     return this.getById(vendorId);
   }
 }

@@ -631,3 +631,280 @@ npx tsx scripts/demoOpportunityDossier.ts
 ```
 
 > Los endpoints HTTP llegarán en F2.2; por ahora el script actúa como prueba unitaria del servicio en memoria.
+### Subfase F2.2 – Backend: endpoints para dossier ✅
+
+1. **HTTP API**
+   - `POST /api/opportunities/:opportunityId/dossier/text`
+   - `GET /api/opportunities/:opportunityId/dossier`
+   - `POST /api/opportunities/:opportunityId/dossier/files`
+   - Nueva ruta `src/http/routes/opportunityDossier.ts` (usa `multer` en memoria) montada en `server.ts`.
+
+2. **Validación**
+   - `src/domain/validators/opportunityDossierValidators.ts` valida `sourceType`, `title?` y `content`.
+   - Uploads aceptan un campo `file`; mientras llega File Inputs real generamos un `file_local_*` y lo adjuntamos al dossier.
+
+3. **Servicios reutilizados**
+   - `OpportunityDossierService` recibe las operaciones; las rutas verifican la oportunidad y registran eventos con `logger`.
+
+### Cómo probar la subfase
+
+```bash
+# Backend en marcha (npm run dev) y oportunidad creada.
+
+# 1) Añadir chunk textual
+curl -X POST \
+  http://localhost:3001/api/opportunities/OPPORTUNITY_ID/dossier/text \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceType": "email",
+    "title": "Correo kickoff",
+    "content": "El cliente confirma kickoff el lunes y pide enviar agenda antes del viernes."
+  }'
+
+# 2) Listar dossier
+curl http://localhost:3001/api/opportunities/OPPORTUNITY_ID/dossier
+
+# 3) Adjuntar archivo (se sube a OpenAI File Search)
+curl -X POST \
+  -F "file=@/ruta/a/archivo.pdf" \
+  http://localhost:3001/api/opportunities/OPPORTUNITY_ID/dossier/files
+```
+
+> La respuesta devuelve `fileId` real de OpenAI y el `vectorStoreId` asociado a la oportunidad.
+
+### Subfase F3.1 – Cliente OpenAiDeepResearchClient ✅
+
+1. **Cliente dedicado**
+   - `src/llm/deepResearchClient.ts` encapsula la llamada a Responses API (modelo configurable vía `DEEP_RESEARCH_MODEL`, por defecto `o3-deep-research-2025-06-26`).
+   - Usa `response_format: { type: 'json_schema' }` con el schema de `ClientDeepResearchReport` para garantizar estructura.
+
+2. **Modelos y configuración**
+   - `src/domain/models/clientDeepResearchReport.ts` define input/report (summary, businessModel, marketSegments, riesgos, competidores, fuentes, etc.).
+   - `llmConfig` añade `deepResearchModel`.
+
+3. **Integración inicial**
+   - `deepResearchService.runClientResearchStructured()` delega en el nuevo cliente.
+   - Script `scripts/runDeepResearch.ts` + comando `npm run deeptest` permiten probarlo rápidamente.
+
+### Cómo probar la subfase
+
+```bash
+cd backend
+# PowerShell
+$env:OPENAI_API_KEY="tu_api_key"
+# Opcional:
+$env:DEEP_RESEARCH_MODEL="o4-mini-deep-research-2025-06-26"
+npm run deeptest
+# Debe imprimir ClientDeepResearchReport (summary, competitors, sources, etc.)
+```
+
+> Requiere Responses API habilitada y la versión reciente del SDK `openai`. Si OpenAI cambia la sintaxis, revisa https://platform.openai.com/docs/api-reference/responses/create.
+
+### Subfase F3.2 – Integración Deep Research → agentes y dashboard ✅
+
+1. **Servicio centralizado**
+   - `src/llm/deepResearchService.ts` ahora ofrece `getClientReport(client, service)` que delega en `runClientDeepResearch`, incluye `web_search_preview` y logging con `pino`.
+   - El servicio mantiene los métodos legacy (`researchCompetitors`, `researchNews`) pero con logging consistente y control centralizado de la API key.
+
+2. **ClientResearchAgent simplificado**
+   - `src/llm/clientResearchAgent.ts` recibe `client`, `service`, `opportunityContext` y el `ClientDeepResearchReport`.
+   - El agente se limita a sintetizar el JSON proporcionado (sin relanzar investigación), produce Account Snapshot / Market Context / Strategic Priorities y registra los eventos con el logger central.
+
+3. **DashboardService**
+   - `generateLLMSections` ejecuta la investigación profunda como paso obligatorio antes de los agentes.
+   - El progreso (`deep-research`) se actualiza en cuanto finaliza el reporte y se pasa al agente de cliente junto al `service`.
+
+4. **Código auxiliar**
+   - `ClientDeepResearchReport` se importa en `dashboardService` para tipar internamente el payload.
+   - Todo el logging de esta ruta utiliza `logger` (sin `console.log`).
+
+### Cómo probar la subfase
+
+```bash
+# 1) Configura API key válida
+cd backend
+$env:OPENAI_API_KEY="sk-..."
+npm run deeptest   # Verifica que el reporte estructurado se genera sin errores (usa web_search_preview)
+
+# 2) End-to-end dashboard ligado a oportunidad
+npm run dev  # backend
+# (en otra terminal) npm run dev  # frontend
+# En la UI:
+#   - Crea vendor/client/service + oportunidad
+#   - Desde /opportunities/[id], pulsa "Generar Strategy Dashboard"
+# En la terminal del backend verás:
+#   [DashboardService] ... Deep research step 1 ...
+#   [ClientResearchAgent] ... completed synthesis ...
+```
+
+Alternativa vía API:
+
+```bash
+curl -X POST http://localhost:3001/api/vendors/VENDOR_ID/opportunities/OPPORTUNITY_ID/dashboard \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+> La respuesta incluye `llmModelUsed` y todas las secciones generadas a partir del reporte profundo.
+
+### Deep Research – observabilidad y comparación de modelos
+
+1. **Toggles y tiempo de espera**
+   - `DEEP_RESEARCH_DEBUG=1` → habilita logging a nivel `debug` + heartbeats cada 30 s.
+   - `DEEP_RESEARCH_TIMEOUT_MS=600000` (por defecto) → aborta la llamada si supera los 10 min.
+   - Ambos flags se leen en `llmConfig` y se pueden ajustar sin tocar código.
+
+2. **Script CLI (`npm run deeptest`)**
+   - Ahora acepta argumentos:
+     - `--model=o3-deep-research-2025-06-26` (se pueden pasar varios separados por coma para comparar en serie).
+     - `--reasoning=low|medium|high`, `--timeoutMs=360000`, `--quiet=1`, etc.
+   - Ejemplo para comparar o3 vs o4-mini y ver duraciones:
+
+```bash
+# Backend
+cd backend
+$env:OPENAI_API_KEY="sk-..."
+
+# Ejecuta ambos modelos en serie
+npm run deeptest -- --model=o3-deep-research-2025-06-26,o4-mini-deep-research-2025-06-26
+
+# Con logs detallados y timeout personalizado
+$env:DEEP_RESEARCH_DEBUG="1"
+$env:DEEP_RESEARCH_TIMEOUT_MS="600000"
+npm run deeptest -- --model=o3-deep-research-2025-06-26 --reasoning=high --timeoutMs=600000
+```
+
+   - Cada ejecución muestra el tiempo total (`✓ ... completado en Xs`) para facilitar la comparación.
+
+3. **Interpretación**
+   - `o3-deep-research` puede tardar varios minutos: revisa los heartbeats (“Deep research still running”) para confirmar que la llamada sigue viva.
+   - `o4-mini-deep-research` es más rápido pero con menor cobertura; con el prompt reducido (“Dime lo que sepas de <cliente>”) y `reasoning.effort = low` por defecto la latencia suele bajar, aunque seguimos permitiendo hasta 10 min antes de cortar.
+   - Si se alcanza el timeout, el log marcará `timedOut: true` y el error indicará cuántos segundos se esperó.
+
+### Subfase F4.1 – JSON Schemas del dashboard ✅
+
+1. **Esquemas por sección**
+   - Directorio `backend/src/llm/schemas/` con un fichero por sección: `accountSnapshot`, `opportunitySummary`, `marketContext`, `opportunityRequirements`, `stakeholderMap`, `competitiveLandscape`, `vendorFitAndPlays`, `evidencePack`, `gapsAndQuestions`, `newsOfInterest`, `criticalDates`.
+   - Cada schema sigue Draft-07, define `required`, enums y límites (`minimum`/`maximum` en scores y relevancias).
+
+2. **Helper unificado**
+   - `backend/src/llm/schemas/index.ts` exporta `dashboardSchemas` y `loadDashboardSchema(name)` para que los agentes GPT-5.1 puedan declarar `response_format` sin duplicar JSON.
+   - Gracias a `resolveJsonModule`, los schemas se importan como objetos TS sin configuración extra.
+
+3. **Uso previsto**
+   - F4.2+ (agentes con GPT-5.1) sólo tendrán que hacer `loadDashboardSchema('accountSnapshot')` o componer schemas agregados.
+
+### Cómo probar
+
+```bash
+# Listar schemas disponibles
+ls backend/src/llm/schemas
+
+# (Opcional) validar alguno con ajv
+npx ajv validate -s backend/src/llm/schemas/accountSnapshot.json -d sample.json
+```
+
+> En esta fase no se conectó aún a los agentes; el helper queda listo para usarse en F4.2/F4.3/F4.4.
+
+### Subfase F4.2 – ClientResearchAgent con GPT-5.1 ✅
+
+1. **Nuevo flujo LLM**
+   - `src/llm/clientResearchAgent.ts` ahora usa la Responses API (`gpt-5.1` por defecto) con `response_format = json_schema`.
+   - La respuesta estructurada incluye: `accountSnapshot`, `marketContext`, `opportunityRequirements` (antiguas strategic priorities).  
+   - Los schemas se cargan desde `loadDashboardSchema(...)`, así que cualquier cambio en los `.json` se refleja automáticamente.
+   - **Novedad:** si el dossier de la oportunidad tiene notas (`/dossier/text`), se genera un resumen y se incluye en el prompt (`Notas del dossier: …`). Si no hay notas, se indica explícitamente que no existen.
+
+2. **Configuración**
+   - Variables nuevas:
+     - `CLIENT_RESEARCH_MODEL` (default: `gpt-5.1`).
+     - `CLIENT_RESEARCH_REASONING` (`low|medium|high`, default `medium`).
+   - `llmConfig` ya no trae una API key por defecto (vacío → hay que exportar `OPENAI_API_KEY` sí o sí).
+
+3. **DashboardService**
+   - `generateLLMSections` consume el output del agente y llena `opportunityRequirements` reales (ya no usa `generateFakeOpportunityRequirements` cuando hay LLM).
+   - El resto de secciones siguen igual (VendorResearch y Fit&Strategy se mantienen en GPT-4o por ahora).
+
+4. **Validación**
+   - `npm run type-check` ✅
+   - Flujo recomendado:
+
+```bash
+cd backend
+$env:OPENAI_API_KEY="sk-..."
+$env:CLIENT_RESEARCH_MODEL="gpt-5.1"              # opcional
+$env:CLIENT_RESEARCH_REASONING="medium"           # opcional
+npm run dev
+# Desde el frontend o vía curl generar un dashboard → verificar en logs:
+#   [ClientResearchAgent] ... completed synthesis
+# y que la sección Opportunity Requirements ya no sea fake.
+
+# Para probar el dossier:
+curl -X POST http://localhost:3001/api/opportunities/OPP_ID/dossier/text \
+  -H "Content-Type: application/json" \
+  -d '{"sourceType":"email","title":"Kickoff","content":"Cliente pide agenda el lunes."}'
+# Después genera el dashboard → en los logs se verá "Notas del dossier" y el agente las usará como contexto.
+```
+
+> El script `npm run deeptest` sigue siendo el punto de entrada para comparar modelos deep-research; ahora se complementa con el nuevo agente estructurado cuando se genera un dashboard completo.
+
+### File Search del dossier ✅
+
+1. **Almacenamiento en OpenAI**
+   - Cada oportunidad dispone de un vector store dedicado (`dossier_{opportunityId}`). La primera vez que subes un archivo via `POST /dossier/files`, se crea automáticamente y se guarda su `vectorStoreId` en `OpportunityDossier`.
+   - Los PDFs / docs se suben con la API de Files (`purpose: assistants`) y se asocian al vector store mediante `vectorStores.files.create`.
+
+2. **Agentes que lo consumen**
+   - `ClientResearchAgent` declara `file_search` cuando existe `vectorStoreId`, de modo que GPT‑5.1 puede leer el dossier además de las notas resumidas.
+   - `FitAndStrategyAgent` también incorpora `file_search + web_search`, así Stakeholder/Competitive/Vendor Fit tienen acceso directo al dossier.
+
+3. **Cómo probar**
+
+```bash
+# Subir un PDF al dossier
+curl -X POST \
+  -F "file=@brief.pdf" \
+  http://localhost:3001/api/opportunities/OPP_ID/dossier/files
+
+# Generar dashboard y revisar logs:
+#   [ClientResearchAgent] ... file_search tool active ...
+#   [FitAndStrategyAgent] ... file_search tool active ...
+```
+
+> Si necesitas limpiar estados, recuerda que por ahora todo está en memoria, pero los vector stores quedan en tu cuenta de OpenAI (puedes listarlos desde la consola si quieres eliminarlos).
+
+### Fase 5.2 – Proposal Outline ✅
+
+1. **Agente dedicado**
+   - `src/llm/proposalOutlineAgent.ts` usa GPT-5.1 + `web_search` + `file_search` (si hay dossier) y Structured Output (`proposalOutline` schema).
+   - Input: cliente, servicio, contexto, requisitos, evidencias y resumen del dossier.
+   - Salida: máx. 4 secciones con propósito, bullets y evidencias enlazadas.
+
+2. **Integración backend**
+   - `dashboardService.generateLLMSections` añade el outline al objeto `sections` y lo replica en `ClientIntelDashboard.proposalOutline`.
+   - El fake generator deja el campo vacío.
+
+3. **UI**
+   - Nueva card `ProposalOutlineCard` en `/dashboard/[id]` mostrando título, propósito, bullets y evidencias.
+
+### Cómo probar
+
+```bash
+# Generar un dashboard con dossier + evidencias
+npm run dev  # en backend y frontend
+# Dashboard ahora muestra la card "Proposal Outline" con las secciones propuestas.
+```
+
+### Fase 5.1 – Priorización y límites ✅
+
+1. **Backend**
+   - Tipos con nuevos campos:
+     - `priorityLevel` en Opportunity Requirements y Gaps.
+     - `isCritical` en Smart Questions.
+   - Post-procesado tras los agentes: recorta stakeholders (≤8), competidores (≤4), gaps (≤5), preguntas (≤6), requisitos (≤4) y aplica defaults (`high→must`, `low→nice`, etc.).
+
+2. **Prompts**
+   - `ClientResearchAgent` y `FitAndStrategyAgent` incluyen instrucciones de cardinalidad y de marcado de criticidad.
+
+3. **Frontend**
+   - Badges “MUST/SHOULD/NICE” en requisitos y prioridades de gaps.
+   - Preguntas críticas resaltadas.

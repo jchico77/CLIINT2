@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StakeholderMapSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["stakeholders", "summary"],
+  "properties": {
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "role",
+          "department",
+          "influence",
+          "stance",
+          "notes",
+          "priorities"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "department": { "type": "string" },
+          "influence": { "type": "string", "enum": ["high", "medium", "low"] },
+          "stance": { "type": "string", "enum": ["champion", "supporter", "neutral", "skeptic", "blocker"] },
+          "notes": { "type": "string" },
+          "priorities": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

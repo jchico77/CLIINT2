@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpportunityRequirementsSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["requirements", "whatClientSeeks", "scope", "exclusions", "selectionCriteria", "summary"],
+  "properties": {
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "title", "description", "priority", "relevanceToService"],
+        "properties": {
+          "id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["requirement", "scope", "criteria", "exclusion", "constraint"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+          "relevanceToService": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+    "whatClientSeeks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "scope": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "selectionCriteria": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

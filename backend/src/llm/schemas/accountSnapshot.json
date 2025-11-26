@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AccountSnapshotSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "companyName",
+    "industry",
+    "headquarters",
+    "employeeCount",
+    "revenue",
+    "description",
+    "keyMetrics"
+  ],
+  "properties": {
+    "companyName": { "type": "string" },
+    "industry": { "type": "string" },
+    "headquarters": { "type": "string" },
+    "employeeCount": { "type": "string" },
+    "revenue": { "type": "string" },
+    "description": { "type": "string" },
+    "keyMetrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "value"],
+        "properties": {
+          "label": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+

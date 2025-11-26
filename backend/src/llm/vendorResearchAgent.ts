@@ -1,7 +1,11 @@
-import { llmClient } from './client';
+import OpenAI from 'openai';
 import { Vendor } from '../domain/models/vendor';
 import { ServiceOffering } from '../domain/models/serviceOffering';
 import { EvidenceItem } from '../domain/models/clientIntelDashboard';
+import { llmConfig } from '../config/llm';
+import { logger } from '../lib/logger';
+import { loadDashboardSchema } from './schemas';
+import { logPhaseStart } from './phaseLogger';
 
 export interface VendorResearchOutput {
   serviceOfferings: Array<{
@@ -16,77 +20,204 @@ export interface VendorResearchOutput {
   evidence: EvidenceItem[];
 }
 
+type VendorResearchStructuredOutput = {
+  serviceOfferings: VendorResearchOutput['serviceOfferings'];
+  differentiators: VendorResearchOutput['differentiators'];
+  evidencePack: {
+    items: EvidenceItem[];
+    summary: string;
+  };
+};
+
+const evidencePackSchema = loadDashboardSchema('evidencePack') as Record<
+  string,
+  unknown
+>;
+
+const vendorResearchSchema = {
+  name: 'vendor_research_output',
+  schema: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['serviceOfferings', 'differentiators', 'evidencePack'],
+    properties: {
+      serviceOfferings: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['name', 'description', 'categoryTags'],
+          properties: {
+            name: { type: 'string' },
+            description: { type: 'string' },
+            categoryTags: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+        },
+      },
+      differentiators: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['claim', 'evidence'],
+          properties: {
+            claim: { type: 'string' },
+            evidence: { type: 'string' },
+          },
+        },
+      },
+      evidencePack: evidencePackSchema,
+    },
+  },
+};
+
+const ensureOpenAIClient = (): OpenAI => {
+  if (!llmConfig.openaiApiKey) {
+    throw new Error('OPENAI_API_KEY is required for VendorResearchAgent');
+  }
+  return new OpenAI({ apiKey: llmConfig.openaiApiKey });
+};
+
+const extractStructuredOutput = (
+  response: OpenAI.Responses.Response,
+): VendorResearchStructuredOutput => {
+  const outputItems =
+    (response.output as Array<{ content?: Array<{ type: string; [key: string]: unknown }> }>) ??
+    [];
+
+  const jsonChunk = outputItems
+    .flatMap((entry) => entry.content ?? [])
+    .find((chunk) => chunk.type === 'output_json');
+
+  if (jsonChunk && 'json' in jsonChunk && jsonChunk.json) {
+    return jsonChunk.json as VendorResearchStructuredOutput;
+  }
+
+  const fallbackText = Array.isArray(response.output_text)
+    ? response.output_text.join('')
+    : response.output_text;
+  if (fallbackText) {
+    return JSON.parse(fallbackText.trim()) as VendorResearchStructuredOutput;
+  }
+
+  throw new Error('VendorResearchAgent: no structured output returned');
+};
+
 export class VendorResearchAgent {
   async research(vendor: Vendor, service: ServiceOffering): Promise<VendorResearchOutput> {
-    const systemPrompt = `Eres un analista de negocio B2B experto. Tu objetivo es analizar un vendor (proveedor) y extraer:
-1. Service Offerings: Servicios y soluciones que ofrece
-2. Differentiators: Diferenciadores y claims respaldados
-3. Evidence: Evidencias (casos de estudio, KPIs, testimonios, premios)
+    const openai = ensureOpenAIClient();
 
-IMPORTANTE:
-- Extrae información de la web corporativa del vendor
-- Identifica claims respaldados por algo concreto (rankings, casos, métricas)
-- Genera evidencias relevantes y específicas
-- Responde SIEMPRE en formato JSON válido`;
+    const systemPrompt = `Eres un analista de vendor B2B. Necesitamos:
+1) Resumen claro de servicios/productos del vendor.
+2) Diferenciadores respaldados por evidencia.
+3) Evidencias accionables (casos, KPIs, premios) listas para propuestas.
+Responde en JSON conforme al schema proporcionado.`;
 
-    const userPrompt = `Analiza el siguiente vendor:
+    const userPrompt = `Analiza el vendor y servicio objetivo:
 
-**Vendor:**
+VENDOR
 - Nombre: ${vendor.name}
 - Website: ${vendor.websiteUrl}
 - Descripción: ${vendor.description || 'No disponible'}
 
-**Servicio Específico:**
+SERVICIO FOCO
 - Nombre: ${service.name}
 - Descripción: ${service.shortDescription}
 - Categorías: ${service.categoryTags.join(', ')}
 
-Genera un análisis completo con la siguiente estructura JSON:
+Genera serviceOfferings, differentiators y un evidencePack con items relevantes. 
+Si no hay evidencias específicas disponibles, crea ejemplos plausibles para este tipo de servicio basados en mejores prácticas del sector.`;
 
-{
-  "serviceOfferings": [
-    {
-      "name": "string",
-      "description": "string",
-      "categoryTags": ["string"]
-    }
-  ],
-  "differentiators": [
-    {
-      "claim": "string (ej: 'Líder en el mercado')",
-      "evidence": "string (ej: 'Ranking Gartner 2024')"
-    }
-  ],
-  "evidence": [
-    {
-      "id": "evidence_1",
-      "type": "case_study" | "kpi" | "testimonial" | "award" | "certification",
-      "title": "string",
-      "description": "string",
-      "snippet": "string (texto corto para usar en propuestas)",
-      "source": "string o null",
-      "relevance": 0-100
-    }
-  ]
-}`;
+    const canUseFileSearch =
+      Boolean(llmConfig.vendorEvidenceVectorStoreId) && llmConfig.featureToggles.fileSearch;
+    const tools = canUseFileSearch
+      ? ([{ type: 'file_search' }] as OpenAI.Responses.ResponseCreateParams['tools'])
+      : undefined;
+    const toolResources = canUseFileSearch && llmConfig.vendorEvidenceVectorStoreId
+      ? { file_search: { vector_store_ids: [llmConfig.vendorEvidenceVectorStoreId] } }
+      : undefined;
 
     try {
-      console.log(`[VendorResearchAgent] Analizando vendor: ${vendor.name}`);
-      const result = await llmClient.generateJSON<VendorResearchOutput>(
-        systemPrompt,
-        userPrompt,
-        {
-          model: 'gpt-4o',
-          temperature: 0.4,
-          maxTokens: 3000,
-        }
+      logPhaseStart('vendorResearch', {
+        source: 'agent' as const,
+        vendorId: vendor.id,
+        serviceId: service.id,
+        model: llmConfig.vendorResearchModel,
+        reasoningEffort: llmConfig.vendorResearchReasoningEffort,
+        usesWebSearch: false,
+        usesFileSearch: canUseFileSearch,
+      });
+      logger.info(
+        { vendorId: vendor.id, serviceId: service.id },
+        'VendorResearchAgent starting analysis',
       );
 
-      console.log(`[VendorResearchAgent] ✓ Análisis completado para ${vendor.name}`);
-      return result;
+      const requestPayload = {
+        model: llmConfig.vendorResearchModel,
+        reasoning: { effort: llmConfig.vendorResearchReasoningEffort },
+        input: [
+          {
+            role: 'system',
+            content: [{ type: 'input_text', text: systemPrompt }],
+          },
+          {
+            role: 'user',
+            content: [{ type: 'input_text', text: userPrompt }],
+          },
+        ],
+        text: {
+          format: {
+            type: 'json_schema',
+            name: vendorResearchSchema.name,
+            schema: vendorResearchSchema.schema,
+          },
+        },
+      } as Record<string, unknown>;
+
+      if (tools) {
+        requestPayload.tools = tools;
+      }
+      if (toolResources) {
+        requestPayload.tool_resources = toolResources;
+      }
+
+      const response = (await openai.responses.create(
+        requestPayload as OpenAI.Responses.ResponseCreateParams,
+      )) as OpenAI.Responses.Response;
+
+      const structured = extractStructuredOutput(response);
+      logger.info(
+        {
+          vendorId: vendor.id,
+          serviceId: service.id,
+          responseId: response.id,
+          evidenceItems: structured.evidencePack.items.length,
+        },
+        'VendorResearchAgent completed analysis',
+      );
+
+      return {
+        serviceOfferings: structured.serviceOfferings,
+        differentiators: structured.differentiators,
+        evidence: structured.evidencePack.items,
+      };
     } catch (error) {
-      console.error('[VendorResearchAgent] Error:', error);
-      throw new Error(`Failed to research vendor: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      logger.error(
+        {
+          vendorId: vendor.id,
+          serviceId: service.id,
+          error: error instanceof Error ? error.message : error,
+        },
+        'VendorResearchAgent failed',
+      );
+      throw new Error(
+        `Failed to research vendor: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+      );
     }
   }
 }

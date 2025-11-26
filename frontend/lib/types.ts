@@ -4,13 +4,12 @@ export type Stance = 'champion' | 'supporter' | 'neutral' | 'skeptic' | 'blocker
 export type InfluenceLevel = 'high' | 'medium' | 'low';
 export type EvidenceType = 'case_study' | 'kpi' | 'testimonial' | 'award' | 'certification';
 export type GapImpact = 'high' | 'medium' | 'low';
-export type OpportunityStage =
-  | 'early'
-  | 'rfp'
-  | 'shortlist'
-  | 'bafo'
-  | 'won'
-  | 'lost';
+export type DashboardPhase =
+  | 'deepResearch'
+  | 'clientResearch'
+  | 'vendorResearch'
+  | 'fitStrategy'
+  | 'proposalOutline';
 
 export interface Opportunity {
   id: string;
@@ -18,7 +17,6 @@ export interface Opportunity {
   clientId: string;
   serviceOfferingId: string;
   name: string;
-  stage: OpportunityStage;
   estimatedValue?: number;
   currency?: string;
   deadline?: string;
@@ -28,11 +26,40 @@ export interface Opportunity {
   updatedAt: string;
 }
 
+export type DossierSourceType =
+  | 'rfp'
+  | 'brief'
+  | 'email'
+  | 'meeting_notes'
+  | 'other';
+
+export interface DossierTextChunk {
+  id: string;
+  sourceType: DossierSourceType;
+  title?: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface OpportunityDossier {
+  opportunityId: string;
+  textChunks: DossierTextChunk[];
+  openAiFileIds: string[];
+  vectorStoreId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppendDossierTextInput {
+  sourceType: DossierSourceType;
+  title?: string;
+  content: string;
+}
+
 export interface CreateOpportunityInput {
   clientId: string;
   serviceOfferingId: string;
   name: string;
-  stage?: OpportunityStage;
   estimatedValue?: number;
   currency?: string;
   deadline?: string;
@@ -159,6 +186,7 @@ export interface OpportunityRequirement {
   description: string;
   priority: 'high' | 'medium' | 'low';
   relevanceToService: number; // 0-100
+  priorityLevel?: 'must' | 'should' | 'nice';
 }
 
 export interface OpportunityRequirementsSection {
@@ -283,6 +311,7 @@ export interface InformationGap {
   topic: string;
   impact: GapImpact;
   description: string;
+  priorityLevel?: 'must' | 'should' | 'nice';
 }
 
 export interface IntelligentQuestion {
@@ -290,12 +319,25 @@ export interface IntelligentQuestion {
   question: string;
   context: string;
   targetStakeholder?: string;
+  isCritical?: boolean;
 }
 
 export interface GapsAndQuestionsSection {
   gaps: InformationGap[];
   questions: IntelligentQuestion[];
   summary: string;
+}
+
+export interface ProposalSectionSuggestion {
+  id: string;
+  title: string;
+  purpose: string;
+  suggestedContent: string[];
+  linkedEvidenceIds: string[];
+}
+
+export interface ProposalOutlineLite {
+  sections: ProposalSectionSuggestion[];
 }
 
 // Complete Dashboard Sections
@@ -311,6 +353,7 @@ export interface ClientIntelDashboardSections {
   gapsAndQuestions: GapsAndQuestionsSection;
   newsOfInterest: NewsOfInterestSection;
   criticalDates: CriticalDatesSection;
+  proposalOutline?: ProposalOutlineLite;
 }
 
 // Complete Dashboard
@@ -319,13 +362,13 @@ export interface ClientIntelDashboard {
   vendorId: string;
   clientId: string;
   serviceOfferingId: string;
-  opportunityId?: string;
+  opportunityId: string;
   opportunityName?: string;
-  opportunityStage?: OpportunityStage;
   opportunityContext: string;
   generatedAt: string;
   llmModelUsed: string;
   sections: ClientIntelDashboardSections;
+  proposalOutline?: ProposalOutlineLite;
 }
 
 export interface CreateDashboardInput {
@@ -346,5 +389,59 @@ export interface CreateOpportunityDashboardInput {
 export interface CreateDashboardResponse {
   dashboardId: string;
   dashboard: ClientIntelDashboard;
+}
+
+// Admin settings
+export type AdminPhaseId =
+  | 'deepResearch'
+  | 'clientResearch'
+  | 'vendorResearch'
+  | 'fitAndStrategy'
+  | 'proposalOutline';
+
+export type AdminModelOption = 'gpt-5.1' | 'gpt-5.1-mini' | 'gpt-5-mini';
+export type AdminReasoningEffort = 'low' | 'medium' | 'high';
+export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy';
+export type AdminFeatureToggleId = 'webSearch' | 'fileSearch' | 'dossierContext' | 'proposalBeta';
+export type AdminTokenLimitId =
+  | 'deepResearchTokens'
+  | 'clientResearchTokens'
+  | 'vendorResearchTokens'
+  | 'fitStrategyTokens';
+export type AdminTemperatureId =
+  | 'deepResearchTemp'
+  | 'clientResearchTemp'
+  | 'vendorResearchTemp'
+  | 'fitStrategyTemp';
+export type AdminSectionLimitId =
+  | 'maxStakeholders'
+  | 'maxCompetitors'
+  | 'maxPlays'
+  | 'maxQuestions';
+export type AdminLoggingLevel = 'silent' | 'info' | 'debug';
+export type AdminRetryId = 'agentRetries' | 'fitStrategyRetries' | 'proposalRetries';
+export type AdminAlertToggleId = 'alertOnFallback' | 'alertOnTimeout';
+export type AdminDashboardSectionId =
+  | 'showOpportunitySummary'
+  | 'showStakeholderMap'
+  | 'showCompetitiveLandscape'
+  | 'showEvidencePack'
+  | 'showProposalOutline';
+export type AdminLanguageOption = 'es' | 'en' | 'mix';
+
+export interface AdminSettings {
+  modelConfig: Record<AdminPhaseId, AdminModelOption>;
+  reasoningConfig: Record<AdminPhaseId, AdminReasoningEffort>;
+  timeoutConfig: Record<AdminTimeoutId, number>;
+  featureToggles: Record<AdminFeatureToggleId, boolean>;
+  tokenConfig: Record<AdminTokenLimitId, number>;
+  temperatureConfig: Record<AdminTemperatureId, number>;
+  sectionLimits: Record<AdminSectionLimitId, number>;
+  loggingLevel: AdminLoggingLevel;
+  retryConfig: Record<AdminRetryId, number>;
+  alertToggles: Record<AdminAlertToggleId, boolean>;
+  dashboardVisibility: Record<AdminDashboardSectionId, boolean>;
+  sandboxMode: boolean;
+  preferredLanguage: AdminLanguageOption;
 }
 

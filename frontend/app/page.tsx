@@ -26,6 +26,9 @@ export default function Home() {
         <div className="w-full flex h-14 items-center px-6 justify-between">
           <h1 className="text-xl font-semibold">ClientIntel Dashboard</h1>
           <div className="flex items-center gap-3">
+            <Link href="/admin">
+              <Button variant="ghost" size="sm">Admin</Button>
+            </Link>
             <Link href="/opportunities">
               <Button variant="ghost" size="sm">Oportunidades</Button>
             </Link>

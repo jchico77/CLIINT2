@@ -1,0 +1,38 @@
+# Email Telefónica → Indra (Ficticio)
+
+**De:** marcos.perez@telefonica.com  
+**Para:** equipo_indra_proyecto@indra.com  
+**Asunto:** Ajustes y dudas sobre la propuesta de plataforma CX
+
+---
+
+Hola equipo de Indra,
+
+Gracias por la documentación que enviasteis el viernes. Estamos revisando internamente y quería dejaros por aquí lo más urgente:
+
+1. **Requerimientos técnicos “imprescindibles”**
+   - Integración nativa con nuestra capa de datos (DataLake interno). No podemos asumir pipelines manuales adicionales.
+   - Cumplimiento estricto de la política Zero Trust. Necesitamos claridad de quién gestiona los accesos y cómo se audita.
+   - Roadmap claro para incorporar IA generativa en la parte de customer care (aunque sea PoC en Q1).
+
+2. **Requerimientos “deberían”**
+   - Dashboard ejecutivo consolidado (CX + ventas) en una única interfaz.
+   - KPIs en tiempo real para la flota de field service. Esto nos ayuda a justificar la inversión ante la Dirección de Operaciones.
+
+3. **“Nice to have”**
+   - Alguna referencia de cómo estáis trabajando 5G privado con clientes telco. No es obligatorio, pero nos ayudaría para la narrativa interna.
+   - Plantilla editable del plan de adopción para formaciones (tenemos que presentarlo al comité interno la primera semana del próximo mes).
+
+4. **Riesgos / atención**
+   - El presupuesto inicial debe mantenerse en el rango que comentamos (no podemos ir más allá sin otra ronda de approvals).
+   - Nos preocupa el tiempo de despliegue que mencionasteis (6-7 meses). Si tenéis un fast track para al menos la parte de orquestación, contadnos.
+
+---
+Estamos preparando una sesión con Finanzas y Tecnología el martes. Si nos podéis mandar un borrador de la propuesta técnica (con estos ajustes) antes del lunes, os lo agradeceríamos mucho.
+
+Cualquier cosa, me escribís o me llamáis directo (estoy todo el día en Teams).
+
+¡Gracias!
+
+Marcos Pérez  
+Gerente Transformación Digital – Telefónica

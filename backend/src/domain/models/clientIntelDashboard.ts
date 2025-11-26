@@ -1,5 +1,3 @@
-import { OpportunityStage } from './opportunity';
-
 // Base types
 export type FitLevel = 'high' | 'medium' | 'low';
 export type Stance = 'champion' | 'supporter' | 'neutral' | 'skeptic' | 'blocker';
@@ -70,6 +68,7 @@ export interface OpportunityRequirement {
   description: string;
   priority: 'high' | 'medium' | 'low';
   relevanceToService: number; // 0-100
+  priorityLevel?: 'must' | 'should' | 'nice';
 }
 
 export interface OpportunityRequirementsSection {
@@ -194,6 +193,7 @@ export interface InformationGap {
   topic: string;
   impact: GapImpact;
   description: string;
+  priorityLevel?: 'must' | 'should' | 'nice';
 }
 
 export interface IntelligentQuestion {
@@ -201,12 +201,25 @@ export interface IntelligentQuestion {
   question: string;
   context: string;
   targetStakeholder?: string;
+  isCritical?: boolean;
 }
 
 export interface GapsAndQuestionsSection {
   gaps: InformationGap[];
   questions: IntelligentQuestion[];
   summary: string;
+}
+
+export interface ProposalSectionSuggestion {
+  id: string;
+  title: string;
+  purpose: string;
+  suggestedContent: string[];
+  linkedEvidenceIds: string[];
+}
+
+export interface ProposalOutlineLite {
+  sections: ProposalSectionSuggestion[];
 }
 
 // Complete Dashboard Sections
@@ -222,6 +235,7 @@ export interface ClientIntelDashboardSections {
   gapsAndQuestions: GapsAndQuestionsSection;
   newsOfInterest: NewsOfInterestSection;
   criticalDates: CriticalDatesSection;
+  proposalOutline?: ProposalOutlineLite;
 }
 
 export interface ClientIntelDashboard {
@@ -231,11 +245,11 @@ export interface ClientIntelDashboard {
   serviceOfferingId: string;
   opportunityId: string;
   opportunityName?: string;
-  opportunityStage?: OpportunityStage;
   opportunityContext: string;
   generatedAt: string;
   llmModelUsed: string;
   sections: ClientIntelDashboardSections;
+  proposalOutline?: ProposalOutlineLite;
 }
 
 export interface CreateDashboardInput {

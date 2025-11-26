@@ -1,0 +1,14 @@
+{
+  "features": {
+    "enableDeepResearch": true,
+    "enableDossierUploads": true,
+    "enableLlmCache": true,
+    "enableLegacyDashboardEndpoint": false
+  },
+  "limits": {
+    "maxDossierTextCharacters": 10000,
+    "maxDossierFileSizeMB": 25
+  }
+}
+
+

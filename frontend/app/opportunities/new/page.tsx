@@ -36,7 +36,6 @@ import {
 import type {
   ClientAccount,
   ServiceOffering,
-  OpportunityStage,
 } from '@/lib/types';
 import {
   Building2,
@@ -45,15 +44,6 @@ import {
   Target,
   Sparkles,
 } from 'lucide-react';
-
-const opportunityStages: OpportunityStage[] = [
-  'early',
-  'rfp',
-  'shortlist',
-  'bafo',
-  'won',
-  'lost',
-];
 
 export default function NewOpportunityPage() {
   const router = useRouter();
@@ -89,7 +79,6 @@ export default function NewOpportunityPage() {
 
   // Opportunity
   const [opportunityName, setOpportunityName] = useState('Transformación Telefónica 2025');
-  const [opportunityStage, setOpportunityStage] = useState<OpportunityStage>('early');
   const [opportunityDeadline, setOpportunityDeadline] = useState('');
   const [opportunityValue, setOpportunityValue] = useState('');
   const [opportunityCurrency, setOpportunityCurrency] = useState('EUR');
@@ -174,7 +163,6 @@ export default function NewOpportunityPage() {
         clientId: finalClientId,
         serviceOfferingId: finalServiceId,
         name: opportunityName.trim(),
-        stage: opportunityStage,
         estimatedValue: opportunityValue ? Number(opportunityValue) : undefined,
         currency: opportunityCurrency ? sanitizeCurrency(opportunityCurrency) : undefined,
         deadline: opportunityDeadline
@@ -211,6 +199,11 @@ export default function NewOpportunityPage() {
             <h1 className="text-xl font-semibold">Nueva oportunidad</h1>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin">
+              <Button variant="ghost" size="sm">
+                Admin
+              </Button>
+            </Link>
             <Link href="/opportunities">
               <Button variant="ghost" size="sm">
                 Oportunidades
@@ -232,7 +225,7 @@ export default function NewOpportunityPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Vendor */}
                   <Card>
                     <CardHeader className="pb-3">
@@ -384,21 +377,21 @@ export default function NewOpportunityPage() {
                           </div>
                         </>
                       ) : (
-                        <div className="space-y-1">
-                          <Label className="text-xs">Cliente *</Label>
-                          <Select value={clientId} onValueChange={setClientId}>
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue placeholder="Selecciona un cliente" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {existingClients.map((client) => (
-                                <SelectItem key={client.id} value={client.id}>
-                                  {client.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Cliente *</Label>
+                            <Select value={clientId} onValueChange={setClientId}>
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue placeholder="Selecciona un cliente" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {existingClients.map((client) => (
+                                  <SelectItem key={client.id} value={client.id}>
+                                    {client.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                       )}
                     </CardContent>
                   </Card>
@@ -465,21 +458,21 @@ export default function NewOpportunityPage() {
                           </div>
                         </>
                       ) : (
-                        <div className="space-y-1">
-                          <Label className="text-xs">Servicio *</Label>
-                          <Select value={serviceId} onValueChange={setServiceId}>
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue placeholder="Selecciona un servicio" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {existingServices.map((service) => (
-                                <SelectItem key={service.id} value={service.id}>
-                                  {service.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Servicio *</Label>
+                            <Select value={serviceId} onValueChange={setServiceId}>
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue placeholder="Selecciona un servicio" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {existingServices.map((service) => (
+                                  <SelectItem key={service.id} value={service.id}>
+                                    {service.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                       )}
                     </CardContent>
                   </Card>
@@ -504,24 +497,6 @@ export default function NewOpportunityPage() {
                           required
                           className="h-8 text-xs"
                         />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-xs">Stage</Label>
-                        <Select
-                          value={opportunityStage}
-                          onValueChange={(value) => setOpportunityStage(value as OpportunityStage)}
-                        >
-                          <SelectTrigger className="h-8 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {opportunityStages.map((stage) => (
-                              <SelectItem key={stage} value={stage}>
-                                {stage.toUpperCase()}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-1">

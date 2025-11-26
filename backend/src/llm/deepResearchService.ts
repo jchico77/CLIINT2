@@ -1,195 +1,77 @@
-import { llmClient } from './client';
 import OpenAI from 'openai';
 import { llmConfig } from '../config/llm';
+import { runClientDeepResearch } from './deepResearchClient';
+import {
+  ClientDeepResearchInput,
+  ClientDeepResearchReport,
+} from '../domain/models/clientDeepResearchReport';
+import { ClientAccount } from '../domain/models/clientAccount';
+import { ServiceOffering } from '../domain/models/serviceOffering';
+import { logger } from '../lib/logger';
 
 /**
  * Deep Research Service
- * Utiliza las capacidades nativas de GPT-4o para realizar investigación profunda
- * usando web search, análisis de documentos, y reasoning avanzado
+ * Centraliza el acceso a los modelos de Deep Research y expone utilidades
+ * adicionales (competidores, noticias) todavía basadas en prompts legacy.
  */
 export class DeepResearchService {
-  private client: OpenAI;
+  private client: OpenAI | null;
 
   constructor() {
+    this.client = llmConfig.openaiApiKey
+      ? new OpenAI({
+          apiKey: llmConfig.openaiApiKey,
+        })
+      : null;
+
     if (!llmConfig.openaiApiKey) {
+      logger.warn(
+        { feature: 'deepResearch' },
+        'OpenAI API key not configured; deep research features are disabled',
+      );
+    }
+  }
+
+  private ensureClient(): OpenAI {
+    if (!this.client) {
       throw new Error('OpenAI API key not configured');
     }
-    this.client = new OpenAI({
-      apiKey: llmConfig.openaiApiKey,
+
+    return this.client;
+  }
+
+  async getClientReport(
+    client: ClientAccount,
+    service: ServiceOffering,
+  ): Promise<ClientDeepResearchReport> {
+    logger.info(
+      {
+        clientId: client.id,
+        serviceOfferingId: service.id,
+        model: llmConfig.deepResearchModel,
+      },
+      'Running structured deep research report',
+    );
+
+    return this.runClientResearchStructured({
+      clientName: client.name,
+      clientWebsiteUrl: client.websiteUrl,
+      country: client.country,
+      sectorHint: client.sectorHint,
+      serviceOfferingName: service.name,
     });
   }
 
-  /**
-   * Realiza investigación profunda sobre una empresa/cliente
-   * Usa web search y análisis de múltiples fuentes
-   */
-  async researchCompany(
-    companyName: string,
-    websiteUrl: string,
-    sector?: string,
-    country?: string
-  ): Promise<{
-    companyInfo: {
-      description: string;
-      headquarters?: string;
-      employeeCount?: string;
-      revenue?: string;
-      keyMetrics: Array<{ label: string; value: string }>;
-      recentNews: Array<{
-        title: string;
-        date: string;
-        source: string;
-        summary: string;
-        url?: string;
-      }>;
-    };
-    marketAnalysis: {
-      industryTrends: Array<{
-        trend: string;
-        impact: 'high' | 'medium' | 'low';
-        description: string;
-      }>;
-      marketSize?: string;
-      growthRate?: string;
-      competitivePosition?: string;
-    };
-    strategicInsights: {
-      priorities: Array<{
-        name: string;
-        description: string;
-        evidence: string[];
-      }>;
-      challenges: Array<{
-        challenge: string;
-        severity: 'high' | 'medium' | 'low';
-        description: string;
-      }>;
-    };
-  }> {
-    const systemPrompt = `Eres un analista de negocio B2B experto con acceso a información en tiempo real. 
-Tu objetivo es realizar una investigación PROFUNDA y COMPLETA sobre una empresa, utilizando:
-1. Búsqueda web para obtener información actualizada
-2. Análisis de múltiples fuentes (noticias, reportes, documentos públicos)
-3. Reasoning avanzado para sintetizar información
-
-IMPORTANTE:
-- Usa herramientas de búsqueda web para obtener información actualizada
-- Analiza múltiples fuentes y cruza información
-- Prioriza información reciente y relevante
-- Sé específico y basado en hechos, no en suposiciones
-- Si no encuentras información específica, indica "unknown" o usa rangos razonables
-- Responde SIEMPRE en formato JSON válido`;
-
-    const userPrompt = `Realiza una investigación PROFUNDA sobre la siguiente empresa:
-
-**Empresa:**
-- Nombre: ${companyName}
-- Website: ${websiteUrl}
-- Sector: ${sector || 'No especificado'}
-- País: ${country || 'No especificado'}
-
-**Instrucciones de investigación:**
-1. Busca información actualizada sobre la empresa (últimos 12 meses)
-2. Analiza noticias relevantes, comunicados de prensa, reportes financieros públicos
-3. Investiga tendencias del sector/industria
-4. Identifica prioridades estratégicas y desafíos basados en evidencia
-5. Obtén métricas clave y datos financieros si están disponibles públicamente
-
-Genera un análisis completo con la siguiente estructura JSON:
-
-{
-  "companyInfo": {
-    "description": "string (descripción detallada basada en investigación)",
-    "headquarters": "string o null",
-    "employeeCount": "string (ej: '50,000-100,000' o 'unknown')",
-    "revenue": "string (ej: '€5B - €10B' o 'unknown')",
-    "keyMetrics": [
-      {"label": "string", "value": "string"}
-    ],
-    "recentNews": [
-      {
-        "title": "string",
-        "date": "YYYY-MM-DD",
-        "source": "string",
-        "summary": "string",
-        "url": "string o null"
-      }
-    ]
-  },
-  "marketAnalysis": {
-    "industryTrends": [
-      {
-        "trend": "string",
-        "impact": "high" | "medium" | "low",
-        "description": "string"
-      }
-    ],
-    "marketSize": "string o null",
-    "growthRate": "string o null",
-    "competitivePosition": "string o null"
-  },
-  "strategicInsights": {
-    "priorities": [
-      {
-        "name": "string",
-        "description": "string",
-        "evidence": ["string"]
-      }
-    ],
-    "challenges": [
-      {
-        "challenge": "string",
-        "severity": "high" | "medium" | "low",
-        "description": "string"
-      }
-    ]
-  }
-}`;
-
-    try {
-      console.log(`[DeepResearchService] Iniciando investigación profunda sobre: ${companyName}`);
-      
-      // Usar GPT-4o con herramientas de búsqueda web
-      const response = await this.client.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
-        temperature: 0.3, // Más bajo para investigación precisa
-        max_tokens: 8000,
-        response_format: { type: 'json_object' },
-        // Nota: GPT-4o puede usar herramientas de búsqueda automáticamente
-        // cuando detecta que necesita información actualizada
-      });
-
-      const content = response.choices[0]?.message?.content;
-      if (!content) {
-        throw new Error('Empty response from LLM');
-      }
-
-      // Parse JSON response
-      let cleaned = content.trim();
-      if (cleaned.startsWith('```')) {
-        cleaned = cleaned.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
-      }
-
-      const result = JSON.parse(cleaned);
-      console.log(`[DeepResearchService] ✓ Investigación completada para ${companyName}`);
-      return result;
-    } catch (error) {
-      console.error('[DeepResearchService] Error en investigación:', error);
-      throw new Error(`Failed to perform deep research: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  async runClientResearchStructured(
+    input: ClientDeepResearchInput,
+  ): Promise<ClientDeepResearchReport> {
+    return runClientDeepResearch(input);
   }
 
-  /**
-   * Investiga competidores y paisaje competitivo
-   */
   async researchCompetitors(
     companyName: string,
     sector: string,
-    serviceType: string
+    serviceType: string,
   ): Promise<{
     clientCompetitors: Array<{
       name: string;
@@ -252,7 +134,12 @@ Genera la respuesta en formato JSON con la siguiente estructura:
 }`;
 
     try {
-      const response = await this.client.chat.completions.create({
+      logger.info(
+        { companyName, sector, serviceType },
+        'DeepResearchService researching competitors',
+      );
+      const openaiClient = this.ensureClient();
+      const response = await openaiClient.chat.completions.create({
         model: 'gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt },
@@ -273,29 +160,36 @@ Genera la respuesta en formato JSON con la siguiente estructura:
         cleaned = cleaned.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
       }
 
-      return JSON.parse(cleaned);
+      const parsed = JSON.parse(cleaned);
+      logger.info(
+        { companyName, sector, serviceType },
+        'Competitor research completed',
+      );
+      return parsed;
     } catch (error) {
-      console.error('[DeepResearchService] Error en investigación de competidores:', error);
+      logger.error(
+        { companyName, sector, serviceType, error },
+        'Competitor research failed',
+      );
       throw error;
     }
   }
 
-  /**
-   * Investiga noticias relevantes y eventos recientes
-   */
   async researchNews(
     companyName: string,
     sector: string,
-    timeframe: '1month' | '3months' | '6months' | '1year' = '6months'
-  ): Promise<Array<{
-    title: string;
-    source: string;
-    date: string;
-    url?: string;
-    relevance: 'high' | 'medium' | 'low';
-    summary: string;
-    impactOnOpportunity?: string;
-  }>> {
+    timeframe: '1month' | '3months' | '6months' | '1year' = '6months',
+  ): Promise<
+    Array<{
+      title: string;
+      source: string;
+      date: string;
+      url?: string;
+      relevance: 'high' | 'medium' | 'low';
+      summary: string;
+      impactOnOpportunity?: string;
+    }>
+  > {
     const systemPrompt = `Eres un analista de noticias B2B. Busca y analiza noticias relevantes sobre empresas,
 usando búsqueda web para obtener información actualizada.
 
@@ -306,7 +200,7 @@ IMPORTANTE: Responde SIEMPRE en formato JSON válido.`;
       '3months': 'últimos 3 meses',
       '6months': 'últimos 6 meses',
       '1year': 'último año',
-    };
+    } as const;
 
     const userPrompt = `Busca noticias relevantes sobre ${companyName} (sector: ${sector}) del ${timeframeMap[timeframe]}.
 
@@ -339,7 +233,12 @@ Genera la respuesta en formato JSON con la siguiente estructura:
 }`;
 
     try {
-      const response = await this.client.chat.completions.create({
+      logger.info(
+        { companyName, sector, timeframe },
+        'DeepResearchService researching news',
+      );
+      const openaiClient = this.ensureClient();
+      const response = await openaiClient.chat.completions.create({
         model: 'gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt },
@@ -361,9 +260,17 @@ Genera la respuesta en formato JSON con la siguiente estructura:
       }
 
       const result = JSON.parse(cleaned);
-      return result.news || result.items || [];
+      const parsedNews = result.news || result.items || [];
+      logger.info(
+        { companyName, sector, timeframe, items: parsedNews.length },
+        'News research completed',
+      );
+      return parsedNews;
     } catch (error) {
-      console.error('[DeepResearchService] Error en investigación de noticias:', error);
+      logger.error(
+        { companyName, sector, timeframe, error },
+        'News research failed',
+      );
       throw error;
     }
   }

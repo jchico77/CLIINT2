@@ -1,5 +1,4 @@
-import { llmClient } from './client';
-import { deepResearchService } from './deepResearchService';
+import OpenAI from 'openai';
 import {
   StakeholderMapSection,
   CompetitiveLandscapeSection,
@@ -7,12 +6,18 @@ import {
   GapsAndQuestionsSection,
   AccountSnapshotSection,
   MarketContextSection,
-  StrategicPrioritiesSection,
+  OpportunityRequirementsSection,
   EvidenceItem,
 } from '../domain/models/clientIntelDashboard';
 import { Vendor } from '../domain/models/vendor';
 import { ClientAccount } from '../domain/models/clientAccount';
 import { ServiceOffering } from '../domain/models/serviceOffering';
+import { llmConfig } from '../config/llm';
+import { logger } from '../lib/logger';
+import { loadDashboardSchema } from './schemas';
+import { logPhaseStart } from './phaseLogger';
+
+type ResponseTool = NonNullable<OpenAI.Responses.ResponseCreateParams['tools']>[number];
 
 export interface FitAndStrategyOutput {
   stakeholderMap: StakeholderMapSection;
@@ -20,6 +25,62 @@ export interface FitAndStrategyOutput {
   vendorFitAndPlays: VendorFitAndPlaysSection;
   gapsAndQuestions: GapsAndQuestionsSection;
 }
+
+type FitAndStrategyStructuredOutput = {
+  stakeholderMap: StakeholderMapSection;
+  competitiveLandscape: CompetitiveLandscapeSection;
+  vendorFitAndPlays: VendorFitAndPlaysSection;
+  gapsAndQuestions: GapsAndQuestionsSection;
+};
+
+const schemaParts = {
+  stakeholderMap: loadDashboardSchema('stakeholderMap') as Record<string, unknown>,
+  competitiveLandscape: loadDashboardSchema('competitiveLandscape') as Record<string, unknown>,
+  vendorFitAndPlays: loadDashboardSchema('vendorFitAndPlays') as Record<string, unknown>,
+  gapsAndQuestions: loadDashboardSchema('gapsAndQuestions') as Record<string, unknown>,
+};
+
+const fitAndStrategySchema = {
+  name: 'fit_and_strategy_output',
+  schema: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['stakeholderMap', 'competitiveLandscape', 'vendorFitAndPlays', 'gapsAndQuestions'],
+    properties: schemaParts,
+  },
+};
+
+const ensureOpenAIClient = (): OpenAI => {
+  if (!llmConfig.openaiApiKey) {
+    throw new Error('OPENAI_API_KEY is required for FitAndStrategyAgent');
+  }
+  return new OpenAI({ apiKey: llmConfig.openaiApiKey });
+};
+
+const extractStructuredOutput = (
+  response: OpenAI.Responses.Response,
+): FitAndStrategyStructuredOutput => {
+  const outputItems =
+    (response.output as Array<{ content?: Array<{ type: string; [key: string]: unknown }> }>) ??
+    [];
+
+  const jsonChunk = outputItems
+    .flatMap((entry) => entry.content ?? [])
+    .find((chunk) => chunk.type === 'output_json');
+
+  if (jsonChunk && 'json' in jsonChunk && jsonChunk.json) {
+    return jsonChunk.json as FitAndStrategyStructuredOutput;
+  }
+
+  const fallbackText = Array.isArray(response.output_text)
+    ? response.output_text.join('')
+    : response.output_text;
+  if (fallbackText) {
+    return JSON.parse(fallbackText.trim()) as FitAndStrategyStructuredOutput;
+  }
+
+  throw new Error('FitAndStrategyAgent: no structured output returned');
+};
 
 export class FitAndStrategyAgent {
   async generate(
@@ -30,24 +91,25 @@ export class FitAndStrategyAgent {
     clientResearch: {
       accountSnapshot: AccountSnapshotSection;
       marketContext: MarketContextSection;
-      strategicPriorities: StrategicPrioritiesSection;
+      opportunityRequirements: OpportunityRequirementsSection;
     },
-    vendorEvidence: EvidenceItem[]
+    vendorEvidence: EvidenceItem[],
+    dossierVectorStoreId?: string,
   ): Promise<FitAndStrategyOutput> {
-    // Realizar investigación profunda de competidores
-    console.log(`[FitAndStrategyAgent] Investigando competidores para ${client.name}...`);
-    let competitiveResearch;
-    try {
-      competitiveResearch = await deepResearchService.researchCompetitors(
-        client.name,
-        client.sectorHint || clientResearch.accountSnapshot.industry,
-        service.name
-      );
-      console.log(`[FitAndStrategyAgent] ✓ Investigación de competidores completada`);
-    } catch (error) {
-      console.warn(`[FitAndStrategyAgent] ⚠️  Investigación de competidores falló:`, error);
-      competitiveResearch = null;
-    }
+    const openai = ensureOpenAIClient();
+    const usesWebSearch = llmConfig.featureToggles.webSearch;
+    const allowFileSearch =
+      Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch;
+    logPhaseStart('fitStrategy', {
+      source: 'agent' as const,
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      model: llmConfig.fitStrategyModel,
+      reasoningEffort: llmConfig.fitStrategyReasoningEffort,
+      usesWebSearch,
+      usesFileSearch: allowFileSearch,
+    });
 
     const systemPrompt = `Eres un estratega de ventas B2B experto con acceso a información en tiempo real. 
 Tu objetivo es analizar el encaje entre un vendor (proveedor) y un cliente, y generar:
@@ -63,20 +125,11 @@ IMPORTANTE:
 - Basa tus análisis en información real y específica, no genérica
 - Los plays deben ser accionables, estratégicos y relevantes
 - Las preguntas deben ser inteligentes, contextualizadas y basadas en insights reales
+- Limita stakeholders a máx. 8, competidores/alternativas a 4, plays a 4, gaps a 5 y preguntas a 6.
+- Marca gaps/preguntas críticas: cada gap lleva priorityLevel ("must" | "should" | "nice") y cada pregunta "isCritical" true/false.
 - Responde SIEMPRE en formato JSON válido`;
 
-    const competitiveContext = competitiveResearch
-      ? `
-**INVESTIGACIÓN DE COMPETIDORES DISPONIBLE:**
-${JSON.stringify(competitiveResearch, null, 2)}
-
-Usa esta información como base para el competitive landscape, complementándola con búsqueda web adicional si es necesario.
-`
-      : `
-**NOTA:** Realiza búsqueda web para identificar competidores reales del cliente y del vendor en el sector ${client.sectorHint || clientResearch.accountSnapshot.industry}.
-`;
-
-    const userPrompt = `Analiza el encaje estratégico entre vendor y cliente realizando investigación profunda:
+    const userPrompt = `Analiza el encaje estratégico entre vendor y cliente:
 
 **VENDOR:**
 - Nombre: ${vendor.name}
@@ -99,19 +152,22 @@ Usa esta información como base para el competitive landscape, complementándola
 **CONTEXTO DE OPORTUNIDAD:**
 ${opportunityContext}
 
-**PRIORIDADES ESTRATÉGICAS DEL CLIENTE:**
-${clientResearch.strategicPriorities.priorities.map(p => `- ${p.name}: ${p.description}`).join('\n')}
+**REQUISITOS / PRIORIDADES DEL CLIENTE:**
+${(clientResearch.opportunityRequirements.requirements || [])
+  .map(
+    (req) =>
+      `- (${req.priority.toUpperCase()}) ${req.title}: ${req.description} [Relevancia ${req.relevanceToService}/100]`,
+  )
+  .join('\n') || 'No se han identificado requisitos prioritarios en el reporte.'}
 
 **EVIDENCIAS DEL VENDOR:**
 ${vendorEvidence.map(e => `- ${e.title}: ${e.snippet}`).join('\n')}
 
-${competitiveContext}
-
 **INSTRUCCIONES:**
-1. Si necesitas información adicional sobre competidores, usa búsqueda web
-2. Identifica stakeholders reales basándote en la estructura típica del sector
-3. Genera plays estratégicos específicos y accionables
-4. Las preguntas deben ser inteligentes y basadas en insights reales del sector
+1. Usa web_search para encontrar competidores y stakeholders reales si no tienes información suficiente.
+2. Identifica stakeholders con nombre/rol realista en el mercado del cliente.
+3. Genera plays estratégicos accionables (con target stakeholder y factores de éxito).
+4. Preguntas y gaps deben ser concretos y accionables.
 
 Genera un análisis estratégico completo con la siguiente estructura JSON:
 
@@ -190,7 +246,8 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
         "id": "gap_1",
         "topic": "string (tema del gap)",
         "impact": "high" | "medium" | "low",
-        "description": "string (qué información falta y por qué es importante)"
+        "description": "string (qué información falta y por qué es importante)",
+        "priorityLevel": "must" | "should" | "nice"
       }
     ],
     "questions": [
@@ -198,64 +255,86 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
         "id": "question_1",
         "question": "string (pregunta inteligente y específica)",
         "context": "string (por qué esta pregunta es importante)",
-        "targetStakeholder": "string o null (stakeholder específico si aplica)"
+        "targetStakeholder": "string o null (stakeholder específico si aplica)",
+        "isCritical": true | false
       }
     ],
     "summary": "string"
   }
 }`;
 
+    const tools: OpenAI.Responses.ResponseCreateParams['tools'] = [];
+    if (usesWebSearch) {
+      tools.push({ type: 'web_search' });
+    }
+    if (allowFileSearch && dossierVectorStoreId) {
+      tools.push({ type: 'file_search' } as ResponseTool);
+    }
+
+    const toolResources = allowFileSearch && dossierVectorStoreId
+      ? { file_search: { vector_store_ids: [dossierVectorStoreId] } }
+      : undefined;
+
     try {
-      console.log(`[FitAndStrategyAgent] Generando análisis estratégico con GPT-4o para ${vendor.name} ↔ ${client.name}`);
-      const result = await llmClient.generateJSON<FitAndStrategyOutput>(
-        systemPrompt,
-        userPrompt,
-        {
-          model: 'gpt-4o', // GPT-4o con capacidades nativas maximizadas
-          temperature: 0.3, // Más bajo para análisis estratégico preciso
-          maxTokens: 8000, // Más tokens para análisis profundo
-        }
+      logger.info(
+        { vendorId: vendor.id, clientId: client.id, serviceId: service.id },
+        'FitAndStrategyAgent generating analysis',
       );
 
-      // Enriquecer competitive landscape con investigación profunda si está disponible
-      if (competitiveResearch) {
-        if (competitiveResearch.clientCompetitors && competitiveResearch.clientCompetitors.length > 0) {
-          result.competitiveLandscape.clientCompetitors = competitiveResearch.clientCompetitors.map((comp, idx) => ({
-            id: `comp_client_${idx}`,
-            name: comp.name,
-            type: 'client_competitor' as const,
-            description: comp.description,
-            strengths: comp.strengths || [],
-            weaknesses: comp.weaknesses || [],
-          }));
-        }
+      const requestPayload = {
+        model: llmConfig.fitStrategyModel,
+        reasoning: { effort: llmConfig.fitStrategyReasoningEffort },
+        input: [
+          {
+            role: 'system',
+            content: [{ type: 'input_text', text: systemPrompt }],
+          },
+          {
+            role: 'user',
+            content: [{ type: 'input_text', text: userPrompt }],
+          },
+        ],
+        text: {
+          format: {
+            type: 'json_schema',
+            name: fitAndStrategySchema.name,
+            schema: fitAndStrategySchema.schema,
+          },
+        },
+      } as Record<string, unknown>;
 
-        if (competitiveResearch.vendorCompetitors && competitiveResearch.vendorCompetitors.length > 0) {
-          result.competitiveLandscape.vendorCompetitors = competitiveResearch.vendorCompetitors.map((comp, idx) => ({
-            id: `comp_vendor_${idx}`,
-            name: comp.name,
-            type: 'vendor_competitor' as const,
-            description: comp.description,
-            strengths: comp.differentiators || [],
-            weaknesses: [],
-          }));
-        }
-
-        if (competitiveResearch.alternatives && competitiveResearch.alternatives.length > 0) {
-          result.competitiveLandscape.alternatives = competitiveResearch.alternatives.map((alt, idx) => ({
-            id: `alt_${idx}`,
-            name: alt.name,
-            type: 'alternative_solution' as const,
-            description: alt.description,
-          }));
-        }
+      if (tools.length) {
+        requestPayload.tools = tools;
+      }
+      if (toolResources) {
+        requestPayload.tool_resources = toolResources;
       }
 
-      console.log(`[FitAndStrategyAgent] ✓ Análisis estratégico completado`);
-      return result;
+      const response = (await openai.responses.create(
+        requestPayload as OpenAI.Responses.ResponseCreateParams,
+      )) as OpenAI.Responses.Response;
+
+      const structured = extractStructuredOutput(response);
+      logger.info(
+        { vendorId: vendor.id, clientId: client.id, responseId: response.id },
+        'FitAndStrategyAgent completed analysis',
+      );
+
+      return structured;
     } catch (error) {
-      console.error('[FitAndStrategyAgent] Error:', error);
-      throw new Error(`Failed to generate fit and strategy: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      logger.error(
+        {
+          vendorId: vendor.id,
+          clientId: client.id,
+          error: error instanceof Error ? error.message : error,
+        },
+        'FitAndStrategyAgent failed',
+      );
+      throw new Error(
+        `Failed to generate fit and strategy: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+      );
     }
   }
 }

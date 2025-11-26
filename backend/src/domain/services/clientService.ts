@@ -1,39 +1,52 @@
+import type { ClientAccount as PrismaClientAccount } from '@prisma/client';
+import { prisma } from '../../lib/prisma';
 import { ClientAccount, CreateClientAccountInput } from '../models/clientAccount';
 
-// In-memory storage
-const clients: Map<string, ClientAccount> = new Map();
+const mapClient = (record: PrismaClientAccount): ClientAccount => ({
+  id: record.id,
+  vendorId: record.vendorId,
+  name: record.name,
+  websiteUrl: record.websiteUrl,
+  country: record.country ?? undefined,
+  sectorHint: record.sectorHint ?? undefined,
+  notes: record.notes ?? undefined,
+  createdAt: record.createdAt.toISOString(),
+  updatedAt: record.updatedAt.toISOString(),
+});
 
 export class ClientService {
-  static create(input: CreateClientAccountInput): ClientAccount {
+  static async create(input: CreateClientAccountInput): Promise<ClientAccount> {
     const id = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date().toISOString();
-    
-    const client: ClientAccount = {
-      id,
-      vendorId: input.vendorId,
-      name: input.name,
-      websiteUrl: input.websiteUrl,
-      country: input.country,
-      sectorHint: input.sectorHint,
-      notes: input.notes,
-      createdAt: now,
-      updatedAt: now,
-    };
-    
-    clients.set(id, client);
-    return client;
+    const client = await prisma.clientAccount.create({
+      data: {
+        id,
+        vendorId: input.vendorId,
+        name: input.name,
+        websiteUrl: input.websiteUrl,
+        country: input.country,
+        sectorHint: input.sectorHint,
+        notes: input.notes,
+      },
+    });
+    return mapClient(client);
   }
 
-  static getById(id: string): ClientAccount | null {
-    return clients.get(id) || null;
+  static async getById(id: string): Promise<ClientAccount | null> {
+    const client = await prisma.clientAccount.findUnique({ where: { id } });
+    return client ? mapClient(client) : null;
   }
 
-  static getByVendorId(vendorId: string): ClientAccount[] {
-    return Array.from(clients.values()).filter(c => c.vendorId === vendorId);
+  static async getByVendorId(vendorId: string): Promise<ClientAccount[]> {
+    const clients = await prisma.clientAccount.findMany({
+      where: { vendorId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return clients.map(mapClient);
   }
 
-  static getAll(): ClientAccount[] {
-    return Array.from(clients.values());
+  static async getAll(): Promise<ClientAccount[]> {
+    const clients = await prisma.clientAccount.findMany({ orderBy: { createdAt: 'desc' } });
+    return clients.map(mapClient);
   }
 }
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NewsOfInterestSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items", "summary"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "source", "date", "relevance", "summary"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "source": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string" },
+          "relevance": { "type": "string", "enum": ["high", "medium", "low"] },
+          "summary": { "type": "string" },
+          "impactOnOpportunity": { "type": "string" }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

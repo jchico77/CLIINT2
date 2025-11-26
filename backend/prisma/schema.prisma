@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vendor {
+  id              String             @id @default(cuid())
+  name            String
+  websiteUrl      String
+  description     String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  clients         ClientAccount[]
+  serviceOffering ServiceOffering[]
+  opportunities   Opportunity[]
+  dashboards      Dashboard[]
+}
+
+model ClientAccount {
+  id          String       @id @default(cuid())
+  vendorId    String
+  vendor      Vendor       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  name        String
+  websiteUrl  String
+  country     String?
+  sectorHint  String?
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  opportunities Opportunity[]
+  dashboards  Dashboard[]
+}
+
+model ServiceOffering {
+  id              String       @id @default(cuid())
+  vendorId        String
+  vendor          Vendor       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  name            String
+  shortDescription String
+  categoryTags    String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  opportunities   Opportunity[]
+  dashboards      Dashboard[]
+}
+
+model Opportunity {
+  id               String              @id @default(cuid())
+  vendorId         String
+  clientId         String
+  serviceOfferingId String
+  vendor           Vendor              @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  client           ClientAccount       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  serviceOffering  ServiceOffering     @relation(fields: [serviceOfferingId], references: [id], onDelete: Cascade)
+  name             String
+  estimatedValue   Float?
+  currency         String?
+  deadline         DateTime?
+  ownerUserId      String?
+  notes            String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  dossier          OpportunityDossier?
+  dashboards       Dashboard[]
+  phaseCache       DashboardPhaseCache[]
+}
+
+model OpportunityDossier {
+  opportunityId String  @id
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  vectorStoreId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  textChunks    DossierTextChunk[]
+  files         DossierFile[]
+}
+
+model DossierTextChunk {
+  id             String   @id @default(cuid())
+  opportunityId  String
+  opportunity    OpportunityDossier @relation(fields: [opportunityId], references: [opportunityId], onDelete: Cascade)
+  sourceType     String
+  title          String?
+  content        String
+  createdAt      DateTime @default(now())
+}
+
+model DossierFile {
+  id             String   @id @default(cuid())
+  opportunityId  String
+  opportunity    OpportunityDossier @relation(fields: [opportunityId], references: [opportunityId], onDelete: Cascade)
+  openAiFileId   String
+  createdAt      DateTime @default(now())
+}
+
+model Dashboard {
+  id                String      @id @default(cuid())
+  vendorId          String
+  clientId          String
+  serviceOfferingId String
+  opportunityId     String
+  vendor            Vendor       @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  client            ClientAccount @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  serviceOffering   ServiceOffering @relation(fields: [serviceOfferingId], references: [id], onDelete: Cascade)
+  opportunity       Opportunity   @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  opportunityName   String?
+  opportunityContext String
+  sections          Json
+  proposalOutline   Json?
+  llmModelUsed      String
+  generatedAt       DateTime @default(now())
+  createdAt         DateTime @default(now())
+}
+
+model DashboardPhaseCache {
+  id            String   @id @default(cuid())
+  opportunityId String
+  phase         String
+  payload       Json
+  status        PhaseCacheStatus @default(success)
+  errorMessage  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@unique([opportunityId, phase])
+}
+
+model AdminSettingsSnapshot {
+  id        Int      @id @default(1)
+  settings  Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+enum PhaseCacheStatus {
+  success
+  error
+}
+

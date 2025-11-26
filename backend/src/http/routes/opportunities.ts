@@ -9,11 +9,11 @@ import { OpportunityService } from '../../domain/services/opportunityService';
 const vendorOpportunitiesRouter = Router({ mergeParams: true });
 const opportunityRouter = Router();
 
-const assertVendorParam = (vendorId?: string): string => {
+const assertVendorParam = async (vendorId?: string): Promise<string> => {
   if (!vendorId) {
     throw new ValidationError('vendorId parameter is required');
   }
-  const vendor = VendorService.getById(vendorId);
+  const vendor = await VendorService.getById(vendorId);
   if (!vendor) {
     throw new NotFoundError('Vendor', vendorId);
   }
@@ -22,9 +22,9 @@ const assertVendorParam = (vendorId?: string): string => {
 
 vendorOpportunitiesRouter.post(
   '/',
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const vendorId = assertVendorParam(req.params.vendorId);
+      const vendorId = await assertVendorParam(req.params.vendorId);
       const parsedBody = createOpportunitySchema.safeParse(req.body);
 
       if (!parsedBody.success) {
@@ -35,7 +35,7 @@ vendorOpportunitiesRouter.post(
 
       const body = parsedBody.data;
 
-      const client = ClientService.getById(body.clientId);
+      const client = await ClientService.getById(body.clientId);
       if (!client) {
         throw new NotFoundError('Client', body.clientId);
       }
@@ -46,7 +46,7 @@ vendorOpportunitiesRouter.post(
         });
       }
 
-      const serviceOffering = ServiceOfferingService.getById(
+      const serviceOffering = await ServiceOfferingService.getById(
         body.serviceOfferingId,
       );
       if (!serviceOffering) {
@@ -59,7 +59,7 @@ vendorOpportunitiesRouter.post(
         });
       }
 
-      const opportunity = OpportunityService.createOpportunity({
+      const opportunity = await OpportunityService.createOpportunity({
         vendorId,
         ...body,
       });
@@ -73,11 +73,10 @@ vendorOpportunitiesRouter.post(
 
 vendorOpportunitiesRouter.get(
   '/',
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const vendorId = assertVendorParam(req.params.vendorId);
-      const opportunities =
-        OpportunityService.listOpportunitiesByVendor(vendorId);
+      const vendorId = await assertVendorParam(req.params.vendorId);
+      const opportunities = await OpportunityService.listOpportunitiesByVendor(vendorId);
       return res.json(opportunities);
     } catch (error) {
       return next(error);
@@ -87,14 +86,13 @@ vendorOpportunitiesRouter.get(
 
 opportunityRouter.get(
   '/:opportunityId',
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { opportunityId } = req.params;
       if (!opportunityId) {
         throw new ValidationError('opportunityId parameter is required');
       }
-      const opportunity =
-        OpportunityService.getOpportunityById(opportunityId);
+      const opportunity = await OpportunityService.getOpportunityById(opportunityId);
       if (!opportunity) {
         throw new NotFoundError('Opportunity', opportunityId);
       }

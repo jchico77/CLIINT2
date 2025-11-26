@@ -23,6 +23,20 @@ export function OpportunityRequirementsCard({ data }: OpportunityRequirementsCar
     }
   };
 
+  const getPriorityLevelVariant = (
+    level?: 'must' | 'should' | 'nice',
+  ): "default" | "secondary" | "outline" => {
+    switch (level) {
+      case 'must':
+        return 'destructive';
+      case 'should':
+        return 'default';
+      case 'nice':
+      default:
+        return 'outline';
+    }
+  };
+
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'requirement':
@@ -68,6 +82,14 @@ export function OpportunityRequirementsCard({ data }: OpportunityRequirementsCar
                         <Badge variant={getPriorityVariant(req.priority)} className="text-xs">
                           {req.priority}
                         </Badge>
+                        {req.priorityLevel && (
+                          <Badge
+                            variant={getPriorityLevelVariant(req.priorityLevel)}
+                            className="text-xs uppercase"
+                          >
+                            {req.priorityLevel}
+                          </Badge>
+                        )}
                         <Badge variant="outline" className="text-xs">
                           {getCategoryLabel(req.category)}
                         </Badge>

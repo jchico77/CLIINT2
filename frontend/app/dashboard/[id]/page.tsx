@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getDashboard } from '@/lib/api';
-import type { ClientIntelDashboard } from '@/lib/types';
+import { getDashboard, retryDashboardPhase } from '@/lib/api';
+import type { ClientIntelDashboard, DashboardPhase } from '@/lib/types';
 import { AccountSnapshotCard } from '@/components/dashboard/AccountSnapshotCard';
 import { OpportunitySummaryCard } from '@/components/dashboard/OpportunitySummaryCard';
 import { MarketContextCard } from '@/components/dashboard/MarketContextCard';
@@ -16,10 +16,19 @@ import { EvidenceCard } from '@/components/dashboard/EvidenceCard';
 import { GapsQuestionsCard } from '@/components/dashboard/GapsQuestionsCard';
 import { NewsOfInterestCard } from '@/components/dashboard/NewsOfInterestCard';
 import { CriticalDatesCard } from '@/components/dashboard/CriticalDatesCard';
+import { ProposalOutlineCard } from '@/components/dashboard/ProposalOutlineCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Eye, RefreshCcw, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
   const params = useParams();
@@ -29,6 +38,9 @@ export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<ClientIntelDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailSection, setDetailSection] = useState<{ title: string; data: unknown } | null>(null);
+  const [retryPhase, setRetryPhase] = useState<DashboardPhase | null>(null);
+  const [retryError, setRetryError] = useState<string | null>(null);
 
   useEffect(() => {
     if (dashboardId) {
@@ -38,6 +50,72 @@ export default function DashboardPage() {
         .finally(() => setLoading(false));
     }
   }, [dashboardId]);
+
+  const handleOpenDetail = (title: string, data: unknown) => {
+    setDetailSection({ title, data });
+  };
+
+  const handleRetryPhase = async (phase: DashboardPhase) => {
+    if (!dashboard) return;
+    setRetryPhase(phase);
+    setRetryError(null);
+    try {
+      const response = await retryDashboardPhase({
+        vendorId: dashboard.vendorId,
+        opportunityId: dashboard.opportunityId,
+        phase,
+        opportunityContextOverride: dashboard.opportunityContext,
+      });
+      router.push(`/dashboard/${response.dashboardId}`);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'No se pudo relanzar la fase seleccionada';
+      setRetryError(message);
+    } finally {
+      setRetryPhase(null);
+    }
+  };
+
+  const renderSection = (
+    node: React.ReactNode,
+    options: { title: string; data: unknown; phase?: DashboardPhase },
+  ) => (
+    <div className="space-y-2">
+      {node}
+      <div className="flex justify-end gap-2 text-xs">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1"
+          onClick={() => handleOpenDetail(options.title, options.data)}
+        >
+          <Eye className="h-3 w-3" />
+          Detalle
+        </Button>
+        {options.phase && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1"
+            disabled={retryPhase === options.phase}
+            onClick={() => handleRetryPhase(options.phase!)}
+          >
+            {retryPhase === options.phase ? (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Relanzando...
+              </>
+            ) : (
+              <>
+                <RefreshCcw className="h-3 w-3" />
+                Relanzar fase
+              </>
+            )}
+          </Button>
+        )}
+      </div>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -76,6 +154,11 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin">
+              <Button variant="ghost" size="sm">
+                Admin
+              </Button>
+            </Link>
             <Link href="/opportunities">
               <Button variant="ghost" size="sm">Oportunidades</Button>
             </Link>
@@ -89,65 +172,129 @@ export default function DashboardPage() {
 
       {/* Main Content - Compact Dense Layout */}
       <main className="w-full px-4 py-3 space-y-3">
+        {retryError && (
+          <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <AlertCircle className="h-4 w-4" />
+            <span>{retryError}</span>
+          </div>
+        )}
         {/* Main Dashboard Grid - Dense 4 Columns */}
         <div className="grid gap-3 grid-cols-4">
-          {/* Column 1: Opportunity Summary */}
           <div className="col-span-1">
-            <OpportunitySummaryCard data={dashboard.sections.opportunitySummary} />
+            {renderSection(
+              <OpportunitySummaryCard data={dashboard.sections.opportunitySummary} />,
+              {
+                title: 'Opportunity summary',
+                data: dashboard.sections.opportunitySummary,
+                phase: 'clientResearch',
+              },
+            )}
           </div>
-
-          {/* Column 2: Opportunity Requirements */}
           <div className="col-span-1">
-            <OpportunityRequirementsCard data={dashboard.sections.opportunityRequirements} />
+            {renderSection(
+              <OpportunityRequirementsCard data={dashboard.sections.opportunityRequirements} />,
+              {
+                title: 'Opportunity requirements',
+                data: dashboard.sections.opportunityRequirements,
+                phase: 'clientResearch',
+              },
+            )}
           </div>
-
-          {/* Column 3: Stakeholders */}
           <div className="col-span-1">
-            <StakeholderCard data={dashboard.sections.stakeholderMap} />
+            {renderSection(<StakeholderCard data={dashboard.sections.stakeholderMap} />, {
+              title: 'Stakeholder map',
+              data: dashboard.sections.stakeholderMap,
+              phase: 'fitStrategy',
+            })}
           </div>
-
-          {/* Column 4: Vendor Fit */}
           <div className="col-span-1">
-            <VendorFitCard data={dashboard.sections.vendorFitAndPlays} />
+            {renderSection(<VendorFitCard data={dashboard.sections.vendorFitAndPlays} />, {
+              title: 'Vendor fit & plays',
+              data: dashboard.sections.vendorFitAndPlays,
+              phase: 'fitStrategy',
+            })}
           </div>
         </div>
 
         {/* Second Row - Dense 4 Columns */}
         <div className="grid gap-3 grid-cols-4">
-          {/* Column 1: Competitive Landscape */}
           <div className="col-span-2">
-            <CompetitiveCard data={dashboard.sections.competitiveLandscape} />
+            {renderSection(
+              <CompetitiveCard data={dashboard.sections.competitiveLandscape} />,
+              {
+                title: 'Competitive landscape',
+                data: dashboard.sections.competitiveLandscape,
+                phase: 'fitStrategy',
+              },
+            )}
           </div>
-
-          {/* Column 2: Evidence Pack */}
           <div className="col-span-1">
-            <EvidenceCard data={dashboard.sections.evidencePack} />
+            {renderSection(<EvidenceCard data={dashboard.sections.evidencePack} />, {
+              title: 'Evidence pack',
+              data: dashboard.sections.evidencePack,
+              phase: 'vendorResearch',
+            })}
           </div>
-
-          {/* Column 3: Critical Dates */}
           <div className="col-span-1">
-            <CriticalDatesCard data={dashboard.sections.criticalDates} />
+            {renderSection(<CriticalDatesCard data={dashboard.sections.criticalDates} />, {
+              title: 'Critical dates',
+              data: dashboard.sections.criticalDates,
+            })}
           </div>
         </div>
 
         {/* Third Row - Dense 4 Columns */}
         <div className="grid gap-3 grid-cols-4">
-          {/* Column 1: Gaps & Questions */}
           <div className="col-span-2">
-            <GapsQuestionsCard data={dashboard.sections.gapsAndQuestions} />
+            {renderSection(<GapsQuestionsCard data={dashboard.sections.gapsAndQuestions} />, {
+              title: 'Gaps & intelligent questions',
+              data: dashboard.sections.gapsAndQuestions,
+              phase: 'fitStrategy',
+            })}
           </div>
-
-          {/* Column 2: News of Interest */}
           <div className="col-span-1">
-            <NewsOfInterestCard data={dashboard.sections.newsOfInterest} />
+            {renderSection(<NewsOfInterestCard data={dashboard.sections.newsOfInterest} />, {
+              title: 'News of interest',
+              data: dashboard.sections.newsOfInterest,
+              phase: 'deepResearch',
+            })}
           </div>
-
-          {/* Column 3: Market Context (moved to bottom) */}
           <div className="col-span-1">
-            <MarketContextCard data={dashboard.sections.marketContext} />
+            {renderSection(<MarketContextCard data={dashboard.sections.marketContext} />, {
+              title: 'Market context',
+              data: dashboard.sections.marketContext,
+              phase: 'clientResearch',
+            })}
+          </div>
+        </div>
+
+        {/* Fourth Row - Proposal Outline */}
+        <div className="grid gap-3 grid-cols-4">
+          <div className="col-span-4">
+            {renderSection(
+              <ProposalOutlineCard
+                data={dashboard.sections.proposalOutline ?? dashboard.proposalOutline}
+              />,
+              {
+                title: 'Proposal outline',
+                data: dashboard.sections.proposalOutline ?? dashboard.proposalOutline,
+                phase: 'proposalOutline',
+              },
+            )}
           </div>
         </div>
       </main>
+      <Dialog open={Boolean(detailSection)} onOpenChange={(open) => !open && setDetailSection(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{detailSection?.title}</DialogTitle>
+            <DialogDescription>Vista detallada de la sección seleccionada.</DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-auto rounded-md bg-muted/50 p-4 text-xs font-mono">
+            <pre>{JSON.stringify(detailSection?.data, null, 2)}</pre>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

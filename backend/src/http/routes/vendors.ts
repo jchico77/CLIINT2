@@ -4,15 +4,15 @@ import { CreateVendorInput } from '../../domain/models/vendor';
 
 const router = Router();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const input: CreateVendorInput = req.body;
-    
+
     if (!input.name || !input.websiteUrl) {
       return res.status(400).json({ error: 'Name and websiteUrl are required' });
     }
 
-    const vendor = VendorService.create(input);
+    const vendor = await VendorService.create(input);
     return res.status(201).json(vendor);
   } catch (error) {
     console.error('Error creating vendor:', error);
@@ -20,10 +20,10 @@ router.post('/', (req: Request, res: Response) => {
   }
 });
 
-router.get('/:vendorId', (req: Request, res: Response) => {
+router.get('/:vendorId', async (req: Request, res: Response) => {
   try {
     const { vendorId } = req.params;
-    const vendor = VendorService.getById(vendorId);
+    const vendor = await VendorService.getById(vendorId);
 
     if (!vendor) {
       return res.status(404).json({ error: 'Vendor not found' });

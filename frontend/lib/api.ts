@@ -7,10 +7,15 @@ import {
   CreateClientAccountInput,
   Opportunity,
   CreateOpportunityInput,
+  OpportunityDossier,
+  DossierTextChunk,
+  AppendDossierTextInput,
   ClientIntelDashboard,
   CreateDashboardInput,
   CreateOpportunityDashboardInput,
   CreateDashboardResponse,
+  AdminSettings,
+  DashboardPhase,
 } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -147,6 +152,47 @@ export async function getOpportunities(vendorId: string): Promise<Opportunity[]>
 
 export async function getOpportunity(opportunityId: string): Promise<Opportunity> {
   return fetchAPI<Opportunity>(`/opportunities/${opportunityId}`);
+}
+
+// Dossier
+export async function appendDossierText(
+  opportunityId: string,
+  input: AppendDossierTextInput,
+): Promise<DossierTextChunk> {
+  return fetchAPI<DossierTextChunk>(`/opportunities/${opportunityId}/dossier/text`, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function getOpportunityDossier(
+  opportunityId: string,
+): Promise<OpportunityDossier> {
+  return fetchAPI<OpportunityDossier>(`/opportunities/${opportunityId}/dossier`);
+}
+
+export async function uploadDossierFile(
+  opportunityId: string,
+  file: File,
+): Promise<{ fileId: string; originalName: string; size: number; mimetype: string }> {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(
+    `${API_BASE_URL}/opportunities/${opportunityId}/dossier/files`,
+    {
+      method: 'POST',
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '');
+    throw new Error(errorText || 'Error subiendo el archivo');
+  }
+
+  return response.json();
 }
 
 export async function createOpportunityDashboard(
@@ -351,11 +397,19 @@ export async function getDashboard(dashboardId: string): Promise<ClientIntelDash
   return fetchAPI<ClientIntelDashboard>(`/dashboard/${dashboardId}`);
 }
 
+export async function getLatestDashboardForOpportunity(
+  opportunityId: string,
+): Promise<ClientIntelDashboard> {
+  return fetchAPI<ClientIntelDashboard>(`/opportunities/${opportunityId}/dashboard/latest`);
+}
+
 export interface DashboardSummary {
   id: string;
   vendorId: string;
   clientId: string;
   serviceOfferingId: string;
+  opportunityId: string;
+  opportunityName?: string;
   clientName: string;
   industry: string;
   opportunityBrief: string;
@@ -369,5 +423,60 @@ export async function getAllDashboards(vendorId?: string): Promise<DashboardSumm
   const url = vendorId ? `/dashboards?vendorId=${vendorId}` : '/dashboards';
   const response = await fetchAPI<{ dashboards: DashboardSummary[] }>(url);
   return response.dashboards;
+}
+
+export async function retryDashboardPhase(
+  params: {
+    vendorId: string;
+    opportunityId: string;
+    phase: DashboardPhase;
+    opportunityContextOverride?: string | null;
+    uploadedDocIds?: string[];
+  },
+): Promise<CreateDashboardResponse> {
+  const { vendorId, opportunityId, phase, opportunityContextOverride, uploadedDocIds } = params;
+  return fetchAPI<CreateDashboardResponse>(
+    `/vendors/${vendorId}/opportunities/${opportunityId}/phases/${phase}/retry`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        opportunityContextOverride,
+        uploadedDocIds,
+      }),
+    },
+  );
+}
+
+function buildAdminHeaders(adminToken?: string): HeadersInit | undefined {
+  if (!adminToken) {
+    return undefined;
+  }
+  return {
+    'x-admin-token': adminToken,
+  };
+}
+
+export async function getAdminSettings(adminToken?: string): Promise<AdminSettings> {
+  return fetchAPI<AdminSettings>('/admin/settings', {
+    headers: buildAdminHeaders(adminToken),
+  });
+}
+
+export async function updateAdminSettings(
+  payload: AdminSettings,
+  adminToken?: string,
+): Promise<AdminSettings> {
+  return fetchAPI<AdminSettings>('/admin/settings', {
+    method: 'PUT',
+    headers: buildAdminHeaders(adminToken),
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function resetAdminSettings(adminToken?: string): Promise<AdminSettings> {
+  return fetchAPI<AdminSettings>('/admin/settings/reset', {
+    method: 'POST',
+    headers: buildAdminHeaders(adminToken),
+  });
 }
 

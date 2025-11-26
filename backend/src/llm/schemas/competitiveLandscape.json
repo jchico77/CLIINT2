@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CompetitiveLandscapeSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["clientCompetitors", "vendorCompetitors", "alternatives", "summary"],
+  "properties": {
+    "clientCompetitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "type", "description", "strengths", "weaknesses"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["client_competitor"]
+          },
+          "description": { "type": "string" },
+          "strengths": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "weaknesses": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "vendorCompetitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "type", "description", "strengths", "weaknesses"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["vendor_competitor"]
+          },
+          "description": { "type": "string" },
+          "strengths": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "weaknesses": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "type", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["alternative_solution"]
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

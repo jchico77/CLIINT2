@@ -4,15 +4,15 @@ import { CreateClientAccountInput } from '../../domain/models/clientAccount';
 
 const router = Router();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const input: CreateClientAccountInput = req.body;
-    
+
     if (!input.vendorId || !input.name || !input.websiteUrl) {
       return res.status(400).json({ error: 'vendorId, name, and websiteUrl are required' });
     }
 
-    const client = ClientService.create(input);
+    const client = await ClientService.create(input);
     return res.status(201).json(client);
   } catch (error) {
     console.error('Error creating client:', error);
@@ -20,16 +20,16 @@ router.post('/', (req: Request, res: Response) => {
   }
 });
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const vendorId = req.params.vendorId || req.query.vendorId;
-    
+
     if (vendorId && typeof vendorId === 'string') {
-      const clients = ClientService.getByVendorId(vendorId);
+      const clients = await ClientService.getByVendorId(vendorId);
       return res.json(clients);
     }
 
-    const clients = ClientService.getAll();
+    const clients = await ClientService.getAll();
     return res.json(clients);
   } catch (error) {
     console.error('Error getting clients:', error);
@@ -37,10 +37,10 @@ router.get('/', (req: Request, res: Response) => {
   }
 });
 
-router.get('/:clientId', (req: Request, res: Response) => {
+router.get('/:clientId', async (req: Request, res: Response) => {
   try {
     const { clientId } = req.params;
-    const client = ClientService.getById(clientId);
+    const client = await ClientService.getById(clientId);
 
     if (!client) {
       return res.status(404).json({ error: 'Client not found' });

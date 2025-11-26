@@ -4,15 +4,15 @@ import { CreateServiceOfferingInput } from '../../domain/models/serviceOffering'
 
 const router = Router();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const input: CreateServiceOfferingInput = req.body;
-    
+
     if (!input.vendorId || !input.name || !input.shortDescription) {
       return res.status(400).json({ error: 'vendorId, name, and shortDescription are required' });
     }
 
-    const service = ServiceOfferingService.create(input);
+    const service = await ServiceOfferingService.create(input);
     return res.status(201).json(service);
   } catch (error) {
     console.error('Error creating service:', error);
@@ -20,16 +20,16 @@ router.post('/', (req: Request, res: Response) => {
   }
 });
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const vendorId = req.params.vendorId || req.query.vendorId;
-    
+
     if (vendorId && typeof vendorId === 'string') {
-      const services = ServiceOfferingService.getByVendorId(vendorId);
+      const services = await ServiceOfferingService.getByVendorId(vendorId);
       return res.json(services);
     }
 
-    const services = ServiceOfferingService.getAll();
+    const services = await ServiceOfferingService.getAll();
     return res.json(services);
   } catch (error) {
     console.error('Error getting services:', error);
@@ -37,10 +37,10 @@ router.get('/', (req: Request, res: Response) => {
   }
 });
 
-router.get('/:serviceId', (req: Request, res: Response) => {
+router.get('/:serviceId', async (req: Request, res: Response) => {
   try {
     const { serviceId } = req.params;
-    const service = ServiceOfferingService.getById(serviceId);
+    const service = await ServiceOfferingService.getById(serviceId);
 
     if (!service) {
       return res.status(404).json({ error: 'Service not found' });

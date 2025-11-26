@@ -17,6 +17,7 @@ export interface OpportunityDossier {
   opportunityId: string;
   textChunks: DossierTextChunk[];
   openAiFileIds: string[];
+  vectorStoreId?: string;
   createdAt: string;
   updatedAt: string;
 }

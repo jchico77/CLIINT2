@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MarketContextSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["industryTrends", "recentEvents", "marketSize", "growthRate"],
+  "properties": {
+    "industryTrends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trend", "impact", "description"],
+        "properties": {
+          "trend": { "type": "string" },
+          "impact": { "type": "string", "enum": ["high", "medium", "low"] },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "recentEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "event", "significance"],
+        "properties": {
+          "date": { "type": "string" },
+          "event": { "type": "string" },
+          "significance": { "type": "string" }
+        }
+      }
+    },
+    "marketSize": { "type": "string" },
+    "growthRate": { "type": "string" }
+  }
+}
+

@@ -8,7 +8,11 @@ import servicesRouter from './routes/services';
 import { dashboardCreateRouter, dashboardGetRouter } from './routes/dashboard';
 import { cacheRouter } from './routes/cache';
 import { vendorOpportunitiesRouter, opportunityRouter } from './routes/opportunities';
+import { opportunityDossierRouter } from './routes/opportunityDossier';
+import { adminSettingsRouter } from './routes/adminSettings';
 import { logger } from '../lib/logger';
+import { AdminSettingsService } from '../domain/services/adminSettingsService';
+import { applyAdminSettings } from '../config/llm';
 
 const app = express();
 
@@ -33,8 +37,11 @@ app.use('/api', dashboardGetRouter); // GET /api/dashboard/:dashboardId
 // Opportunities routes
 app.use('/api/vendors/:vendorId/opportunities', vendorOpportunitiesRouter);
 app.use('/api/opportunities', opportunityRouter);
+app.use('/api/opportunities', opportunityDossierRouter);
 // Cache routes
 app.use('/api/cache', cacheRouter); // GET /api/cache/stats, DELETE /api/cache
+// Admin settings routes
+app.use('/api/admin', adminSettingsRouter);
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -59,8 +66,19 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 
 const PORT = parseInt(env.PORT, 10);
 
-app.listen(PORT, () => {
-  logger.info({ port: PORT }, 'Server running');
-  logger.info({ url: `http://localhost:${PORT}/api/health` }, 'Health check available');
-});
+const bootstrap = async () => {
+  try {
+    const settings = await AdminSettingsService.loadSettings();
+    applyAdminSettings(settings);
+    app.listen(PORT, () => {
+      logger.info({ port: PORT }, 'Server running');
+      logger.info({ url: `http://localhost:${PORT}/api/health` }, 'Health check available');
+    });
+  } catch (error) {
+    logger.error({ error }, 'Failed to bootstrap server');
+    process.exit(1);
+  }
+};
+
+void bootstrap();
 

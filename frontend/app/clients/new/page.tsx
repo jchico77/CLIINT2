@@ -301,6 +301,9 @@ export default function NewClientAnalysisPage() {
             <h1 className="text-xl font-semibold">Nueva Oportunidad</h1>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin">
+              <Button variant="ghost" size="sm">Admin</Button>
+            </Link>
             <Link href="/opportunities">
               <Button variant="ghost" size="sm">Oportunidades</Button>
             </Link>

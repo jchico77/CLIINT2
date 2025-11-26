@@ -33,6 +33,20 @@ export function GapsQuestionsCard({ data }: GapsQuestionsCardProps) {
     }
   };
 
+  const getPriorityLevelVariant = (
+    level?: 'must' | 'should' | 'nice',
+  ): "default" | "secondary" | "outline" => {
+    switch (level) {
+      case 'must':
+        return 'destructive';
+      case 'should':
+        return 'default';
+      case 'nice':
+      default:
+        return 'outline';
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -69,6 +83,7 @@ export function GapsQuestionsCard({ data }: GapsQuestionsCardProps) {
                     <TableRow>
                       <TableHead>Tema</TableHead>
                       <TableHead>Impacto</TableHead>
+                      <TableHead>Prioridad</TableHead>
                       <TableHead>Descripción</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -80,6 +95,18 @@ export function GapsQuestionsCard({ data }: GapsQuestionsCardProps) {
                           <Badge variant={getImpactVariant(gap.impact)}>
                             {gap.impact}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {gap.priorityLevel ? (
+                            <Badge
+                              variant={getPriorityLevelVariant(gap.priorityLevel)}
+                              className="uppercase"
+                            >
+                              {gap.priorityLevel}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">-</span>
+                          )}
                         </TableCell>
                         <TableCell className="text-muted-foreground">{gap.description}</TableCell>
                       </TableRow>
@@ -93,7 +120,14 @@ export function GapsQuestionsCard({ data }: GapsQuestionsCardProps) {
               {data.questions.map((question) => (
                 <div key={question.id} className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-start justify-between">
-                    <p className="font-medium flex-1">{question.question}</p>
+                    <div className="flex flex-col flex-1 gap-1">
+                      <p className="font-medium">{question.question}</p>
+                      {question.isCritical && (
+                        <Badge variant="destructive" className="w-fit text-[10px] uppercase">
+                          Crítica
+                        </Badge>
+                      )}
+                    </div>
                     <Button
                       size="sm"
                       variant="outline"

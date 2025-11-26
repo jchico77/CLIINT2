@@ -14,6 +14,7 @@ import {
   GapsAndQuestionsSection,
   NewsOfInterestSection,
   CriticalDatesSection,
+  GapImpact,
 } from '../models/clientIntelDashboard';
 import { VendorService } from './vendorService';
 import { ClientService } from './clientService';
@@ -21,6 +22,7 @@ import { ServiceOfferingService } from './serviceOfferingService';
 import { ClientResearchAgent } from '../../llm/clientResearchAgent';
 import { VendorResearchAgent } from '../../llm/vendorResearchAgent';
 import { FitAndStrategyAgent } from '../../llm/fitAndStrategyAgent';
+import { ProposalOutlineAgent } from '../../llm/proposalOutlineAgent';
 import { deepResearchService } from '../../llm/deepResearchService';
 import { llmConfig } from '../../config/llm';
 import { ProgressCallback } from '../types/progress';
@@ -28,17 +30,71 @@ import { NotFoundError, ValidationError } from '../errors/AppError';
 import { LLMCache } from './llmCache';
 import { OpportunityService } from './opportunityService';
 import { Opportunity } from '../models/opportunity';
+import { ClientDeepResearchReport } from '../models/clientDeepResearchReport';
 import { logger } from '../../lib/logger';
+import { OpportunityDossierService } from './opportunityDossierService';
+import { getCacheMode, loadPhase, savePhase } from '../../utils/dashboardCache';
+import { logPhaseCacheStatus, logPhaseStart } from '../../llm/phaseLogger';
+import type { DashboardPhase } from '../../llm/phaseLogger';
+import { DashboardPhaseCacheService } from './dashboardPhaseCacheService';
+import { prisma } from '../../lib/prisma';
+import type { Dashboard as PrismaDashboard } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-// In-memory storage
-const dashboards: Map<string, ClientIntelDashboard> = new Map();
+const limitArray = <T>(items: T[] | undefined, max: number): T[] => {
+  if (!items || items.length === 0) {
+    return [];
+  }
+  return items.length > max ? items.slice(0, max) : items;
+};
+
+const priorityToLevel = (
+  priority?: 'high' | 'medium' | 'low',
+): 'must' | 'should' | 'nice' => {
+  switch (priority) {
+    case 'high':
+      return 'must';
+    case 'medium':
+      return 'should';
+    default:
+      return 'nice';
+  }
+};
+
+const gapImpactToLevel = (impact: GapImpact): 'must' | 'should' | 'nice' => {
+  switch (impact) {
+    case 'high':
+      return 'must';
+    case 'medium':
+      return 'should';
+    default:
+      return 'nice';
+  }
+};
+
+const mapDashboardRecord = (record: PrismaDashboard): ClientIntelDashboard => ({
+  id: record.id,
+  vendorId: record.vendorId,
+  clientId: record.clientId,
+  serviceOfferingId: record.serviceOfferingId,
+  opportunityId: record.opportunityId,
+  opportunityName: record.opportunityName ?? undefined,
+  opportunityContext: record.opportunityContext,
+  generatedAt: record.generatedAt.toISOString(),
+  llmModelUsed: record.llmModelUsed,
+  sections: record.sections as unknown as ClientIntelDashboardSections,
+  proposalOutline:
+    record.proposalOutline != null
+      ? (record.proposalOutline as unknown as ClientIntelDashboard['proposalOutline'])
+      : undefined,
+});
 
 export class DashboardService {
   static async generateDashboardForOpportunity(
     input: CreateOpportunityDashboardInput,
     onProgress?: ProgressCallback
   ): Promise<ClientIntelDashboard> {
-    const opportunity = OpportunityService.getOpportunityById(input.opportunityId);
+    const opportunity = await OpportunityService.getOpportunityById(input.opportunityId);
 
     if (!opportunity) {
       throw new NotFoundError('Opportunity', input.opportunityId);
@@ -51,12 +107,12 @@ export class DashboardService {
       });
     }
 
-    const client = ClientService.getById(opportunity.clientId);
+    const client = await ClientService.getById(opportunity.clientId);
     if (!client) {
       throw new NotFoundError('Client', opportunity.clientId);
     }
 
-    const service = ServiceOfferingService.getById(opportunity.serviceOfferingId);
+    const service = await ServiceOfferingService.getById(opportunity.serviceOfferingId);
     if (!service) {
       throw new NotFoundError('Service', opportunity.serviceOfferingId);
     }
@@ -85,9 +141,9 @@ export class DashboardService {
     onProgress?: ProgressCallback,
     opportunity?: Opportunity
   ): Promise<ClientIntelDashboard> {
-    const vendor = VendorService.getById(input.vendorId);
-    const client = ClientService.getById(input.clientId);
-    const service = ServiceOfferingService.getById(input.serviceOfferingId);
+    const vendor = await VendorService.getById(input.vendorId);
+    const client = await ClientService.getById(input.clientId);
+    const service = await ServiceOfferingService.getById(input.serviceOfferingId);
 
     if (!vendor) {
       throw new NotFoundError('Vendor', input.vendorId);
@@ -100,7 +156,15 @@ export class DashboardService {
     }
 
     const id = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date().toISOString();
+    const generatedAtDate = new Date();
+    const now = generatedAtDate.toISOString();
+
+    const dossierSummary = opportunity
+      ? await OpportunityDossierService.summarizeTextChunks(opportunity.id)
+      : null;
+    const dossierVectorStoreId = opportunity
+      ? await OpportunityDossierService.getVectorStoreId(opportunity.id)
+      : undefined;
 
     let sections: ClientIntelDashboardSections;
     let llmModelUsed = 'fake-data-generator';
@@ -144,7 +208,10 @@ export class DashboardService {
             client,
             service,
             input.opportunityContext,
-            onProgress
+            onProgress,
+            dossierSummary,
+            dossierVectorStoreId,
+            input.opportunityId
           );
           llmModelUsed = llmConfig.defaultModel;
           
@@ -210,44 +277,32 @@ export class DashboardService {
       serviceOfferingId: input.serviceOfferingId,
       opportunityId: input.opportunityId,
       opportunityName: opportunity?.name,
-      opportunityStage: opportunity?.stage,
       opportunityContext: input.opportunityContext,
       generatedAt: now,
       llmModelUsed,
       sections,
+      proposalOutline: sections.proposalOutline,
     };
 
-    dashboards.set(id, dashboard);
-    return dashboard;
-  }
+    await prisma.dashboard.create({
+      data: {
+        id,
+        vendorId: input.vendorId,
+        clientId: input.clientId,
+        serviceOfferingId: input.serviceOfferingId,
+        opportunityId: input.opportunityId,
+        opportunityName: opportunity?.name ?? null,
+        opportunityContext: input.opportunityContext,
+        sections: sections as unknown as Prisma.InputJsonValue,
+        proposalOutline:
+          sections.proposalOutline !== undefined
+            ? (sections.proposalOutline as unknown as Prisma.InputJsonValue)
+            : undefined,
+        llmModelUsed,
+        generatedAt: generatedAtDate,
+      },
+    });
 
-  static generateFakeDashboard(input: CreateDashboardInput): ClientIntelDashboard {
-    const vendor = VendorService.getById(input.vendorId);
-    const client = ClientService.getById(input.clientId);
-    const service = ServiceOfferingService.getById(input.serviceOfferingId);
-
-    if (!vendor || !client || !service) {
-      throw new Error('Vendor, client, or service not found');
-    }
-
-    const id = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date().toISOString();
-
-    const sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
-
-    const dashboard: ClientIntelDashboard = {
-      id,
-      vendorId: input.vendorId,
-      clientId: input.clientId,
-      serviceOfferingId: input.serviceOfferingId,
-      opportunityId: input.opportunityId,
-      opportunityContext: input.opportunityContext,
-      generatedAt: now,
-      llmModelUsed: 'fake-data-generator',
-      sections,
-    };
-
-    dashboards.set(id, dashboard);
     return dashboard;
   }
 
@@ -256,16 +311,120 @@ export class DashboardService {
     client: { id: string; vendorId: string; name: string; websiteUrl: string; sectorHint?: string; country?: string; notes?: string; createdAt: string; updatedAt: string },
     service: { id: string; vendorId: string; name: string; shortDescription: string; categoryTags: string[]; createdAt: string; updatedAt: string },
     opportunityContext: string,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
+    dossierSummary?: string | null,
+    dossierVectorStoreId?: string,
+    opportunityId?: string,
   ): Promise<ClientIntelDashboardSections> {
     const clientResearchAgent = new ClientResearchAgent();
     const vendorResearchAgent = new VendorResearchAgent();
     const fitAndStrategyAgent = new FitAndStrategyAgent();
+    const proposalOutlineAgent = new ProposalOutlineAgent();
+    const cacheMode = getCacheMode();
+
+    const loadPersistedPhase = async <T>(phase: DashboardPhase) => {
+      let source: 'db' | 'fs' | undefined;
+      let value: T | null = null;
+
+      if (opportunityId) {
+        const dbValue = await DashboardPhaseCacheService.getPhase<T>(opportunityId, phase);
+        if (dbValue) {
+          source = 'db';
+          value = dbValue;
+          return { value, source };
+        }
+      }
+
+      const fileValue = loadPhase<T>(opportunityId, phase);
+      if (fileValue) {
+        source = 'fs';
+        value = fileValue;
+      }
+      return { value, source };
+    };
+
+    const persistPhaseResult = async (phase: DashboardPhase, payload: unknown) => {
+      if (opportunityId) {
+        await DashboardPhaseCacheService.savePhase(opportunityId, phase, payload);
+      }
+      savePhase(opportunityId, phase, payload);
+    };
+
+    const markPhaseFailure = async (phase: DashboardPhase, message: string) => {
+      if (opportunityId) {
+        await DashboardPhaseCacheService.markError(opportunityId, phase, message);
+      }
+    };
 
     // Step 1: Deep Research
-    onProgress?.({ stepId: 'deep-research', status: 'in-progress', message: `Investigando ${client.name}...`, progress: 10 });
-    logger.info({ clientId: client.id }, 'Dashboard generation step 1: Deep research');
-    
+    onProgress?.({
+      stepId: 'deep-research',
+      status: 'in-progress',
+      message: `Investigando ${client.name}...`,
+      progress: 10,
+    });
+    logger.info(
+      { clientId: client.id, serviceOfferingId: service.id },
+      'Dashboard generation step 1: Deep research',
+    );
+
+    const deepResearchModel = llmConfig.deepResearchModel;
+    const deepResearchReasoning = llmConfig.deepResearchReasoningEffort;
+    const deepPersisted = await loadPersistedPhase<ClientDeepResearchReport>('deepResearch');
+    let deepResearchReport = deepPersisted.value;
+    if (deepResearchReport) {
+      logPhaseCacheStatus('deepResearch', {
+        source: 'dashboardService',
+        vendorId: vendor.id,
+        clientId: client.id,
+        serviceId: service.id,
+        opportunityId,
+        cacheMode,
+        cacheHit: true,
+        cacheSource: deepPersisted.source,
+      });
+      onProgress?.({
+        stepId: 'deep-research',
+        status: 'completed',
+        message: 'Investigación profunda reutilizada desde cache',
+        progress: 25,
+      });
+    } else {
+      logPhaseStart('deepResearch', {
+        source: 'dashboardService',
+        vendorId: vendor.id,
+        clientId: client.id,
+        serviceId: service.id,
+        opportunityId,
+        cacheMode,
+        cacheHit: false,
+        model: deepResearchModel,
+        reasoningEffort: deepResearchReasoning,
+      });
+      try {
+        deepResearchReport = await deepResearchService.getClientReport(client, service);
+        await persistPhaseResult('deepResearch', deepResearchReport);
+        onProgress?.({
+          stepId: 'deep-research',
+          status: 'completed',
+          message: 'Investigación profunda completada',
+          progress: 25,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        await markPhaseFailure('deepResearch', message);
+        logger.error(
+          {
+            clientId: client.id,
+            serviceOfferingId: service.id,
+            error: message,
+          },
+          'Deep research step failed',
+        );
+        throw error;
+      }
+    }
+
     // Step 2: Run client and vendor research in parallel
     onProgress?.({ stepId: 'client-analysis', status: 'in-progress', message: 'Analizando cliente con GPT-4o...', progress: 20 });
     onProgress?.({ stepId: 'vendor-research', status: 'in-progress', message: 'Extrayendo evidencias del vendor...', progress: 30 });
@@ -274,10 +433,132 @@ export class DashboardService {
       'Dashboard generation step 2: Client & Vendor research'
     );
     
-    const [clientResearch, vendorResearch] = await Promise.all([
-      clientResearchAgent.research(client, opportunityContext),
-      vendorResearchAgent.research(vendor, service),
-    ]);
+    const clientPersisted =
+      await loadPersistedPhase<Awaited<ReturnType<typeof clientResearchAgent.research>>>(
+        'clientResearch',
+      );
+    let clientResearch = clientPersisted.value;
+    const vendorPersisted =
+      await loadPersistedPhase<Awaited<ReturnType<typeof vendorResearchAgent.research>>>(
+        'vendorResearch',
+      );
+    let vendorResearch = vendorPersisted.value;
+
+    const clientPhaseContext = {
+      source: 'dashboardService' as const,
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      opportunityId,
+      cacheMode,
+      model: llmConfig.clientResearchModel,
+      reasoningEffort: llmConfig.clientResearchReasoningEffort,
+    };
+    const vendorPhaseContext = {
+      source: 'dashboardService' as const,
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      opportunityId,
+      cacheMode,
+      model: llmConfig.vendorResearchModel,
+      reasoningEffort: llmConfig.vendorResearchReasoningEffort,
+    };
+
+    if (clientResearch) {
+      logPhaseCacheStatus('clientResearch', {
+        ...clientPhaseContext,
+        cacheHit: true,
+        cacheSource: clientPersisted.source,
+      });
+    }
+
+    if (vendorResearch) {
+      logPhaseCacheStatus('vendorResearch', {
+        ...vendorPhaseContext,
+        cacheHit: true,
+        cacheSource: vendorPersisted.source,
+      });
+    }
+
+    const pending: Promise<void>[] = [];
+    if (!clientResearch) {
+      pending.push(
+        (async () => {
+          logPhaseStart('clientResearch', { ...clientPhaseContext, cacheHit: false });
+          try {
+            const result = await clientResearchAgent.research(
+              client,
+              service,
+              opportunityContext,
+              deepResearchReport,
+              dossierSummary ?? null,
+              dossierVectorStoreId,
+            );
+            clientResearch = result;
+            await persistPhaseResult('clientResearch', result);
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            await markPhaseFailure('clientResearch', message);
+            throw error;
+          }
+        })(),
+      );
+    }
+
+    if (!vendorResearch) {
+      pending.push(
+        (async () => {
+          logPhaseStart('vendorResearch', { ...vendorPhaseContext, cacheHit: false });
+          try {
+            const result = await vendorResearchAgent.research(vendor, service);
+            vendorResearch = result;
+            await persistPhaseResult('vendorResearch', result);
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            await markPhaseFailure('vendorResearch', message);
+            throw error;
+          }
+        })(),
+      );
+    }
+
+    if (pending.length > 0) {
+      await Promise.all(pending);
+    }
+
+    if (!clientResearch || !vendorResearch) {
+      throw new Error('Failed to obtain client or vendor research');
+    }
+
+    const clientResearchResult = clientResearch!;
+    const vendorResearchResult = vendorResearch!;
+
+    clientResearchResult.opportunityRequirements.requirements = limitArray(
+      clientResearchResult.opportunityRequirements.requirements,
+      4,
+    ).map((req) => ({
+      ...req,
+      priorityLevel: req.priorityLevel ?? priorityToLevel(req.priority),
+    }));
+    clientResearchResult.opportunityRequirements.whatClientSeeks = limitArray(
+      clientResearchResult.opportunityRequirements.whatClientSeeks,
+      3,
+    );
+    clientResearchResult.opportunityRequirements.scope = limitArray(
+      clientResearchResult.opportunityRequirements.scope,
+      3,
+    );
+    clientResearchResult.opportunityRequirements.exclusions = limitArray(
+      clientResearchResult.opportunityRequirements.exclusions,
+      3,
+    );
+    clientResearchResult.opportunityRequirements.selectionCriteria = limitArray(
+      clientResearchResult.opportunityRequirements.selectionCriteria,
+      4,
+    );
+
+    vendorResearchResult.evidence = limitArray(vendorResearchResult.evidence, 6);
 
     onProgress?.({ stepId: 'client-analysis', status: 'completed', message: 'Análisis del cliente completado', progress: 40 });
     onProgress?.({ stepId: 'vendor-research', status: 'completed', message: 'Evidencias extraídas', progress: 50 });
@@ -290,14 +571,126 @@ export class DashboardService {
     onProgress?.({ stepId: 'fit-strategy', status: 'in-progress', message: 'Generando stakeholder map, vendor fit y plays estratégicos...', progress: 60 });
     logger.info({ clientId: client.id }, 'Dashboard generation step 4: Fit & Strategy analysis');
     
-    const fitAndStrategy = await fitAndStrategyAgent.generate(
-      vendor,
-      client,
-      service,
-      opportunityContext,
-      clientResearch,
-      vendorResearch.evidence
+    const fitPhaseContext = {
+      source: 'dashboardService' as const,
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      opportunityId,
+      cacheMode,
+      model: llmConfig.fitStrategyModel,
+      reasoningEffort: llmConfig.fitStrategyReasoningEffort,
+    };
+    const fitPersisted =
+      await loadPersistedPhase<Awaited<ReturnType<typeof fitAndStrategyAgent.generate>>>(
+        'fitStrategy',
+      );
+    let fitAndStrategy = fitPersisted.value;
+    if (fitAndStrategy) {
+      logPhaseCacheStatus('fitStrategy', {
+        ...fitPhaseContext,
+        cacheHit: true,
+        cacheSource: fitPersisted.source,
+      });
+    } else {
+      logPhaseStart('fitStrategy', { ...fitPhaseContext, cacheHit: false });
+      try {
+        fitAndStrategy = await fitAndStrategyAgent.generate(
+          vendor,
+          client,
+          service,
+          opportunityContext,
+          clientResearchResult,
+          vendorResearchResult.evidence,
+          dossierVectorStoreId,
+        );
+        await persistPhaseResult('fitStrategy', fitAndStrategy);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        await markPhaseFailure('fitStrategy', message);
+        throw error;
+      }
+    }
+
+    fitAndStrategy.stakeholderMap.stakeholders = limitArray(
+      fitAndStrategy.stakeholderMap.stakeholders,
+      2,
     );
+    fitAndStrategy.competitiveLandscape.clientCompetitors = limitArray(
+      fitAndStrategy.competitiveLandscape.clientCompetitors,
+      2,
+    );
+    fitAndStrategy.competitiveLandscape.vendorCompetitors = limitArray(
+      fitAndStrategy.competitiveLandscape.vendorCompetitors,
+      2,
+    );
+    fitAndStrategy.competitiveLandscape.alternatives = limitArray(
+      fitAndStrategy.competitiveLandscape.alternatives,
+      2,
+    );
+    fitAndStrategy.vendorFitAndPlays.fitDimensions = limitArray(
+      fitAndStrategy.vendorFitAndPlays.fitDimensions,
+      2,
+    );
+    fitAndStrategy.vendorFitAndPlays.recommendedPlays = limitArray(
+      fitAndStrategy.vendorFitAndPlays.recommendedPlays,
+      2,
+    );
+    fitAndStrategy.gapsAndQuestions.gaps = limitArray(
+      fitAndStrategy.gapsAndQuestions.gaps,
+      2,
+    ).map((gap) => ({
+      ...gap,
+      priorityLevel: gap.priorityLevel ?? gapImpactToLevel(gap.impact),
+    }));
+    fitAndStrategy.gapsAndQuestions.questions = limitArray(
+      fitAndStrategy.gapsAndQuestions.questions,
+      2,
+    ).map((question) => ({
+      ...question,
+      isCritical: question.isCritical ?? false,
+    }));
+
+    const proposalPhaseContext = {
+      source: 'dashboardService' as const,
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      opportunityId,
+      cacheMode,
+      model: llmConfig.proposalOutlineModel,
+      reasoningEffort: llmConfig.proposalOutlineReasoningEffort,
+    };
+    const proposalPersisted =
+      await loadPersistedPhase<Awaited<ReturnType<typeof proposalOutlineAgent.generate>>>(
+        'proposalOutline',
+      );
+    let proposalOutline = proposalPersisted.value;
+    if (proposalOutline) {
+      logPhaseCacheStatus('proposalOutline', {
+        ...proposalPhaseContext,
+        cacheHit: true,
+        cacheSource: proposalPersisted.source,
+      });
+    } else {
+      logPhaseStart('proposalOutline', { ...proposalPhaseContext, cacheHit: false });
+      try {
+        proposalOutline = await proposalOutlineAgent.generate({
+          client,
+          service,
+          opportunityContext,
+          opportunityRequirements: clientResearchResult.opportunityRequirements,
+          vendorEvidence: vendorResearchResult.evidence,
+          dossierSummary: dossierSummary ?? null,
+          dossierVectorStoreId,
+        });
+        await persistPhaseResult('proposalOutline', proposalOutline);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        await markPhaseFailure('proposalOutline', message);
+        throw error;
+      }
+    }
 
     onProgress?.({ stepId: 'competitive', status: 'completed', message: 'Análisis competitivo completado', progress: 80 });
     onProgress?.({ stepId: 'fit-strategy', status: 'completed', message: 'Fit y estrategia generados', progress: 85 });
@@ -308,7 +701,11 @@ export class DashboardService {
     
     let newsResearch;
     try {
-      newsResearch = await deepResearchService.researchNews(client.name, client.sectorHint || clientResearch.accountSnapshot.industry, '6months');
+      newsResearch = await deepResearchService.researchNews(
+        client.name,
+        client.sectorHint || clientResearchResult.accountSnapshot.industry,
+        '6months',
+      );
       logger.info({ clientId: client.id }, 'News research completed');
       onProgress?.({ stepId: 'news', status: 'completed', message: 'Noticias encontradas', progress: 95 });
     } catch (error) {
@@ -320,19 +717,21 @@ export class DashboardService {
       onProgress?.({ stepId: 'news', status: 'completed', message: 'Usando datos alternativos', progress: 95 });
     }
 
-    onProgress?.({ stepId: 'deep-research', status: 'completed', message: 'Investigación profunda completada', progress: 95 });
-
     // Combine all LLM results - now everything is generated by LLM with deep research!
     return {
-      accountSnapshot: clientResearch.accountSnapshot,
-      opportunitySummary: this.generateOpportunitySummary(client, opportunityContext, clientResearch.accountSnapshot),
-      marketContext: clientResearch.marketContext,
-      opportunityRequirements: this.generateFakeOpportunityRequirements(service, opportunityContext),
+      accountSnapshot: clientResearchResult.accountSnapshot,
+      opportunitySummary: this.generateOpportunitySummary(
+        client,
+        opportunityContext,
+        clientResearchResult.accountSnapshot,
+      ),
+      marketContext: clientResearchResult.marketContext,
+      opportunityRequirements: clientResearchResult.opportunityRequirements,
       stakeholderMap: fitAndStrategy.stakeholderMap,
       competitiveLandscape: fitAndStrategy.competitiveLandscape,
       vendorFitAndPlays: fitAndStrategy.vendorFitAndPlays,
       evidencePack: {
-        items: vendorResearch.evidence,
+        items: vendorResearchResult.evidence,
         summary: `Evidencias extraídas del análisis del vendor ${vendor.name}`,
       },
       gapsAndQuestions: fitAndStrategy.gapsAndQuestions,
@@ -352,22 +751,38 @@ export class DashboardService {
           }
         : this.generateFakeNewsOfInterest(client),
       criticalDates: this.generateFakeCriticalDates(),
+      proposalOutline,
     };
   }
 
-  static getById(id: string): ClientIntelDashboard | null {
-    return dashboards.get(id) || null;
+  static async getById(id: string): Promise<ClientIntelDashboard | null> {
+    const record = await prisma.dashboard.findUnique({ where: { id } });
+    return record ? mapDashboardRecord(record) : null;
   }
 
-  static getAll(): ClientIntelDashboard[] {
-    return Array.from(dashboards.values()).sort((a, b) => {
-      // Ordenar por fecha de generación (más recientes primero)
-      return new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime();
+  static async getLatestByOpportunityId(
+    opportunityId: string,
+  ): Promise<ClientIntelDashboard | null> {
+    const record = await prisma.dashboard.findFirst({
+      where: { opportunityId },
+      orderBy: { generatedAt: 'desc' },
     });
+    return record ? mapDashboardRecord(record) : null;
   }
 
-  static getByVendorId(vendorId: string): ClientIntelDashboard[] {
-    return this.getAll().filter((d) => d.vendorId === vendorId);
+  static async getAll(): Promise<ClientIntelDashboard[]> {
+    const records = await prisma.dashboard.findMany({
+      orderBy: { generatedAt: 'desc' },
+    });
+    return records.map(mapDashboardRecord);
+  }
+
+  static async getByVendorId(vendorId: string): Promise<ClientIntelDashboard[]> {
+    const records = await prisma.dashboard.findMany({
+      where: { vendorId },
+      orderBy: { generatedAt: 'desc' },
+    });
+    return records.map(mapDashboardRecord);
   }
 
   private static resolveOpportunityContext(
@@ -384,7 +799,7 @@ export class DashboardService {
       return trimmedNotes;
     }
 
-    return `Opportunity ${opportunity.name} (${opportunity.stage}) for client ${opportunity.clientId}`;
+    return `Opportunity ${opportunity.name} for client ${opportunity.clientId}`;
   }
 
   private static generateFakeSections(
@@ -406,6 +821,7 @@ export class DashboardService {
       gapsAndQuestions: this.generateGapsAndQuestions(),
       newsOfInterest: this.generateFakeNewsOfInterest(client),
       criticalDates: this.generateFakeCriticalDates(),
+      proposalOutline: undefined,
     };
   }
 
@@ -878,4 +1294,3 @@ export class DashboardService {
     };
   }
 }
-

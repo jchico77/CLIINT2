@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GapsAndQuestionsSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["gaps", "questions", "summary"],
+  "properties": {
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "topic", "impact", "description", "priorityLevel"],
+        "properties": {
+          "id": { "type": "string" },
+          "topic": { "type": "string" },
+          "impact": { "type": "string", "enum": ["high", "medium", "low"] },
+          "description": { "type": "string" },
+          "priorityLevel": { "type": "string", "enum": ["must", "should", "nice"] }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "question", "context", "targetStakeholder", "isCritical"],
+        "properties": {
+          "id": { "type": "string" },
+          "question": { "type": "string" },
+          "context": { "type": "string" },
+          "targetStakeholder": { "type": "string" },
+          "isCritical": { "type": "boolean" }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

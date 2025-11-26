@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EvidencePackSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items", "summary"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "title", "description", "snippet", "source", "relevance"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["case_study", "kpi", "testimonial", "award", "certification"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "snippet": { "type": "string" },
+          "source": { "type": "string" },
+          "relevance": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

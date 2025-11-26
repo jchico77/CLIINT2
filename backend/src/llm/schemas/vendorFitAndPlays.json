@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VendorFitAndPlaysSection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["overallFit", "fitScore", "fitDimensions", "recommendedPlays", "summary"],
+  "properties": {
+    "overallFit": { "type": "string", "enum": ["high", "medium", "low"] },
+    "fitScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "fitDimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "score", "reasoning"],
+        "properties": {
+          "dimension": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "reasoning": { "type": "string" }
+        }
+      }
+    },
+    "recommendedPlays": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "description", "rationale", "targetStakeholders", "successFactors"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "rationale": { "type": "string" },
+          "targetStakeholders": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "successFactors": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}
+

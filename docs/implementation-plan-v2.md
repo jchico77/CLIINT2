@@ -275,14 +275,12 @@ Esperar validación del usuario.
 
 #### F2.2 – Backend: endpoints para dossier
 
-- ⬜ `POST /api/opportunities/:opportunityId/dossier/text`:
-  - Body: `{ sourceType, title?, content }`.
-- ⬜ `GET /api/opportunities/:opportunityId/dossier`:
-  - Devuelve todos los `textChunks`.
-- ⬜ `POST /api/opportunities/:opportunityId/dossier/files`:
-  - Accepta upload de 1 archivo (PDF/Doc).
-  - Lo sube a OpenAI como file (File Inputs).
-  - Guarda el `file_id` en `OpportunityDossier.openAiFileIds`.
+- ✅ `POST /api/opportunities/:opportunityId/dossier/text`
+- ✅ `GET /api/opportunities/:opportunityId/dossier`
+- ✅ `POST /api/opportunities/:opportunityId/dossier/files`
+  - Crea (si no existe) un vector store en OpenAI por oportunidad.
+  - Sube el archivo via Files API (`purpose: assistants`) y lo asocia al vector store.
+  - Guarda tanto el `file_id` como el `vectorStoreId` en `OpportunityDossier`.
 
 **Parada:** documentar cómo hacer:
 - un POST texto (notas/email),
@@ -309,8 +307,8 @@ crear oportunidad → añadir texto + PDF → comprobar que el backend los conoc
 
 #### F3.1 – Cliente OpenAiDeepResearchClient
 
-- ⬜ Crear `backend/src/llm/deepResearchClient.ts`.
-- ⬜ Implementar función:
+- ✅ Crear `backend/src/llm/deepResearchClient.ts`.
+- ✅ Implementar función:
 
 ```ts
 async function runClientDeepResearch(input: {
@@ -322,8 +320,8 @@ async function runClientDeepResearch(input: {
 }): Promise<ClientDeepResearchReport> { ... }
 ```
 
-- ⬜ Usar el modelo `o3-deep-research-2025-06-26` (o `o4-mini` si se configura así en env).
-- ⬜ Definir `ClientDeepResearchReport` (modelo propio) con campos:
+- ✅ Usar el modelo `o3-deep-research-2025-06-26` (o `o4-mini` si se configura así en env).
+- ✅ Definir `ClientDeepResearchReport` (modelo propio) con campos:
   - `businessModel`
   - `marketSegments`
   - `strategicThemes`
@@ -334,12 +332,12 @@ async function runClientDeepResearch(input: {
 
 #### F3.2 – Integración en DashboardService / deepResearchService.ts
 
-- ⬜ Reescribir o adaptar `deepResearchService.ts` para:
+- ✅ Reescribir o adaptar `deepResearchService.ts` para:
   - Llamar a `OpenAiDeepResearchClient`.
   - No hacer orquestación manual de web scraping si ya no es necesario.
-- ⬜ `ClientResearchAgent` debe recibir:
+- ✅ `ClientResearchAgent` debe recibir:
   - `clientAccount` + `serviceOffering` + `deepResearchReport`.
-- ⬜ Reducir la responsabilidad de `ClientResearchAgent` a:
+- ✅ Reducir la responsabilidad de `ClientResearchAgent` a:
   - interpretar y transformar el `deepResearchReport` en:
     - `AccountSnapshotSection`
     - `MarketContextSection`
@@ -358,32 +356,19 @@ Probar con una empresa real.
 
 #### F4.1 – Definir JSON Schemas para todas las secciones
 
-- ⬜ A partir de `clientIntelDashboard.ts`, generar o escribir a mano esquemas JSON para:
-  - `AccountSnapshotSection`
-  - `MarketContextSection`
-  - `StrategicPrioritiesSection`
-  - `StakeholderMapSection`
-  - `CompetitiveLandscapeSection`
-  - `VendorFitAndPlaysSection`
-  - `EvidencePackSection`
-  - `GapsAndQuestionsSection`
-  - (y `ProposalOutlineLite` cuando exista)
-- ⬜ Guardarlos en `backend/src/llm/schemas/*.json`.
+- ✅ A partir de `clientIntelDashboard.ts`, generar esquemas JSON para todas las secciones actuales (`accountSnapshot`, `opportunitySummary`, `marketContext`, `opportunityRequirements`, `stakeholderMap`, `competitiveLandscape`, `vendorFitAndPlays`, `evidencePack`, `gapsAndQuestions`, `newsOfInterest`, `criticalDates`).  
+  - `ProposalOutlineLite` se añadirá cuando exista (F5.2).
+- ✅ Guardar los schemas en `backend/src/llm/schemas/*.json` y exponer un helper `loadDashboardSchema`.
 
 #### F4.2 – ClientResearchAgent con GPT-5.1 + Structured Output
 
-- ⬜ Reescribir `clientResearchAgent.ts` para:
-  - Usar GPT-5.1 Responses API.
-  - `response_format` = Structured Output con el schema conjunto de:
-    - `AccountSnapshotSection`
-    - `MarketContextSection`
-    - `StrategicPrioritiesSection` (limitando nº de items según Fase 5).
-  - Input:
-    - `clientAccount`, `serviceOffering`,
-    - `deepResearchReport`,
-    - `opportunityDossierText` (resumen de textChunks) – solo texto, sin File Search aún.
-- ⬜ Establecer `reasoning_effort`:
-  - `medium` para este agente.
+- ✅ `clientResearchAgent.ts` usa GPT-5.1 (Responses API) con `response_format = json_schema` apuntando a las secciones `accountSnapshot`, `marketContext` y `opportunityRequirements` (la evolución del antiguo `StrategicPrioritiesSection`).
+- ✅ Input del agente:
+  - `clientAccount`, `serviceOffering`, `opportunityContext`.
+  - `deepResearchReport` estructurado.
+  - (Placeholder para `opportunityDossierText`, que se inyectará cuando F2.3/F4.x conecten dossier).
+- ✅ `reasoning_effort = medium` configurable vía `CLIENT_RESEARCH_REASONING`. Modelo configurable con `CLIENT_RESEARCH_MODEL` (por defecto `gpt-5.1`).
+- ✅ `DashboardService` ya consume las nuevas secciones (se sustituye el antiguo `generateFakeOpportunityRequirements` cuando hay LLM).
 
 **Parada:** probar un caso end-to-end y validar que el JSON cumple esquema sin Zod "parcheando".
 
@@ -397,20 +382,12 @@ Probar con una empresa real.
 
 #### F4.4 – FitAndStrategyAgent con GPT-5.1 + Tools
 
-- ⬜ Reescribir `fitAndStrategyAgent.ts` para:
-  - Usar GPT-5.1 con Structured Output hacia:
-    - `StakeholderMapSection`
-    - `CompetitiveLandscapeSection`
-    - `VendorFitAndPlaysSection`
-    - `GapsAndQuestionsSection`
-  - Declarar tools:
-    - `file_search` sobre dossier de oportunidad.
-    - `getOpportunityMeta` (tool custom que llama a nuestro backend para stage, deadline, value, etc.).
-    - `getClientDeepResearchReport` (opcional, o pasar el contenido como input directo).
-- ⬜ Configurar `reasoning_effort = high`:
-  - Es el corazón estratégico del sistema.
+- ✅ `fitAndStrategyAgent.ts` usa GPT-5.1 Responses API + Structured Output (schemas `stakeholderMap`, `competitiveLandscape`, `vendorFitAndPlays`, `gapsAndQuestions`).
+- ✅ Declaramos tools:
+  - `web_search` (siempre) y `file_search` cuando existe `vectorStoreId` del dossier.
+- ✅ `reasoning_effort = high` por defecto y cardenalidades recortadas (máx. 8 stakeholders, 4 competidores, 5 gaps, 6 preguntas).
 
-**Parada:** documentar cómo está usando tools y cómo se ve un ejemplo real de salida.
+**Parada:** logs muestran `FitAndStrategyAgent completed analysis` y la UI refleja los nuevos límites/etiquetas.
 
 ---
 
@@ -420,25 +397,13 @@ Probar con una empresa real.
 
 #### F5.1 – Limitar cardinalidad y añadir campos de prioridad
 
-- ⬜ Modificar tipos de secciones para incluir:
-  - límites lógicos (documentados en comentarios / doc):
-    - priorities máx 3,
-    - painPoints máx 3–4,
-    - stakeholders máx 6–8,
-    - smartQuestions máx 8, etc.
-  - añadir campos:
-    - `isCritical?: boolean` en `SmartQuestion`.
-    - `priorityLevel?: "must" | "should" | "nice"` en prioridades, gaps, etc.
-- ⬜ Ajustar prompts de los agentes para:
-  - NO generar más elementos de los permitidos.
-  - Marcar qué es crítico y por qué.
-- ⬜ Ajustar cards de frontend:
-  - Destacar visualmente lo crítico.
-  - Evitar que las listas largas colapsen la UX (por diseño).
+- ✅ Tipos actualizados (`priorityLevel`, `isCritical`) y post-procesado en backend para truncar arrays (requisitos ≤4, stakeholders ≤8, gaps ≤5, preguntas ≤6, etc.).
+- ✅ Prompts de `ClientResearchAgent` / `FitAndStrategyAgent` incluyen las nuevas reglas y etiquetados.
+- ✅ UI muestra las etiquetas nuevas (badges Must/Should/Nice, indicador “Crítica” en preguntas).
 
 #### F5.2 – ProposalOutlineLite + UI de "borrador de propuesta"
 
-- ⬜ Definir tipo en `clientIntelDashboard.ts`:
+- ✅ Definir tipo en `clientIntelDashboard.ts`:
 
 ```ts
 type ProposalSectionSuggestion = {
@@ -454,7 +419,7 @@ type ProposalOutlineLite = {
 };
 ```
 
-- ⬜ Crear nuevo agente `proposalOutlineAgent.ts`:
+- ✅ Crear nuevo agente `proposalOutlineAgent.ts`:
   - GPT-5.1 + Structured Output → `ProposalOutlineLite`.
   - Input:
     - `ClientIntelDashboardSections`,
@@ -463,15 +428,11 @@ type ProposalOutlineLite = {
   - Tools:
     - `getEvidenceItemById` (si ya hay librería),
     - `file_search` (opcional) para encontrar material relevante.
-- ⬜ Backend:
-  - Ampliar `ClientIntelDashboard` para incluir `proposalOutline?: ProposalOutlineLite`.
-  - O exponer endpoint separado:
-    - `POST /api/dashboard/:dashboardId/proposal-outline`.
-- ⬜ Frontend:
-  - En `/dashboard/[id]`:
-    - Card "Esquema de propuesta sugerido":
-      - Lista de secciones con título y propósito.
-      - Botón "Copiar outline" (texto/Markdown).
+- ✅ Backend:
+  - `ClientIntelDashboard.sections` incluye `proposalOutline`.
+  - `ProposalOutlineAgent` toma requisitos + evidencias + dossier y genera máx. 4 secciones.
+- ✅ Frontend:
+  - En `/dashboard/[id]` se muestra la card “Proposal Outline” con títulos, propósito, bullets y evidencias asociadas.
 
 **Parada:** documentar cómo se genera el outline, qué datos usa y cómo probarlo.
 

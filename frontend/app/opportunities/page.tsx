@@ -7,6 +7,8 @@ import {
   getOpportunities,
   getClients,
   getServices,
+  getAllDashboards,
+  type DashboardSummary,
 } from '@/lib/api';
 import type {
   Opportunity,
@@ -20,16 +22,27 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { AppShell } from '@/components/app-shell';
 import {
   Briefcase,
   Calendar,
   ArrowRight,
   Building2,
+  ExternalLink,
 } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function OpportunitiesPage() {
   const router = useRouter();
@@ -40,6 +53,8 @@ export default function OpportunitiesPage() {
   const [services, setServices] = useState<Record<string, ServiceOffering>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dashboardByOpportunity, setDashboardByOpportunity] = useState<Record<string, DashboardSummary>>({});
 
   useEffect(() => {
     const cachedVendor = typeof window !== 'undefined'
@@ -66,32 +81,43 @@ export default function OpportunitiesPage() {
       getOpportunities(selectedVendor),
       getClients(selectedVendor),
       getServices(selectedVendor),
+      getAllDashboards(selectedVendor),
     ])
-      .then(([opps, clientList, serviceList]) => {
+      .then(([opps, clientList, serviceList, dashboards]) => {
         const clientMap = Object.fromEntries(clientList.map((c) => [c.id, c]));
         const serviceMap = Object.fromEntries(serviceList.map((s) => [s.id, s]));
+        const dashboardsMap = dashboards.reduce<Record<string, DashboardSummary>>((acc, dash) => {
+          const existing = acc[dash.opportunityId];
+          if (!existing || new Date(dash.generatedAt) > new Date(existing.generatedAt)) {
+            acc[dash.opportunityId] = dash;
+          }
+          return acc;
+        }, {});
         setOpportunities(opps);
         setClients(clientMap);
         setServices(serviceMap);
+        setDashboardByOpportunity(dashboardsMap);
       })
       .catch((err) => setError(err instanceof Error ? err.message : 'Error desconocido'))
       .finally(() => setLoading(false));
   }, [selectedVendor]);
 
-  const stageVariant = (stage: Opportunity['stage']): "default" | "secondary" | "destructive" | "outline" => {
-    switch (stage) {
-      case 'won':
-        return 'default';
-      case 'lost':
-        return 'destructive';
-      case 'rfp':
-      case 'shortlist':
-      case 'bafo':
-        return 'secondary';
-      default:
-        return 'outline';
-    }
-  };
+  useEffect(() => {
+    setSearchTerm('');
+  }, [selectedVendor]);
+
+  const filteredOpportunities = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return opportunities.filter((opportunity) => {
+      if (!query) {
+        return true;
+      }
+      const clientName = clients[opportunity.clientId]?.name ?? '';
+      const serviceName = services[opportunity.serviceOfferingId]?.name ?? '';
+      const haystack = `${opportunity.name} ${clientName} ${serviceName}`.toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [opportunities, searchTerm, clients, services]);
 
   const handleVendorSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -110,155 +136,207 @@ export default function OpportunitiesPage() {
     if (loading) {
       return `Cargando oportunidades de ${selectedVendor}...`;
     }
-    return `${opportunities.length} oportunidad(es) para ${selectedVendor}`;
-  }, [selectedVendor, loading, opportunities.length]);
+    return `${filteredOpportunities.length} oportunidad(es) visibles para ${selectedVendor}`;
+  }, [selectedVendor, loading, filteredOpportunities.length]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="w-full flex h-14 items-center px-6">
-          <div className="flex-1">
-            <h1 className="text-xl font-semibold">Oportunidades</h1>
-            <p className="text-xs text-muted-foreground">{headerDescription}</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/opportunities/new">
-              <Button variant="outline" size="sm">
-                Nueva oportunidad
-              </Button>
-            </Link>
-            <ThemeToggle />
-            <Link href="/">
-              <Button variant="outline" size="sm">
-                Inicio
-              </Button>
-            </Link>
-          </div>
+    <AppShell
+      title="Oportunidades"
+      description={headerDescription}
+      actions={
+        <div className="flex items-center gap-2">
+          <Link href="/admin">
+            <Button variant="ghost" size="sm">
+              Admin
+            </Button>
+          </Link>
+          <Link href="/opportunities/new">
+            <Button size="sm">
+              Nueva oportunidad
+            </Button>
+          </Link>
         </div>
-      </header>
-
-      <main className="w-full px-6 py-6 space-y-6">
+      }
+    >
+      <div className="space-y-6">
         <Card>
           <CardHeader className="flex flex-col gap-2">
-            <CardTitle>Vendor</CardTitle>
-            <CardDescription>Trabajamos en memoria, así que indica el vendorId que quieras consultar.</CardDescription>
+            <CardTitle>Vendor ID</CardTitle>
+            <CardDescription>
+              Trabajamos en memoria, así que indica el vendorId que quieras consultar.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleVendorSubmit} className="flex flex-col gap-3 sm:flex-row">
-              <div className="flex-1">
-                <LabelInput value={vendorInput} onChange={setVendorInput} />
+            <form onSubmit={handleVendorSubmit} className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                <div className="space-y-2">
+                  <Label htmlFor="vendor-id">Vendor ID</Label>
+                  <Input
+                    id="vendor-id"
+                    value={vendorInput}
+                    onChange={(event) => setVendorInput(event.target.value)}
+                    placeholder="vendor_123..."
+                    className="text-sm"
+                  />
+                </div>
+                <Button type="submit" className="gap-2" disabled={loading}>
+                  <Building2 className="h-4 w-4" />
+                  {loading ? 'Cargando...' : 'Cargar oportunidades'}
+                </Button>
               </div>
-              <Button type="submit" className="gap-2" disabled={loading}>
-                <Building2 className="h-4 w-4" />
-                {loading ? 'Cargando...' : 'Cargar oportunidades'}
-              </Button>
+              {error && <p className="text-sm text-destructive">{error}</p>}
             </form>
-            {error && (
-              <p className="text-sm text-destructive mt-3">{error}</p>
-            )}
           </CardContent>
         </Card>
 
         {!selectedVendor ? (
-          <div className="max-w-2xl mx-auto text-center py-12">
-            <Briefcase className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">Selecciona un vendor</h2>
-            <p className="text-muted-foreground">
-              Una vez creado tu vendor (desde “Nueva oportunidad”), podrás ver todas sus oportunidades aquí.
-            </p>
-          </div>
-        ) : loading ? (
-          <div className="flex items-center justify-center py-12 text-muted-foreground">
-            Cargando oportunidades...
-          </div>
-        ) : opportunities.length === 0 ? (
-          <Card className="max-w-3xl mx-auto">
+          <Card className="border-dashed">
             <CardContent className="py-12 text-center space-y-3">
-              <Briefcase className="h-12 w-12 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold">No hay oportunidades registradas</h3>
-              <p className="text-muted-foreground text-sm">
-                Crea una nueva oportunidad para {selectedVendor} y aparecerá aquí.
+              <Briefcase className="h-14 w-14 text-muted-foreground mx-auto" />
+              <h2 className="text-xl font-semibold">Selecciona un vendor</h2>
+              <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+                Una vez creado tu vendor desde “Nueva oportunidad”, podrás ver todas sus oportunidades y filtrarlas por nombre, cliente o servicio.
               </p>
-              <Link href="/opportunities/new">
-                <Button>Registrar oportunidad</Button>
-              </Link>
+            </CardContent>
+          </Card>
+        ) : loading ? (
+          <Card>
+            <CardContent className="flex items-center justify-center py-12 text-muted-foreground">
+              Cargando pipeline...
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {opportunities.map((opportunity) => (
-              <Card key={opportunity.id} className="flex flex-col border bg-card shadow-sm">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <CardTitle className="text-lg">{opportunity.name}</CardTitle>
-                      <CardDescription className="text-xs">
-                        {clients[opportunity.clientId]?.name ?? opportunity.clientId}
-                      </CardDescription>
-                    </div>
-                    <Badge variant={stageVariant(opportunity.stage)} className="text-xs">
-                      {opportunity.stage.toUpperCase()}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-1 space-y-3 text-sm">
+          <Card>
+            <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <CardTitle>Pipeline activo</CardTitle>
+                <CardDescription>
+                  {filteredOpportunities.length} registros — vendor {selectedVendor}
+                </CardDescription>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Input
+                  placeholder="Buscar por nombre, cliente o servicio"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  className="sm:w-64"
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {filteredOpportunities.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+                  <Briefcase className="h-12 w-12 text-muted-foreground" />
                   <div>
-                    <p className="text-muted-foreground text-xs">Servicio</p>
-                    <p className="font-medium">
-                      {services[opportunity.serviceOfferingId]?.name ?? opportunity.serviceOfferingId}
+                    <h3 className="text-lg font-semibold">No hay oportunidades que coincidan</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Ajusta los filtros o crea una nueva oportunidad para {selectedVendor}.
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    Creada el{' '}
-                    {new Date(opportunity.createdAt).toLocaleDateString('es-ES', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </div>
-                  <p className="text-muted-foreground text-xs line-clamp-3">
-                    {opportunity.notes || 'Sin notas registradas.'}
-                  </p>
-                  <div className="pt-3 border-t flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-1"
-                      onClick={() => router.push(`/opportunities/${opportunity.id}`)}
-                    >
-                      Ver detalle
-                      <ArrowRight className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <Link href="/opportunities/new">
+                    <Button size="sm">Registrar oportunidad</Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="rounded-lg border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Oportunidad</TableHead>
+                        <TableHead>Cliente</TableHead>
+                        <TableHead>Servicio</TableHead>
+                        <TableHead>Último dashboard</TableHead>
+                        <TableHead>Actualizada</TableHead>
+                        <TableHead className="text-right">Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOpportunities.map((opportunity) => {
+                        const clientName =
+                          clients[opportunity.clientId]?.name ?? opportunity.clientId;
+                        const serviceName =
+                          services[opportunity.serviceOfferingId]?.name ??
+                          opportunity.serviceOfferingId;
+                        const updatedAt = new Date(
+                          opportunity.updatedAt || opportunity.createdAt,
+                        ).toLocaleDateString('es-ES', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        });
+
+                        return (
+                          <TableRow key={opportunity.id}>
+                            <TableCell>
+                              <div className="font-medium">{opportunity.name}</div>
+                              <p className="text-xs text-muted-foreground line-clamp-2">
+                                {opportunity.notes || 'Sin notas registradas.'}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-sm font-semibold">{clientName}</div>
+                              <p className="text-xs text-muted-foreground">{opportunity.clientId}</p>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-sm font-semibold">{serviceName}</div>
+                              <p className="text-xs text-muted-foreground">
+                                {opportunity.serviceOfferingId}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              {dashboardByOpportunity[opportunity.id] ? (
+                                <div className="space-y-1 text-xs">
+                                  <p className="text-muted-foreground">
+                                    {formatDistanceToNow(
+                                      new Date(dashboardByOpportunity[opportunity.id].generatedAt),
+                                      { addSuffix: true, locale: es },
+                                    )}
+                                  </p>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full gap-1"
+                                    onClick={() =>
+                                      router.push(`/dashboard/${dashboardByOpportunity[opportunity.id].id}`)
+                                    }
+                                  >
+                                    <ExternalLink className="h-3 w-3" />
+                                    Ver dashboard
+                                  </Button>
+                                </div>
+                              ) : (
+                                <p className="text-xs text-muted-foreground">Sin generar</p>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Calendar className="h-3 w-3" />
+                                {updatedAt}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="gap-1"
+                                onClick={() => router.push(`/opportunities/${opportunity.id}`)}
+                              >
+                                Ver detalle
+                                <ArrowRight className="h-3 w-3" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         )}
-      </main>
-    </div>
-  );
-}
-
-interface LabelInputProps {
-  value: string;
-  onChange: (value: string) => void;
-}
-
-function LabelInput({ value, onChange }: LabelInputProps) {
-  return (
-    <div className="space-y-1">
-      <label className="text-xs font-medium text-muted-foreground">
-        Vendor ID
-      </label>
-      <Input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="vendor_123..."
-        className="text-sm"
-      />
-    </div>
+      </div>
+    </AppShell>
   );
 }
 
