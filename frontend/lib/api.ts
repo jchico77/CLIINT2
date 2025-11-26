@@ -19,6 +19,7 @@ import {
   DashboardMetricsFilters,
   DashboardMetricsResponse,
 } from './types';
+import { logger } from './logger';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -88,6 +89,10 @@ export async function createVendor(input: CreateVendorInput): Promise<Vendor> {
 
 export async function getVendor(vendorId: string): Promise<Vendor> {
   return fetchAPI<Vendor>(`/vendors/${vendorId}`);
+}
+
+export async function getVendors(): Promise<Vendor[]> {
+  return fetchAPI<Vendor[]>('/vendors');
 }
 
 // Services
@@ -313,7 +318,9 @@ export function createDashboardWithProgress(
                   onProgress(data as ProgressEvent);
                 }
               } catch (e) {
-                console.error('Error parsing SSE data:', e);
+                logger.error('Error parsing SSE data', {
+                  message: e instanceof Error ? e.message : 'Unknown error',
+                });
               }
             }
           }
@@ -396,7 +403,9 @@ export function createOpportunityDashboardWithProgress(
                   onProgress(data as ProgressEvent);
                 }
               } catch (e) {
-                console.error('Error parsing SSE data:', e);
+                logger.error('Error parsing SSE data', {
+                  message: e instanceof Error ? e.message : 'Unknown error',
+                });
               }
             }
           }

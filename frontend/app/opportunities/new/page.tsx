@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   Button,
@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { AppShell } from '@/components/app-shell';
 import {
   createVendor,
   createClient,
@@ -33,6 +33,8 @@ import {
   getServices,
   createOpportunity,
 } from '@/lib/api';
+import { useVendors } from '@/hooks/useVendors';
+import { logger } from '@/lib/logger';
 import type {
   ClientAccount,
   ServiceOffering,
@@ -49,6 +51,8 @@ export default function NewOpportunityPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { vendors, loading: vendorsLoading, refresh: refreshVendors } = useVendors();
+  const [dependenciesError, setDependenciesError] = useState<string | null>(null);
 
   // Vendor
   const [createNewVendor, setCreateNewVendor] = useState(true);
@@ -58,6 +62,34 @@ export default function NewOpportunityPage() {
   const [vendorDescription, setVendorDescription] = useState(
     'Indra es una de las principales empresas globales de tecnología y consultoría.'
   );
+
+  const searchParams = useSearchParams();
+  const prefillVendorId = searchParams.get('vendorId');
+  const prefillClientId = searchParams.get('clientId');
+  const prefillServiceId = searchParams.get('serviceId');
+
+  const vendorPrefillApplied = useRef(false);
+  const clientPrefillApplied = useRef(false);
+  const servicePrefillApplied = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const storedVendor = window.localStorage.getItem('cliint:lastVendorId');
+    if (storedVendor) {
+      setCreateNewVendor(false);
+      setVendorId(storedVendor);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!vendorPrefillApplied.current && prefillVendorId) {
+      vendorPrefillApplied.current = true;
+      setCreateNewVendor(false);
+      setVendorId(prefillVendorId);
+    }
+  }, [prefillVendorId]);
   // Client
   const [createNewClient, setCreateNewClient] = useState(true);
   const [clientId, setClientId] = useState('');
@@ -86,33 +118,101 @@ export default function NewOpportunityPage() {
     'Telefónica busca acelerar la transformación digital en 2025 con un partner estratégico.'
   );
 
-  useEffect(() => {
-    if (!createNewVendor && vendorId) {
-      void loadVendorDependencies(vendorId);
-    }
-  }, [createNewVendor, vendorId]);
-
-  const loadVendorDependencies = async (vendor: string) => {
+  const loadVendorDependencies = useCallback(async (vendor: string) => {
     try {
+      setDependenciesError(null);
       const [clients, services] = await Promise.all([
         getClients(vendor),
         getServices(vendor),
       ]);
       setExistingClients(clients);
       setExistingServices(services);
+      logger.info('Vendor dependencies loaded', {
+        vendorId: vendor,
+        clients: clients.length,
+        services: services.length,
+      });
     } catch (err) {
-      console.error('Error loading vendor dependencies', err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'Error desconocido cargando clientes o servicios';
+      setExistingClients([]);
+      setExistingServices([]);
+      setDependenciesError('No se pudieron cargar clientes o servicios para el vendor.');
+      logger.error('Error loading vendor dependencies', { vendorId: vendor, message });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (createNewVendor) {
+      setExistingClients([]);
+      setExistingServices([]);
+      setDependenciesError(null);
+      return;
+    }
+
+    if (vendorId) {
+      void loadVendorDependencies(vendorId);
+    } else {
       setExistingClients([]);
       setExistingServices([]);
     }
-  };
+  }, [createNewVendor, vendorId, loadVendorDependencies]);
+
+  useEffect(() => {
+    if (!createNewVendor) {
+      setClientId('');
+      setServiceId('');
+    }
+  }, [vendorId, createNewVendor]);
+
+  useEffect(() => {
+    if (
+      !clientPrefillApplied.current &&
+      prefillClientId &&
+      existingClients.some((client) => client.id === prefillClientId)
+    ) {
+      clientPrefillApplied.current = true;
+      setCreateNewClient(false);
+      setClientId(prefillClientId);
+    }
+  }, [prefillClientId, existingClients]);
+
+  useEffect(() => {
+    if (
+      !servicePrefillApplied.current &&
+      prefillServiceId &&
+      existingServices.some((service) => service.id === prefillServiceId)
+    ) {
+      servicePrefillApplied.current = true;
+      setCreateNewService(false);
+      setServiceId(prefillServiceId);
+    }
+  }, [prefillServiceId, existingServices]);
 
   const sanitizeCurrency = (value: string) => value.trim().toUpperCase().slice(0, 3);
+
+  const handleVendorModeChange = (checked: boolean | 'indeterminate') => {
+    const shouldCreate = Boolean(checked);
+    setCreateNewVendor(shouldCreate);
+    if (shouldCreate) {
+      setVendorId('');
+      setDependenciesError(null);
+    } else if (!shouldCreate && vendors.length === 0) {
+      void refreshVendors();
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    logger.info('Submitting new opportunity', {
+      createNewVendor,
+      createNewClient,
+      createNewService,
+    });
 
     try {
       let finalVendorId = vendorId;
@@ -175,57 +275,42 @@ export default function NewOpportunityPage() {
         window.localStorage.setItem('cliint:lastVendorId', finalVendorId);
       }
 
-      router.push(`/opportunities/${opportunity.id}`);
+      router.push('/opportunities');
     } catch (err) {
       const message =
         err instanceof Error
           ? err.message
           : 'Error inesperado al crear la oportunidad';
       setError(message);
+      logger.error('Failed to create opportunity', { message });
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 shrink-0">
-        <div className="w-full flex h-14 items-center px-6 justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="ghost" size="sm">
-                ← Inicio
-              </Button>
-            </Link>
-            <h1 className="text-xl font-semibold">Nueva oportunidad</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/admin">
-              <Button variant="ghost" size="sm">
-                Admin
-              </Button>
-            </Link>
-            <Link href="/opportunities">
-              <Button variant="ghost" size="sm">
-                Oportunidades
-              </Button>
-            </Link>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-6xl mx-auto space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Base comercial</CardTitle>
-              <CardDescription>
-                Define vendor, cliente y servicio antes de registrar la oportunidad.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <AppShell
+      title="Nueva oportunidad"
+      description="Define vendor, cliente y servicio para registrar la base comercial."
+      actions={
+        <Link href="/opportunities">
+          <Button variant="ghost" size="sm">
+            Volver al pipeline
+          </Button>
+        </Link>
+      }
+    >
+      <div className="max-w-6xl mx-auto space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Base comercial</CardTitle>
+            <CardDescription>
+              Define vendor, cliente y servicio antes de registrar la oportunidad.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Vendor */}
                   <Card>
                     <CardHeader className="pb-3">
@@ -239,9 +324,7 @@ export default function NewOpportunityPage() {
                         <Checkbox
                           id="newVendor"
                           checked={createNewVendor}
-                          onCheckedChange={(checked) =>
-                            setCreateNewVendor(checked as boolean)
-                          }
+                          onCheckedChange={handleVendorModeChange}
                         />
                         <Label htmlFor="newVendor" className="text-xs font-normal">
                           Crear nuevo vendor
@@ -286,18 +369,56 @@ export default function NewOpportunityPage() {
                           </div>
                         </>
                       ) : (
-                        <div className="space-y-1">
-                          <Label htmlFor="vendorId" className="text-xs">
-                            Vendor ID *
-                          </Label>
-                          <Input
-                            id="vendorId"
-                            value={vendorId}
-                            onChange={(e) => setVendorId(e.target.value)}
-                            placeholder="vendor_xxx"
-                            required
-                            className="h-8 text-xs"
-                          />
+                        <div className="space-y-2">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Vendor *</Label>
+                            <Select
+                              value={vendorId}
+                              onValueChange={(value) => setVendorId(value)}
+                              disabled={vendorsLoading || vendors.length === 0}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue
+                                  placeholder={
+                                    vendorsLoading
+                                      ? 'Cargando vendors...'
+                                      : 'Selecciona un vendor existente'
+                                  }
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {vendors.length === 0 ? (
+                                  <SelectItem value="no-vendors" disabled>
+                                    Registra un vendor para seleccionarlo
+                                  </SelectItem>
+                                ) : (
+                                  vendors.map((vendor) => (
+                                    <SelectItem key={vendor.id} value={vendor.id}>
+                                      {vendor.name}
+                                    </SelectItem>
+                                  ))
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => void refreshVendors()}
+                              disabled={vendorsLoading}
+                              className="px-2 text-xs"
+                            >
+                              {vendorsLoading ? 'Actualizando...' : 'Actualizar lista'}
+                            </Button>
+                            <Link
+                              href="/vendors/new"
+                              className="text-xs text-primary underline-offset-2 hover:underline"
+                            >
+                              Abrir creación de vendor
+                            </Link>
+                          </div>
                         </div>
                       )}
                     </CardContent>
@@ -319,7 +440,7 @@ export default function NewOpportunityPage() {
                           onCheckedChange={(checked) =>
                             setCreateNewClient(checked as boolean)
                           }
-                          disabled={createNewVendor && !vendorId}
+                          disabled={!vendorId}
                         />
                         <Label htmlFor="newClient" className="text-xs font-normal">
                           Crear nuevo cliente
@@ -377,21 +498,35 @@ export default function NewOpportunityPage() {
                           </div>
                         </>
                       ) : (
+                        <div className="space-y-2">
                           <div className="space-y-1">
                             <Label className="text-xs">Cliente *</Label>
-                            <Select value={clientId} onValueChange={setClientId}>
+                            <Select
+                              value={clientId}
+                              onValueChange={setClientId}
+                              disabled={
+                                !existingClients.length || Boolean(dependenciesError)
+                              }
+                            >
                               <SelectTrigger className="h-8 text-xs">
                                 <SelectValue placeholder="Selecciona un cliente" />
                               </SelectTrigger>
                               <SelectContent>
-                                {existingClients.map((client) => (
-                                  <SelectItem key={client.id} value={client.id}>
-                                    {client.name}
+                                {existingClients.length === 0 ? (
+                                  <SelectItem value="no-client" disabled>
+                                    No hay clientes disponibles
                                   </SelectItem>
-                                ))}
+                                ) : (
+                                  existingClients.map((client) => (
+                                    <SelectItem key={client.id} value={client.id}>
+                                      {client.name}
+                                    </SelectItem>
+                                  ))
+                                )}
                               </SelectContent>
                             </Select>
                           </div>
+                        </div>
                       )}
                     </CardContent>
                   </Card>
@@ -412,7 +547,7 @@ export default function NewOpportunityPage() {
                           onCheckedChange={(checked) =>
                             setCreateNewService(checked as boolean)
                           }
-                          disabled={createNewVendor && !vendorId}
+                          disabled={!vendorId}
                         />
                       <Label htmlFor="newService" className="text-xs font-normal">
                         Crear nuevo servicio
@@ -458,21 +593,38 @@ export default function NewOpportunityPage() {
                           </div>
                         </>
                       ) : (
+                        <div className="space-y-2">
                           <div className="space-y-1">
                             <Label className="text-xs">Servicio *</Label>
-                            <Select value={serviceId} onValueChange={setServiceId}>
+                            <Select
+                              value={serviceId}
+                              onValueChange={setServiceId}
+                              disabled={
+                                !existingServices.length || Boolean(dependenciesError)
+                              }
+                            >
                               <SelectTrigger className="h-8 text-xs">
                                 <SelectValue placeholder="Selecciona un servicio" />
                               </SelectTrigger>
                               <SelectContent>
-                                {existingServices.map((service) => (
-                                  <SelectItem key={service.id} value={service.id}>
-                                    {service.name}
+                                {existingServices.length === 0 ? (
+                                  <SelectItem value="no-service" disabled>
+                                    No hay servicios disponibles
                                   </SelectItem>
-                                ))}
+                                ) : (
+                                  existingServices.map((service) => (
+                                    <SelectItem key={service.id} value={service.id}>
+                                      {service.name}
+                                    </SelectItem>
+                                  ))
+                                )}
                               </SelectContent>
                             </Select>
                           </div>
+                          {dependenciesError && (
+                            <p className="text-[11px] text-destructive">{dependenciesError}</p>
+                          )}
+                        </div>
                       )}
                     </CardContent>
                   </Card>
@@ -561,35 +713,34 @@ export default function NewOpportunityPage() {
                   </Card>
                 )}
 
-                <div className="flex items-center justify-end gap-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => router.push('/')}
-                    disabled={loading}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button type="submit" disabled={loading} className="gap-2">
-                    {loading ? (
-                      <>
-                        <Sparkles className="h-4 w-4 animate-pulse" />
-                        Registrando oportunidad...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="h-4 w-4" />
-                        Crear oportunidad
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+              <div className="flex items-center justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push('/opportunities')}
+                  disabled={loading}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={loading} className="gap-2">
+                  {loading ? (
+                    <>
+                      <Sparkles className="h-4 w-4 animate-pulse" />
+                      Registrando oportunidad...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      Crear oportunidad
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </AppShell>
   );
 }
 

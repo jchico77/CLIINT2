@@ -97,9 +97,13 @@ export class FitAndStrategyAgent {
     dossierVectorStoreId?: string,
   ): Promise<FitAndStrategyOutput> {
     const openai = ensureOpenAIClient();
-    const usesWebSearch = llmConfig.featureToggles.webSearch;
+    const enableFitStrategyWebSearch = false;
+    const enableFitStrategyFileSearch = false;
+    const usesWebSearch = enableFitStrategyWebSearch && llmConfig.featureToggles.webSearch;
     const allowFileSearch =
-      Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch;
+      enableFitStrategyFileSearch &&
+      Boolean(dossierVectorStoreId) &&
+      llmConfig.featureToggles.fileSearch;
     logPhaseStart('fitStrategy', {
       source: 'agent' as const,
       vendorId: vendor.id,

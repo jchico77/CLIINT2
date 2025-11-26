@@ -6,10 +6,12 @@ import { usePathname } from "next/navigation"
 import {
   BarChart3,
   Briefcase,
+  Building2,
   LayoutDashboard,
   PlusCircle,
   Settings,
   UserPlus,
+  Users,
   type LucideIcon,
 } from "lucide-react"
 
@@ -24,11 +26,12 @@ type SidebarItem = {
 
 const NAV_ITEMS: SidebarItem[] = [
   { label: "Inicio", href: "/", icon: LayoutDashboard },
+  { label: "Nueva oportunidad", href: "/opportunities/new", icon: PlusCircle },
+  { label: "Oportunidades", href: "/opportunities", icon: Briefcase },
+  { label: "Vendors", href: "/vendors", icon: Building2 },
+  { label: "Clientes", href: "/clients", icon: Users },
   { label: "Admin", href: "/admin", icon: Settings },
   { label: "Métricas", href: "/admin/metrics", icon: BarChart3 },
-  { label: "Oportunidades", href: "/opportunities", icon: Briefcase },
-  { label: "Nueva oportunidad", href: "/opportunities/new", icon: PlusCircle },
-  { label: "Nuevo cliente", href: "/clients/new", icon: UserPlus },
 ]
 
 interface AppShellProps {

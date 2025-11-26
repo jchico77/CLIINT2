@@ -5,14 +5,14 @@ export const defaultAdminSettings: AdminSettings = {
     deepResearch: 'gpt-5.1',
     clientResearch: 'gpt-5.1',
     vendorResearch: 'gpt-5.1',
-    fitAndStrategy: 'gpt-5.1',
+    fitAndStrategy: 'gpt-5.1-mini',
     proposalOutline: 'gpt-5.1-mini',
   },
   reasoningConfig: {
     deepResearch: 'low',
     clientResearch: 'medium',
     vendorResearch: 'medium',
-    fitAndStrategy: 'high',
+    fitAndStrategy: 'medium',
     proposalOutline: 'medium',
   },
   timeoutConfig: {
