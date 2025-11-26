@@ -201,6 +201,47 @@ npm run dev
    - En Evidence Card: Clic en "Copiar snippet" debe copiar el texto
    - En Gaps & Questions: Clic en "Copiar" debe copiar la pregunta
 
+---
+
+## Observabilidad y métricas de generación (Nov 2025) ✅
+
+### Backend
+
+1. **Persistencia de runs y fases**
+   - Nuevos modelos Prisma `DashboardGenerationRun` y `DashboardPhaseMetric`.
+   - Migración `20251126090000_dashboard_metrics` con enums `DashboardRunStatus`, `DashboardPhaseStatus`, `DashboardPhaseType`.
+   - Recuerda ejecutar `npx prisma migrate deploy && npx prisma generate` en cuanto el tiempo de la base de datos lo permita; el segundo comando falló localmente porque `query_engine-windows.dll.node` estaba bloqueado por otro proceso.
+
+2. **Instrumentación**
+   - `DashboardMetricsService` registra cada fase sólo cuando se ejecuta de verdad (cache hits no generan registros).
+   - `DashboardService` envuelve deep research, client/vendor research, fit & strategy, proposal outline, news research y la persistencia final con el helper `executePhaseWithMetrics`.
+   - Errores de Prisma (tablas inexistentes) se degradan a logs para no romper la generación cuando la migración todavía no se ha aplicado.
+
+3. **Consulta agregada**
+   - `DashboardMetricsQueryService` expone totales, medias, P95 (muestreo de las últimas 500 mediciones), distribución por modelo y los últimos 20 runs con detalle de fases.
+   - Nueva ruta `GET /api/admin/metrics` protegida con `requireAdminAuth` y filtros `from`, `to`, `vendorId`, `model`, `status`.
+
+### Frontend
+
+1. **API client**
+   - `getDashboardMetrics()` en `lib/api.ts` con filtros opcionales y cabecera `x-admin-token`.
+   - Nuevos tipos compartidos (`DashboardMetricsResponse`, `DashboardRunMetric`, etc.) en `lib/types.ts`.
+
+2. **Página de métricas**
+   - Ruta `/admin/metrics` renderizada dentro de `AppShell` y accesible desde la navegación lateral (entrada “Métricas”).
+   - UI con Tremor (`BarChart`, `DonutChart`, `BarList`, `Card`, `Metric`) para mostrar:
+     - KPIs globales (runs totales, tasa de éxito, duración media).
+     - Duración media vs P95 por fase.
+     - Distribución por modelo y lista de fases más costosas.
+     - Tabla con los últimos runs, estados y fases fallidas.
+   - Formulario de filtros + gestión del token reutilizando `AdminSettingsShell`.
+
+### Notas de operación
+
+- Hasta que la migración se ejecute, el backend seguirá generando dashboards sin registrar métricas (los errores se registran como warning).
+- Para limpiar el bloqueo de `node_modules\.prisma\client\query_engine-windows.dll.node`, detén cualquier `npm run dev` del backend antes de volver a ejecutar `npx prisma generate`.
+- Los datos de métricas permiten comparar modelos, esfuerzos de reasoning y tiempos por fase para orientar optimizaciones futuras.
+
 
 ### Notas
 

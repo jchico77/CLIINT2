@@ -10,6 +10,7 @@ import { cacheRouter } from './routes/cache';
 import { vendorOpportunitiesRouter, opportunityRouter } from './routes/opportunities';
 import { opportunityDossierRouter } from './routes/opportunityDossier';
 import { adminSettingsRouter } from './routes/adminSettings';
+import { adminMetricsRouter } from './routes/adminMetrics';
 import { logger } from '../lib/logger';
 import { AdminSettingsService } from '../domain/services/adminSettingsService';
 import { applyAdminSettings } from '../config/llm';
@@ -40,7 +41,8 @@ app.use('/api/opportunities', opportunityRouter);
 app.use('/api/opportunities', opportunityDossierRouter);
 // Cache routes
 app.use('/api/cache', cacheRouter); // GET /api/cache/stats, DELETE /api/cache
-// Admin settings routes
+// Admin routes
+app.use('/api/admin/metrics', adminMetricsRouter);
 app.use('/api/admin', adminSettingsRouter);
 
 // Error handling middleware

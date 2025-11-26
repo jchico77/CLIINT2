@@ -16,6 +16,8 @@ import {
   CreateDashboardResponse,
   AdminSettings,
   DashboardPhase,
+  DashboardMetricsFilters,
+  DashboardMetricsResponse,
 } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -476,6 +478,35 @@ export async function updateAdminSettings(
 export async function resetAdminSettings(adminToken?: string): Promise<AdminSettings> {
   return fetchAPI<AdminSettings>('/admin/settings/reset', {
     method: 'POST',
+    headers: buildAdminHeaders(adminToken),
+  });
+}
+
+export async function getDashboardMetrics(
+  filters: DashboardMetricsFilters,
+  adminToken?: string,
+): Promise<DashboardMetricsResponse> {
+  const params = new URLSearchParams();
+  if (filters.from) {
+    params.set('from', filters.from);
+  }
+  if (filters.to) {
+    params.set('to', filters.to);
+  }
+  if (filters.vendorId) {
+    params.set('vendorId', filters.vendorId);
+  }
+  if (filters.model) {
+    params.set('model', filters.model);
+  }
+  if (filters.status) {
+    params.set('status', filters.status);
+  }
+
+  const queryString = params.toString();
+  const endpoint = queryString ? `/admin/metrics?${queryString}` : '/admin/metrics';
+
+  return fetchAPI<DashboardMetricsResponse>(endpoint, {
     headers: buildAdminHeaders(adminToken),
   });
 }

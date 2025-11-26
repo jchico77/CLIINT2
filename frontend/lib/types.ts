@@ -11,6 +11,18 @@ export type DashboardPhase =
   | 'fitStrategy'
   | 'proposalOutline';
 
+export type DashboardPhaseType =
+  | 'deepResearch'
+  | 'clientResearch'
+  | 'vendorResearch'
+  | 'fitStrategy'
+  | 'proposalOutline'
+  | 'newsResearch'
+  | 'persistToDb';
+
+export type DashboardRunStatus = 'success' | 'error';
+export type DashboardPhaseStatus = 'success' | 'error';
+
 export interface Opportunity {
   id: string;
   vendorId: string;
@@ -443,5 +455,72 @@ export interface AdminSettings {
   dashboardVisibility: Record<AdminDashboardSectionId, boolean>;
   sandboxMode: boolean;
   preferredLanguage: AdminLanguageOption;
+}
+
+export interface DashboardMetricsFilters {
+  vendorId?: string;
+  model?: string;
+  status?: DashboardRunStatus;
+  from?: string;
+  to?: string;
+}
+
+export interface DashboardPhaseInsight {
+  phase: DashboardPhaseType;
+  executions: number;
+  avgDurationMs: number | null;
+  maxDurationMs: number | null;
+  p95DurationMs: number | null;
+}
+
+export interface DashboardModelInsight {
+  model: string;
+  totalRuns: number;
+  avgDurationMs: number | null;
+}
+
+export interface DashboardPhaseMetricSnapshot {
+  id: string;
+  phase: DashboardPhaseType;
+  status: DashboardPhaseStatus;
+  durationMs: number | null;
+  startedAt: string;
+  finishedAt: string | null;
+  errorMessage: string | null;
+}
+
+export interface DashboardRunMetric {
+  id: string;
+  vendorId: string;
+  clientId: string;
+  serviceOfferingId: string;
+  opportunityId: string | null;
+  status: DashboardRunStatus;
+  llmModelUsed: string | null;
+  durationMs: number | null;
+  startedAt: string;
+  finishedAt: string | null;
+  errorMessage: string | null;
+  phases: DashboardPhaseMetricSnapshot[];
+}
+
+export interface DashboardMetricsResponse {
+  summary: {
+    totalRuns: number;
+    successRate: number;
+    avgDurationMs: number | null;
+    from: string | null;
+    to: string | null;
+  };
+  models: DashboardModelInsight[];
+  phases: DashboardPhaseInsight[];
+  recentRuns: DashboardRunMetric[];
+  filters: {
+    vendorId?: string;
+    model?: string;
+    status?: DashboardRunStatus;
+    from: string | null;
+    to: string | null;
+  };
 }
 

@@ -1,0 +1,99 @@
+# Oportunidades CBRE (noviembre 2025)
+# Formato consistente para copiar/pegar en CRM de oportunidades
+Consultora inmobiliaria lider en servicios de gestion, asesoramiento, consultoria y transaccion de activos inmobiliarios para ocupantes y propietarios.
+---
+id_oportunidad: CBRE-2025-ESG-GMP
+cliente: Gmp Property SOCIMI S.A.
+cliente_sector: Inmobiliaria patrimonialista (oficinas prime Madrid)
+vendor: CBRE España
+departamento_cbre: Energy & Sustainability Services
+servicio_cbre: Consultoría ESG y modelado de eficiencia energética
+tipo_operacion: Informe integral de eficiencia energética multi-activo
+origen: Invitación directa a RFP (Gmp Innovation & Smart Buildings)
+
+Invitación directa a RFP (Gmp Innovation & Smart Buildings. )Gmp quiere medir y certificar la mejora de eficiencia energética y reducción de huella de carbono en sus 26 edificios de oficinas en Madrid para reportar en el Informe Anual 2024.
+necesidad_cliente: Gmp quiere medir y certificar la mejora de eficiencia energética y reducción de huella de carbono en sus 26 edificios de oficinas en Madrid para reportar en el Informe Anual 2024.
+alcance_requerido: |
+  - Auditoría energética ASHRAE Level II para 12 activos prioritarios (Castellana 81, ARQBÓREA, Oxxeo, entre otros)
+  - Modelos digitales para simular escenarios de optimización HVAC e iluminación
+  - Plan de inversión CAPEX y payback por activo
+  - Roadmap para certificaciones LEED O+M y WELL Portfolio
+  - Formación ejecutiva y reporting ESG trimestral al comité
+criterios_decision: Preisings en honorarios fijos + ahorro garantizado, experiencia en oficinas prime, capacidad de entregar antes de cierre fiscal.
+plazo_rfp: Entrega propuesta 10-dic-2025; shortlist 20-dic; adjudicación 15-ene-2026.
+estado_oportunidad: En preparación de propuesta (kick-off interno completado)
+equipo_cbre: Account Lead Laura Martín (Director ESG), Delivery Lead Sergio Abadía (Energy Modelling)
+contactos_cliente: innovation@grupogmp.com, responsable Smart Buildings
+fuentes_publicas: https://grupogmp.com/
+notas: Documentación técnica subida a SharePoint ESG/Gmp; pendiente confirmación de data room BIM.
+
+---
+id_oportunidad: CBRE-2025-CM-CASTELLANA
+cliente: Castellana Properties SOCIMI
+cliente_sector: Retail real estate (centros comerciales y parques de medianas)
+vendor: CBRE España
+departamento_cbre: Capital Markets – Retail Investment Properties
+servicio_cbre: Mandato de venta de shopping center
+activo: Bahía Sur Shopping Centre (San Fernando, Cádiz) 90.000 m² SBA
+tipo_operacion: Proceso de desinversión en exclusiva
+origen: Mandato competitivo para reciclar capital hacia flagship malls en Madrid y Barcelona.
+necesidad_cliente: Vender un activo no core manteniendo upside ESG tras recientes inversiones en fotovoltaica y reforma food court.
+alcance_requerido: |
+  - Preparar teaser y cuaderno de venta bilingüe
+  - Modelos cash-flow a 10 años y análisis de sensibilidad footfall + ocupación
+  - Roadshow con inversores institucionales EMEA
+  - Coordinación de vendor due diligence (legal, técnico, medioambiental)
+  - Estrategia de storytelling centrada en mix comercial y mejora NOI post-capex
+criterios_decision: Evidencia de deals >200M€ en retail, cobertura inversores internacionales, integración ESG en equity story.
+plazo_rfp: Lanzamiento 05-dic-2025; non-binding offers 30-ene-2026; exclusividad marzo 2026.
+estado_oportunidad: Propuesta enviada (versión 1.1, entrega 25-nov)
+equipo_cbre: Capital Markets Lead Miguel Portillo; Retail Investor Relations Ana Oliveira
+contactos_cliente: ir@castellanaproperties.es (Dir. Finanzas), COO Retail
+notas: Sensibilidad a confidencialidad por cotización en BME Growth; preparar Appendix sobre resiliencia e-commerce.
+
+---
+id_oportunidad: CBRE-2025-LOG-ONTIME
+cliente: OnTime Logistics (OnTime Logistics Services SL)
+cliente_sector: Logística de última milla y e-commerce
+vendor: CBRE España
+departamento_cbre: Advisory & Transaction Services – Industrial & Logistics
+servicio_cbre: Búsqueda y negociación de arrendamiento llave en mano
+ubicacion_objetivo: Corredor Sur Madrid (Getafe, Pinto, Illescas)
+tipo_operacion: Leasing de nave logística 20.000 m² cross-dock con oficias anexas
+origen: Solicitud directa del COO tras workshop CBRE Supply Chain.
+necesidad_cliente: Consolidar operaciones de fulfilment Iberia con nave cercana a M-50 y capacidad para automatización AMR.
+alcance_requerido: |
+  - Shortlist de suelos y naves disponibles (brownfield + BTS) con potencia ≥1.5 MVA
+  - Negociación de incentivos con propietarios y autoridades locales (bonificaciones IBI)
+  - Estudios de tiempos de ruta hacia hubs de clientes clave (Getafe, Vallecas, Toledo)
+  - Asesoría en subvenciones para inversiones de eficiencia energética (placas FV, BMS)
+criterios_decision: Disponibilidad en Q3 2026, rentas <4,5 €/m²/mes, posibilidad de expansión +30%.
+plazo_rfp: RFP interna OnTime 15-dic-2025; visitas enero; term sheet firmado marzo 2026.
+estado_oportunidad: Discovery completado; enviando RFI propietarios semana 48.
+equipo_cbre: Lead Broker Marta Jiménez; Supply Chain Advisor Luis Bueso
+contactos_cliente: expansion@ontimelogistics.com; COO Javier Cifuentes
+notas: Incluir comparativa de parques logísticos (Los Gavilanes vs. Gavilanes II vs. Gavilanes Sur).
+
+---
+id_oportunidad: CBRE-2025-PM-ACCIONA
+cliente: Acciona Inmobiliaria
+cliente_sector: Promoción y explotación de oficinas sostenibles
+vendor: CBRE España
+departamento_cbre: Property Management – Office & Mixed Use
+servicio_cbre: Property & ESG-enabled Operations Management
+activo: Green Hub Méndez Álvaro (45.000 m², Madrid) entrega Q2 2026
+tipo_operacion: Contrato multianual de gestión integral (property + technical + tenant engagement)
+origen: Concurso restringido para seleccionar gestor especializado en edificios net-zero in operation.
+necesidad_cliente: Garantizar operación 24/7 orientada a bienestar y cumplimiento de compromisos Net Zero 2040 con reporting GRESB.
+alcance_requerido: |
+  - Transición soft-landing desde equipo de obra al de operaciones
+  - Implantación de plataforma digital de incidencias + app de inquilinos
+  - KPIs de eficiencia (kWh/m², consumo agua, residuos) con alertas en tiempo real
+  - Programa de servicios al ocupante (concierge, community management, movilidad)
+  - Plan de resiliencia crítica y protocolos WELL Health-Safety
+criterios_decision: Experiencia en activos ≥40k m² net-zero, capacidad de reporting ESG verificado, estructura de honorarios basada en SLA.
+plazo_rfp: Presentación técnica 18-dic-2025; demos plataforma 15-ene-2026; adjudicación feb-2026.
+estado_oportunidad: Revisión interna final (pricing aprobado por comité España)
+equipo_cbre: PM Lead Nuria Salvat; ESG Ops Specialist Daniel Corral
+contactos_cliente: property@acciona.com; Director de Operaciones de Activos Tertiarios
+notas: Preparar caso de referencia Torre d'Icon (Barcelona) y sinergias con servicios CBRE Host.

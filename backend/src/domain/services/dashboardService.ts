@@ -39,7 +39,8 @@ import type { DashboardPhase } from '../../llm/phaseLogger';
 import { DashboardPhaseCacheService } from './dashboardPhaseCacheService';
 import { prisma } from '../../lib/prisma';
 import type { Dashboard as PrismaDashboard } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, DashboardPhaseStatus, DashboardPhaseType, DashboardRunStatus } from '@prisma/client';
+import { DashboardMetricsService, type RunHandle } from './dashboardMetricsService';
 
 const limitArray = <T>(items: T[] | undefined, max: number): T[] => {
   if (!items || items.length === 0) {
@@ -69,6 +70,48 @@ const gapImpactToLevel = (impact: GapImpact): 'must' | 'should' | 'nice' => {
       return 'should';
     default:
       return 'nice';
+  }
+};
+
+type PhaseMetricsContext = {
+  model?: string;
+  reasoningEffort?: string;
+  cacheMode?: string;
+  featureToggles?: unknown;
+  metadata?: Record<string, unknown>;
+};
+
+const executePhaseWithMetrics = async <T>(
+  metricsRun: RunHandle | null,
+  phase: DashboardPhaseType,
+  context: PhaseMetricsContext,
+  executor: () => Promise<T>,
+): Promise<T> => {
+  if (!metricsRun) {
+    return executor();
+  }
+
+  const handle = await DashboardMetricsService.startPhase({
+    runId: metricsRun.id,
+    phase,
+    model: context.model,
+    reasoningEffort: context.reasoningEffort,
+    cacheMode: context.cacheMode,
+    featureToggles: context.featureToggles,
+    metadata: context.metadata,
+  });
+
+  try {
+    const result = await executor();
+    await DashboardMetricsService.finishPhase(handle, { status: DashboardPhaseStatus.success });
+    return result;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await DashboardMetricsService.finishPhase(handle, {
+      status: DashboardPhaseStatus.error,
+      errorMessage: message,
+    });
+    throw error;
   }
 };
 
@@ -155,155 +198,219 @@ export class DashboardService {
       throw new NotFoundError('Service', input.serviceOfferingId);
     }
 
-    const id = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const generatedAtDate = new Date();
-    const now = generatedAtDate.toISOString();
+    const metricsConfigSnapshot = {
+      defaultModel: llmConfig.defaultModel,
+      temperature: llmConfig.temperature,
+      deepResearchModel: llmConfig.deepResearchModel,
+      clientResearchModel: llmConfig.clientResearchModel,
+      vendorResearchModel: llmConfig.vendorResearchModel,
+      fitStrategyModel: llmConfig.fitStrategyModel,
+      proposalOutlineModel: llmConfig.proposalOutlineModel,
+      reasoningEffort: {
+        deepResearch: llmConfig.deepResearchReasoningEffort,
+        clientResearch: llmConfig.clientResearchReasoningEffort,
+        vendorResearch: llmConfig.vendorResearchReasoningEffort,
+        fitStrategy: llmConfig.fitStrategyReasoningEffort,
+        proposalOutline: llmConfig.proposalOutlineReasoningEffort,
+      },
+    };
 
-    const dossierSummary = opportunity
-      ? await OpportunityDossierService.summarizeTextChunks(opportunity.id)
-      : null;
-    const dossierVectorStoreId = opportunity
-      ? await OpportunityDossierService.getVectorStoreId(opportunity.id)
-      : undefined;
+    let metricsRun: RunHandle | null = null;
+    try {
+      metricsRun = await DashboardMetricsService.startRun({
+        vendorId: input.vendorId,
+        clientId: input.clientId,
+        serviceOfferingId: input.serviceOfferingId,
+        opportunityId: input.opportunityId,
+        llmModelUsed: llmConfig.defaultModel,
+        configSnapshot: metricsConfigSnapshot,
+        featureToggles: llmConfig.featureToggles,
+      });
 
-    let sections: ClientIntelDashboardSections;
-    let llmModelUsed = 'fake-data-generator';
+      const id = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const generatedAtDate = new Date();
+      const now = generatedAtDate.toISOString();
 
-    // Check cache first
-    const cachedSections = LLMCache.get<ClientIntelDashboardSections>(
-      input.vendorId,
-      input.clientId,
-      input.serviceOfferingId,
-      input.opportunityContext
-    );
+      const dossierSummary = opportunity
+        ? await OpportunityDossierService.summarizeTextChunks(opportunity.id)
+        : null;
+      const dossierVectorStoreId = opportunity
+        ? await OpportunityDossierService.getVectorStoreId(opportunity.id)
+        : undefined;
 
-    if (cachedSections) {
-      logger.info(
-        {
-          vendorId: input.vendorId,
-          clientId: input.clientId,
-          serviceOfferingId: input.serviceOfferingId,
-          opportunityId: input.opportunityId,
-        },
-        'Using cached LLM dashboard sections'
+      let sections: ClientIntelDashboardSections;
+      let llmModelUsed = 'fake-data-generator';
+
+      // Check cache first
+      const cachedSections = LLMCache.get<ClientIntelDashboardSections>(
+        input.vendorId,
+        input.clientId,
+        input.serviceOfferingId,
+        input.opportunityContext
       );
-      sections = cachedSections;
-      llmModelUsed = llmConfig.defaultModel;
-      onProgress?.({ stepId: 'cache-hit', status: 'completed', message: 'Usando resultados en caché', progress: 100 });
-    } else {
-      // Try to use LLM if API key is available
-      if (llmConfig.openaiApiKey) {
-        try {
-          logger.info(
-            {
-              vendorId: input.vendorId,
-              clientId: input.clientId,
-              serviceOfferingId: input.serviceOfferingId,
-              opportunityId: input.opportunityId,
-            },
-            'Generating dashboard with LLM agents'
-          );
-          sections = await this.generateLLMSections(
-            vendor,
-            client,
-            service,
-            input.opportunityContext,
-            onProgress,
-            dossierSummary,
-            dossierVectorStoreId,
-            input.opportunityId
-          );
-          llmModelUsed = llmConfig.defaultModel;
-          
-          // Cache the result
-          LLMCache.set(
-            input.vendorId,
-            input.clientId,
-            input.serviceOfferingId,
-            input.opportunityContext,
-            sections
-          );
-          
-          logger.info(
-            {
-              vendorId: input.vendorId,
-              clientId: input.clientId,
-              serviceOfferingId: input.serviceOfferingId,
-              opportunityId: input.opportunityId,
-            },
-            'Dashboard generated with LLM and cached'
-          );
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Unknown LLM error';
-          logger.error(
-            {
-              vendorId: input.vendorId,
-              clientId: input.clientId,
-              serviceOfferingId: input.serviceOfferingId,
-              opportunityId: input.opportunityId,
-              error: errorMessage,
-            },
-            'LLM generation failed, falling back to fake data'
-          );
-          
-          // Emit error progress if callback available
-          onProgress?.({ 
-            stepId: 'llm-error', 
-            status: 'error', 
-            message: `Error en análisis LLM: ${errorMessage}. Usando datos alternativos.`,
-            progress: 0
-          });
-          
-          sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
-        }
-      } else {
-        logger.warn(
+
+      if (cachedSections) {
+        logger.info(
           {
             vendorId: input.vendorId,
             clientId: input.clientId,
             serviceOfferingId: input.serviceOfferingId,
             opportunityId: input.opportunityId,
           },
-          'No LLM API key configured, using fake data'
+          'Using cached LLM dashboard sections'
         );
-        sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
+        sections = cachedSections;
+        llmModelUsed = llmConfig.defaultModel;
+        onProgress?.({ stepId: 'cache-hit', status: 'completed', message: 'Usando resultados en caché', progress: 100 });
+      } else {
+        // Try to use LLM if API key is available
+        if (llmConfig.openaiApiKey) {
+          try {
+            logger.info(
+              {
+                vendorId: input.vendorId,
+                clientId: input.clientId,
+                serviceOfferingId: input.serviceOfferingId,
+                opportunityId: input.opportunityId,
+              },
+              'Generating dashboard with LLM agents'
+            );
+            sections = await this.generateLLMSections(
+              vendor,
+              client,
+              service,
+              input.opportunityContext,
+              onProgress,
+              dossierSummary,
+              dossierVectorStoreId,
+              input.opportunityId,
+              metricsRun ?? undefined
+            );
+            llmModelUsed = llmConfig.defaultModel;
+            
+            // Cache the result
+            LLMCache.set(
+              input.vendorId,
+              input.clientId,
+              input.serviceOfferingId,
+              input.opportunityContext,
+              sections
+            );
+            
+            logger.info(
+              {
+                vendorId: input.vendorId,
+                clientId: input.clientId,
+                serviceOfferingId: input.serviceOfferingId,
+                opportunityId: input.opportunityId,
+              },
+              'Dashboard generated with LLM and cached'
+            );
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown LLM error';
+            logger.error(
+              {
+                vendorId: input.vendorId,
+                clientId: input.clientId,
+                serviceOfferingId: input.serviceOfferingId,
+                opportunityId: input.opportunityId,
+                error: errorMessage,
+              },
+              'LLM generation failed, falling back to fake data'
+            );
+            
+            // Emit error progress if callback available
+            onProgress?.({ 
+              stepId: 'llm-error', 
+              status: 'error', 
+              message: `Error en análisis LLM: ${errorMessage}. Usando datos alternativos.`,
+              progress: 0
+            });
+            
+            sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
+          }
+        } else {
+          logger.warn(
+            {
+              vendorId: input.vendorId,
+              clientId: input.clientId,
+              serviceOfferingId: input.serviceOfferingId,
+              opportunityId: input.opportunityId,
+            },
+            'No LLM API key configured, using fake data'
+          );
+          sections = this.generateFakeSections(vendor, client, service, input.opportunityContext);
+        }
       }
-    }
 
-    const dashboard: ClientIntelDashboard = {
-      id,
-      vendorId: input.vendorId,
-      clientId: input.clientId,
-      serviceOfferingId: input.serviceOfferingId,
-      opportunityId: input.opportunityId,
-      opportunityName: opportunity?.name,
-      opportunityContext: input.opportunityContext,
-      generatedAt: now,
-      llmModelUsed,
-      sections,
-      proposalOutline: sections.proposalOutline,
-    };
-
-    await prisma.dashboard.create({
-      data: {
+      const dashboard: ClientIntelDashboard = {
         id,
         vendorId: input.vendorId,
         clientId: input.clientId,
         serviceOfferingId: input.serviceOfferingId,
         opportunityId: input.opportunityId,
-        opportunityName: opportunity?.name ?? null,
+        opportunityName: opportunity?.name,
         opportunityContext: input.opportunityContext,
-        sections: sections as unknown as Prisma.InputJsonValue,
-        proposalOutline:
-          sections.proposalOutline !== undefined
-            ? (sections.proposalOutline as unknown as Prisma.InputJsonValue)
-            : undefined,
+        generatedAt: now,
         llmModelUsed,
-        generatedAt: generatedAtDate,
-      },
-    });
+        sections,
+        proposalOutline: sections.proposalOutline,
+      };
 
-    return dashboard;
+      const persist = () =>
+        prisma.dashboard.create({
+          data: {
+            id,
+            vendorId: input.vendorId,
+            clientId: input.clientId,
+            serviceOfferingId: input.serviceOfferingId,
+            opportunityId: input.opportunityId,
+            opportunityName: opportunity?.name ?? null,
+            opportunityContext: input.opportunityContext,
+            sections: sections as unknown as Prisma.InputJsonValue,
+            proposalOutline:
+              sections.proposalOutline !== undefined
+                ? (sections.proposalOutline as unknown as Prisma.InputJsonValue)
+                : undefined,
+            llmModelUsed,
+            generatedAt: generatedAtDate,
+          },
+        });
+
+      await executePhaseWithMetrics(
+        metricsRun,
+        DashboardPhaseType.persistToDb,
+        {
+          featureToggles: llmConfig.featureToggles,
+          metadata: {
+            dashboardId: id,
+            vendorId: input.vendorId,
+            clientId: input.clientId,
+            serviceOfferingId: input.serviceOfferingId,
+            opportunityId: input.opportunityId,
+          },
+        },
+        persist,
+      );
+
+      if (metricsRun) {
+        await DashboardMetricsService.finishRun(metricsRun, {
+          status: DashboardRunStatus.success,
+          llmModelUsed,
+        });
+      }
+
+      return dashboard;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown dashboard generation error';
+      if (metricsRun) {
+        await DashboardMetricsService.finishRun(metricsRun, {
+          status: DashboardRunStatus.error,
+          errorMessage: message,
+        });
+      }
+      throw error;
+    }
   }
 
   private static async generateLLMSections(
@@ -315,12 +422,24 @@ export class DashboardService {
     dossierSummary?: string | null,
     dossierVectorStoreId?: string,
     opportunityId?: string,
+    metricsRun?: RunHandle | null,
   ): Promise<ClientIntelDashboardSections> {
     const clientResearchAgent = new ClientResearchAgent();
     const vendorResearchAgent = new VendorResearchAgent();
     const fitAndStrategyAgent = new FitAndStrategyAgent();
     const proposalOutlineAgent = new ProposalOutlineAgent();
     const cacheMode = getCacheMode();
+    const runPhaseWithMetrics = <T>(
+      phase: DashboardPhaseType,
+      context: PhaseMetricsContext,
+      executor: () => Promise<T>,
+    ) => {
+      const mergedContext: PhaseMetricsContext = {
+        ...context,
+        featureToggles: context.featureToggles ?? llmConfig.featureToggles,
+      };
+      return executePhaseWithMetrics(metricsRun ?? null, phase, mergedContext, executor);
+    };
 
     const loadPersistedPhase = async <T>(phase: DashboardPhase) => {
       let source: 'db' | 'fs' | undefined;
@@ -372,14 +491,19 @@ export class DashboardService {
     const deepResearchReasoning = llmConfig.deepResearchReasoningEffort;
     const deepPersisted = await loadPersistedPhase<ClientDeepResearchReport>('deepResearch');
     let deepResearchReport = deepPersisted.value;
+    const deepPhaseMetadata = {
+      source: 'dashboardService',
+      vendorId: vendor.id,
+      clientId: client.id,
+      serviceId: service.id,
+      opportunityId,
+      dossierVectorStoreId,
+      cacheMode,
+    };
+
     if (deepResearchReport) {
       logPhaseCacheStatus('deepResearch', {
-        source: 'dashboardService',
-        vendorId: vendor.id,
-        clientId: client.id,
-        serviceId: service.id,
-        opportunityId,
-        cacheMode,
+        ...deepPhaseMetadata,
         cacheHit: true,
         cacheSource: deepPersisted.source,
       });
@@ -390,39 +514,46 @@ export class DashboardService {
         progress: 25,
       });
     } else {
-      logPhaseStart('deepResearch', {
-        source: 'dashboardService',
-        vendorId: vendor.id,
-        clientId: client.id,
-        serviceId: service.id,
-        opportunityId,
-        cacheMode,
-        cacheHit: false,
-        model: deepResearchModel,
-        reasoningEffort: deepResearchReasoning,
-      });
-      try {
-        deepResearchReport = await deepResearchService.getClientReport(client, service);
-        await persistPhaseResult('deepResearch', deepResearchReport);
-        onProgress?.({
-          stepId: 'deep-research',
-          status: 'completed',
-          message: 'Investigación profunda completada',
-          progress: 25,
-        });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        await markPhaseFailure('deepResearch', message);
-        logger.error(
-          {
-            clientId: client.id,
-            serviceOfferingId: service.id,
-            error: message,
-          },
-          'Deep research step failed',
-        );
-        throw error;
-      }
+      deepResearchReport = await runPhaseWithMetrics(
+        DashboardPhaseType.deepResearch,
+        {
+          model: deepResearchModel,
+          reasoningEffort: deepResearchReasoning,
+          cacheMode,
+          metadata: deepPhaseMetadata,
+        },
+        async () => {
+          logPhaseStart('deepResearch', {
+            ...deepPhaseMetadata,
+            cacheHit: false,
+            model: deepResearchModel,
+            reasoningEffort: deepResearchReasoning,
+          });
+          try {
+            const report = await deepResearchService.getClientReport(client, service);
+            await persistPhaseResult('deepResearch', report);
+            onProgress?.({
+              stepId: 'deep-research',
+              status: 'completed',
+              message: 'Investigación profunda completada',
+              progress: 25,
+            });
+            return report;
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            await markPhaseFailure('deepResearch', message);
+            logger.error(
+              {
+                clientId: client.id,
+                serviceOfferingId: service.id,
+                error: message,
+              },
+              'Deep research step failed',
+            );
+            throw error;
+          }
+        },
+      );
     }
 
     // Step 2: Run client and vendor research in parallel
@@ -485,23 +616,34 @@ export class DashboardService {
     if (!clientResearch) {
       pending.push(
         (async () => {
-          logPhaseStart('clientResearch', { ...clientPhaseContext, cacheHit: false });
-          try {
-            const result = await clientResearchAgent.research(
-              client,
-              service,
-              opportunityContext,
-              deepResearchReport,
-              dossierSummary ?? null,
-              dossierVectorStoreId,
-            );
-            clientResearch = result;
-            await persistPhaseResult('clientResearch', result);
-          } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            await markPhaseFailure('clientResearch', message);
-            throw error;
-          }
+          clientResearch = await runPhaseWithMetrics(
+            DashboardPhaseType.clientResearch,
+            {
+              model: llmConfig.clientResearchModel,
+              reasoningEffort: llmConfig.clientResearchReasoningEffort,
+              cacheMode,
+              metadata: clientPhaseContext,
+            },
+            async () => {
+              logPhaseStart('clientResearch', { ...clientPhaseContext, cacheHit: false });
+              try {
+                const result = await clientResearchAgent.research(
+                  client,
+                  service,
+                  opportunityContext,
+                  deepResearchReport,
+                  dossierSummary ?? null,
+                  dossierVectorStoreId,
+                );
+                await persistPhaseResult('clientResearch', result);
+                return result;
+              } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                await markPhaseFailure('clientResearch', message);
+                throw error;
+              }
+            },
+          );
         })(),
       );
     }
@@ -509,16 +651,27 @@ export class DashboardService {
     if (!vendorResearch) {
       pending.push(
         (async () => {
-          logPhaseStart('vendorResearch', { ...vendorPhaseContext, cacheHit: false });
-          try {
-            const result = await vendorResearchAgent.research(vendor, service);
-            vendorResearch = result;
-            await persistPhaseResult('vendorResearch', result);
-          } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            await markPhaseFailure('vendorResearch', message);
-            throw error;
-          }
+          vendorResearch = await runPhaseWithMetrics(
+            DashboardPhaseType.vendorResearch,
+            {
+              model: llmConfig.vendorResearchModel,
+              reasoningEffort: llmConfig.vendorResearchReasoningEffort,
+              cacheMode,
+              metadata: vendorPhaseContext,
+            },
+            async () => {
+              logPhaseStart('vendorResearch', { ...vendorPhaseContext, cacheHit: false });
+              try {
+                const result = await vendorResearchAgent.research(vendor, service);
+                await persistPhaseResult('vendorResearch', result);
+                return result;
+              } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                await markPhaseFailure('vendorResearch', message);
+                throw error;
+              }
+            },
+          );
         })(),
       );
     }
@@ -593,23 +746,35 @@ export class DashboardService {
         cacheSource: fitPersisted.source,
       });
     } else {
-      logPhaseStart('fitStrategy', { ...fitPhaseContext, cacheHit: false });
-      try {
-        fitAndStrategy = await fitAndStrategyAgent.generate(
-          vendor,
-          client,
-          service,
-          opportunityContext,
-          clientResearchResult,
-          vendorResearchResult.evidence,
-          dossierVectorStoreId,
-        );
-        await persistPhaseResult('fitStrategy', fitAndStrategy);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        await markPhaseFailure('fitStrategy', message);
-        throw error;
-      }
+      fitAndStrategy = await runPhaseWithMetrics(
+        DashboardPhaseType.fitStrategy,
+        {
+          model: llmConfig.fitStrategyModel,
+          reasoningEffort: llmConfig.fitStrategyReasoningEffort,
+          cacheMode,
+          metadata: fitPhaseContext,
+        },
+        async () => {
+          logPhaseStart('fitStrategy', { ...fitPhaseContext, cacheHit: false });
+          try {
+            const result = await fitAndStrategyAgent.generate(
+              vendor,
+              client,
+              service,
+              opportunityContext,
+              clientResearchResult,
+              vendorResearchResult.evidence,
+              dossierVectorStoreId,
+            );
+            await persistPhaseResult('fitStrategy', result);
+            return result;
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            await markPhaseFailure('fitStrategy', message);
+            throw error;
+          }
+        },
+      );
     }
 
     fitAndStrategy.stakeholderMap.stakeholders = limitArray(
@@ -673,23 +838,35 @@ export class DashboardService {
         cacheSource: proposalPersisted.source,
       });
     } else {
-      logPhaseStart('proposalOutline', { ...proposalPhaseContext, cacheHit: false });
-      try {
-        proposalOutline = await proposalOutlineAgent.generate({
-          client,
-          service,
-          opportunityContext,
-          opportunityRequirements: clientResearchResult.opportunityRequirements,
-          vendorEvidence: vendorResearchResult.evidence,
-          dossierSummary: dossierSummary ?? null,
-          dossierVectorStoreId,
-        });
-        await persistPhaseResult('proposalOutline', proposalOutline);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        await markPhaseFailure('proposalOutline', message);
-        throw error;
-      }
+      proposalOutline = await runPhaseWithMetrics(
+        DashboardPhaseType.proposalOutline,
+        {
+          model: llmConfig.proposalOutlineModel,
+          reasoningEffort: llmConfig.proposalOutlineReasoningEffort,
+          cacheMode,
+          metadata: proposalPhaseContext,
+        },
+        async () => {
+          logPhaseStart('proposalOutline', { ...proposalPhaseContext, cacheHit: false });
+          try {
+            const result = await proposalOutlineAgent.generate({
+              client,
+              service,
+              opportunityContext,
+              opportunityRequirements: clientResearchResult.opportunityRequirements,
+              vendorEvidence: vendorResearchResult.evidence,
+              dossierSummary: dossierSummary ?? null,
+              dossierVectorStoreId,
+            });
+            await persistPhaseResult('proposalOutline', result);
+            return result;
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            await markPhaseFailure('proposalOutline', message);
+            throw error;
+          }
+        },
+      );
     }
 
     onProgress?.({ stepId: 'competitive', status: 'completed', message: 'Análisis competitivo completado', progress: 80 });
@@ -701,13 +878,29 @@ export class DashboardService {
     
     let newsResearch;
     try {
-      newsResearch = await deepResearchService.researchNews(
-        client.name,
-        client.sectorHint || clientResearchResult.accountSnapshot.industry,
-        '6months',
+      newsResearch = await runPhaseWithMetrics(
+        DashboardPhaseType.newsResearch,
+        {
+          model: llmConfig.deepResearchModel,
+          reasoningEffort: llmConfig.deepResearchReasoningEffort,
+          metadata: {
+            clientId: client.id,
+            vendorId: vendor.id,
+            serviceId: service.id,
+            opportunityId,
+          },
+        },
+        async () => {
+          const research = await deepResearchService.researchNews(
+            client.name,
+            client.sectorHint || clientResearchResult.accountSnapshot.industry,
+            '6months',
+          );
+          logger.info({ clientId: client.id }, 'News research completed');
+          onProgress?.({ stepId: 'news', status: 'completed', message: 'Noticias encontradas', progress: 95 });
+          return research;
+        },
       );
-      logger.info({ clientId: client.id }, 'News research completed');
-      onProgress?.({ stepId: 'news', status: 'completed', message: 'Noticias encontradas', progress: 95 });
     } catch (error) {
       logger.warn(
         { clientId: client.id, error: error instanceof Error ? error.message : error },

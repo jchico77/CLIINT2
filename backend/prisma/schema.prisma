@@ -67,6 +67,7 @@ model Opportunity {
   dossier          OpportunityDossier?
   dashboards       Dashboard[]
   phaseCache       DashboardPhaseCache[]
+  dashboardRuns    DashboardGenerationRun[]
 }
 
 model OpportunityDossier {
@@ -130,6 +131,45 @@ model DashboardPhaseCache {
   @@unique([opportunityId, phase])
 }
 
+model DashboardGenerationRun {
+  id                String                @id @default(cuid())
+  vendorId          String
+  clientId          String
+  serviceOfferingId String
+  opportunityId     String?
+  llmModelUsed      String?
+  config            Json?
+  featureToggles    Json?
+  status            DashboardRunStatus    @default(success)
+  errorMessage      String?
+  startedAt         DateTime              @default(now())
+  finishedAt        DateTime?
+  durationMs        Int?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  opportunity       Opportunity?          @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+  phases            DashboardPhaseMetric[]
+}
+
+model DashboardPhaseMetric {
+  id              String               @id @default(cuid())
+  runId           String
+  phase           DashboardPhaseType
+  model           String?
+  reasoningEffort String?
+  featureToggles  Json?
+  cacheMode       String?
+  startedAt       DateTime             @default(now())
+  finishedAt      DateTime?
+  durationMs      Int?
+  status          DashboardPhaseStatus @default(success)
+  errorMessage    String?
+  metadata        Json?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  run             DashboardGenerationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+}
+
 model AdminSettingsSnapshot {
   id        Int      @id @default(1)
   settings  Json
@@ -140,5 +180,25 @@ model AdminSettingsSnapshot {
 enum PhaseCacheStatus {
   success
   error
+}
+
+enum DashboardRunStatus {
+  success
+  error
+}
+
+enum DashboardPhaseStatus {
+  success
+  error
+}
+
+enum DashboardPhaseType {
+  deepResearch
+  clientResearch
+  vendorResearch
+  fitStrategy
+  proposalOutline
+  newsResearch
+  persistToDb
 }
 
