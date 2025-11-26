@@ -4,12 +4,13 @@
   "description": "ClientIntel Dashboard MVP - Backend",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/http/server.ts",
+    "dev": "prisma migrate deploy && tsx watch src/http/server.ts",
     "build": "tsc",
     "start": "node dist/http/server.js",
     "type-check": "tsc --noEmit",
     "deeptest": "tsx scripts/runDeepResearch.ts",
-    "o4:test": "tsx scripts/testO4Prompt.ts"
+    "o4:test": "tsx scripts/testO4Prompt.ts",
+    "check:metrics": "tsx scripts/checkMetrics.ts"
   },
   "keywords": [],
   "author": "",

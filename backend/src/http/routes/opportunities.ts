@@ -85,6 +85,22 @@ vendorOpportunitiesRouter.get(
 );
 
 opportunityRouter.get(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const vendorId =
+        typeof req.query.vendorId === 'string' && req.query.vendorId.length > 0
+          ? req.query.vendorId
+          : undefined;
+      const opportunities = await OpportunityService.listOpportunities({ vendorId });
+      return res.json(opportunities);
+    } catch (error) {
+      return next(error);
+    }
+  },
+);
+
+opportunityRouter.get(
   '/:opportunityId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {

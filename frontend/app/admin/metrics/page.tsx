@@ -9,8 +9,6 @@ import {
   Grid,
   Flex,
   BarChart,
-  DonutChart,
-  BarList,
 } from '@tremor/react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -38,15 +36,47 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getDashboardMetrics } from '@/lib/api';
+import { getDashboardMetrics, getVendor, getClient } from '@/lib/api';
 import type {
   DashboardMetricsResponse,
   DashboardRunStatus,
+  DashboardPhaseType,
 } from '@/lib/types';
+import { BarChart3, Activity, Timer, Sparkles } from 'lucide-react';
 
-const ADMIN_TOKEN_KEY = 'cliint-admin-token';
+const HARDCODED_ADMIN_TOKEN = 'cliint-admin-token';
+const ALL_OPTION_VALUE = '__all__';
+
+type EntityOption = {
+  id: string;
+  name: string;
+};
 
 const toInputDate = (date: Date) => date.toISOString().split('T')[0];
+
+const toStartOfDayIso = (dateString: string | null | undefined) => {
+  if (!dateString) {
+    return undefined;
+  }
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+};
+
+const toEndOfDayIso = (dateString: string | null | undefined) => {
+  if (!dateString) {
+    return undefined;
+  }
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+  date.setHours(23, 59, 59, 999);
+  return date.toISOString();
+};
 
 const formatDuration = (durationMs?: number | null) => {
   if (!durationMs) {
@@ -57,6 +87,16 @@ const formatDuration = (durationMs?: number | null) => {
   }
   const seconds = durationMs / 1000;
   return `${seconds.toFixed(seconds >= 10 ? 0 : 1)} s`;
+};
+
+const formatShortDate = (iso?: string | null) => {
+  if (!iso) {
+    return '—';
+  }
+  return new Date(iso).toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'short',
+  });
 };
 
 const phaseLabels: Record<string, string> = {
@@ -79,6 +119,36 @@ const statusBadgeStyles: Record<DashboardRunStatus, string> = {
   error: 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-200',
 };
 
+const tremorCardClass =
+  'shadow-sm border border-white/10 bg-gradient-to-b from-white/5 via-white/0 to-white/0 text-card-foreground dark:bg-card/80';
+
+const summaryCardThemes = [
+  {
+    icon: BarChart3,
+    gradient: 'from-cyan-500/25 via-cyan-500/0 to-transparent',
+    border: 'border-cyan-500/40',
+    iconBg: 'bg-cyan-500/20 text-cyan-100',
+  },
+  {
+    icon: Activity,
+    gradient: 'from-emerald-500/25 via-emerald-500/0 to-transparent',
+    border: 'border-emerald-500/40',
+    iconBg: 'bg-emerald-500/20 text-emerald-100',
+  },
+  {
+    icon: Timer,
+    gradient: 'from-blue-500/25 via-blue-500/0 to-transparent',
+    border: 'border-blue-500/40',
+    iconBg: 'bg-blue-500/20 text-blue-100',
+  },
+  {
+    icon: Sparkles,
+    gradient: 'from-fuchsia-500/25 via-fuchsia-500/0 to-transparent',
+    border: 'border-fuchsia-500/40',
+    iconBg: 'bg-fuchsia-500/20 text-fuchsia-100',
+  },
+];
+
 export default function AdminMetricsPage() {
   const now = useMemo(() => new Date(), []);
   const defaultFrom = useMemo(() => {
@@ -87,36 +157,20 @@ export default function AdminMetricsPage() {
     return d;
   }, [now]);
 
-  const [adminToken, setAdminToken] = useState('');
-  const [tokenInput, setTokenInput] = useState('');
+  const [adminToken] = useState(HARDCODED_ADMIN_TOKEN);
   const [metrics, setMetrics] = useState<DashboardMetricsResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | DashboardRunStatus>('all');
   const [vendorFilter, setVendorFilter] = useState('');
+  const [clientFilter, setClientFilter] = useState('');
   const [modelFilter, setModelFilter] = useState('');
   const [fromFilter, setFromFilter] = useState(toInputDate(defaultFrom));
   const [toFilter, setToFilter] = useState(toInputDate(now));
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const stored = window.localStorage.getItem(ADMIN_TOKEN_KEY) ?? '';
-    setAdminToken(stored);
-    setTokenInput(stored);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    if (adminToken) {
-      window.localStorage.setItem(ADMIN_TOKEN_KEY, adminToken);
-    } else {
-      window.localStorage.removeItem(ADMIN_TOKEN_KEY);
-    }
-  }, [adminToken]);
+  const [vendorOptions, setVendorOptions] = useState<EntityOption[]>([]);
+  const [clientOptions, setClientOptions] = useState<EntityOption[]>([]);
+  const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
+  const [clientNames, setClientNames] = useState<Record<string, string>>({});
 
   const loadMetrics = useCallback(async () => {
     if (!adminToken) {
@@ -130,23 +184,111 @@ export default function AdminMetricsPage() {
         {
           vendorId: vendorFilter.trim() || undefined,
           model: modelFilter.trim() || undefined,
+          clientId: clientFilter || undefined,
           status: statusFilter === 'all' ? undefined : statusFilter,
-          from: fromFilter ? new Date(fromFilter).toISOString() : undefined,
-          to: toFilter ? new Date(toFilter).toISOString() : undefined,
+          from: toStartOfDayIso(fromFilter),
+          to: toEndOfDayIso(toFilter),
         },
         adminToken,
       );
       setMetrics(response);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudieron cargar las métricas. Revisa el backend.',
-      );
+      if (err instanceof Error) {
+        const code = (err as { code?: string }).code;
+        if (code === 'UNAUTHORIZED') {
+          setError(
+            'Token inválido. Define ADMIN_API_TOKEN en el backend y vuelve a introducirlo en esta pantalla.',
+          );
+        } else if (code === 'INTERNAL_ERROR') {
+          setError(
+            `No se pudieron cargar las métricas. Asegúrate de ejecutar "pnpm prisma migrate deploy" y revisa el backend. Detalle: ${err.message}`,
+          );
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('No se pudieron cargar las métricas. Revisa el backend.');
+      }
     } finally {
       setLoading(false);
     }
-  }, [adminToken, vendorFilter, modelFilter, statusFilter, fromFilter, toFilter]);
+  }, [adminToken, vendorFilter, clientFilter, modelFilter, statusFilter, fromFilter, toFilter]);
+  useEffect(() => {
+    if (!metrics) {
+      setVendorOptions([]);
+      return;
+    }
+    const vendorIds = Array.from(
+      new Set(metrics.recentRuns.map((run) => run.vendorId).filter(Boolean)),
+    );
+    setVendorOptions(
+      vendorIds
+        .map((id) => ({
+          id,
+          name: vendorNames[id] ?? id,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name, 'es')),
+    );
+    const missing = vendorIds.filter((id) => !vendorNames[id]);
+    if (missing.length === 0) {
+      return;
+    }
+    void (async () => {
+      const entries = await Promise.all(
+        missing.map(async (id) => {
+          try {
+            const vendor = await getVendor(id);
+            return { id, name: vendor.name };
+          } catch {
+            return { id, name: id };
+          }
+        }),
+      );
+      setVendorNames((prev) => ({
+        ...prev,
+        ...Object.fromEntries(entries.map((entry) => [entry.id, entry.name])),
+      }));
+    })();
+  }, [metrics, vendorNames]);
+
+  useEffect(() => {
+    if (!metrics) {
+      setClientOptions([]);
+      return;
+    }
+    const clientIds = Array.from(
+      new Set(metrics.recentRuns.map((run) => run.clientId).filter(Boolean)),
+    );
+    setClientOptions(
+      clientIds
+        .map((id) => ({
+          id,
+          name: clientNames[id] ?? id,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name, 'es')),
+    );
+    const missing = clientIds.filter((id) => !clientNames[id]);
+    if (missing.length === 0) {
+      return;
+    }
+    void (async () => {
+      const entries = await Promise.all(
+        missing.map(async (id) => {
+          try {
+            const client = await getClient(id);
+            return { id, name: client.name };
+          } catch {
+            return { id, name: id };
+          }
+        }),
+      );
+      setClientNames((prev) => ({
+        ...prev,
+        ...Object.fromEntries(entries.map((entry) => [entry.id, entry.name])),
+      }));
+    })();
+  }, [metrics, clientNames]);
+
 
   useEffect(() => {
     if (adminToken) {
@@ -158,21 +300,27 @@ export default function AdminMetricsPage() {
     if (!metrics) {
       return [];
     }
-    return metrics.phases.map((phase) => ({
-      phase: phaseLabels[phase.phase] ?? phase.phase,
-      'Media (s)': phase.avgDurationMs ? phase.avgDurationMs / 1000 : 0,
-      'P95 (s)': phase.p95DurationMs ? phase.p95DurationMs / 1000 : 0,
-    }));
-  }, [metrics]);
-
-  const modelListData = useMemo(() => {
-    if (!metrics) {
-      return [];
-    }
-    return metrics.models.map((model) => ({
-      name: model.model,
-      value: model.totalRuns,
-    }));
+    const executionOrder: DashboardPhaseType[] = [
+      'deepResearch',
+      'clientResearch',
+      'vendorResearch',
+      'fitStrategy',
+      'proposalOutline',
+      'newsResearch',
+      'persistToDb',
+    ];
+    return executionOrder
+      .map((phaseKey) => {
+        const phase = metrics.phases.find((item) => item.phase === phaseKey);
+        if (!phase) {
+          return null;
+        }
+        return {
+          phase: phaseLabels[phase.phase] ?? phase.phase,
+          avgSeconds: phase.avgDurationMs ? phase.avgDurationMs / 1000 : 0,
+        };
+      })
+      .filter(Boolean) as Array<{ phase: string; avgSeconds: number }>;
   }, [metrics]);
 
   const summaryItems = useMemo(
@@ -195,10 +343,6 @@ export default function AdminMetricsPage() {
     [metrics],
   );
 
-  const handleTokenSave = () => {
-    setAdminToken(tokenInput.trim());
-  };
-
   const hasMetrics = metrics && metrics.recentRuns.length > 0;
 
   return (
@@ -207,6 +351,41 @@ export default function AdminMetricsPage() {
       description="Monitoriza el rendimiento de cada fase LLM y compara modelos"
     >
       <div className="space-y-6">
+        {metrics ? (
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900/70 to-slate-900/30 p-6 text-slate-100">
+            <div className="flex flex-wrap items-center gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                  Ventana activa
+                </p>
+                <p className="mt-2 text-2xl font-semibold">
+                  {formatShortDate(metrics.summary.from)} — {formatShortDate(metrics.summary.to)}
+                </p>
+              </div>
+              <div className="hidden h-10 w-px bg-white/10 md:block" />
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Última vista</p>
+                <p className="mt-2 text-lg font-medium text-white">
+                  {new Date().toLocaleString('es-ES', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
+              <div className="ml-auto flex gap-2 text-xs text-slate-300">
+                <div className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  Datos en vivo
+                </div>
+                <div className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
+                  <span className="h-2 w-2 rounded-full bg-sky-400" />
+                  Tremor + shadcn UI
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <AdminSettingsShell
           title="Acceso y filtros"
           description="Configura el token de administrador y los filtros de consulta."
@@ -214,30 +393,61 @@ export default function AdminMetricsPage() {
           <div className="space-y-6">
             <AdminSection
               title="Token de administrador"
-              helpText="El token se almacena de forma local en tu navegador."
+              helpText="Este entorno usa un token fijo para facilitar las pruebas."
             >
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Input
-                  type="password"
-                  placeholder="Introduce el token seguro"
-                  value={tokenInput}
-                  onChange={(event) => setTokenInput(event.target.value)}
-                />
-                <Button onClick={handleTokenSave}>Guardar token</Button>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Token aplicado automáticamente:{' '}
+                <span className="font-mono text-foreground">{HARDCODED_ADMIN_TOKEN}</span>
+              </p>
             </AdminSection>
 
             <AdminSection title="Filtros de consulta">
-              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground">
-                    Vendor ID
+                    Vendor
                   </p>
-                  <Input
-                    placeholder="vendor_xxx"
-                    value={vendorFilter}
-                    onChange={(event) => setVendorFilter(event.target.value)}
-                  />
+                  <Select
+                    value={vendorFilter || ALL_OPTION_VALUE}
+                    onValueChange={(value) =>
+                      setVendorFilter(value === ALL_OPTION_VALUE ? '' : value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Todos" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ALL_OPTION_VALUE}>Todos</SelectItem>
+                      {vendorOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Cliente
+                  </p>
+                  <Select
+                    value={clientFilter || ALL_OPTION_VALUE}
+                    onValueChange={(value) =>
+                      setClientFilter(value === ALL_OPTION_VALUE ? '' : value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Todos" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ALL_OPTION_VALUE}>Todos</SelectItem>
+                      {clientOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground">
@@ -309,14 +519,14 @@ export default function AdminMetricsPage() {
         </AdminSettingsShell>
 
         {error ? (
-          <TremorCard>
+          <TremorCard className={tremorCardClass}>
             <Title>Advertencia</Title>
             <Text className="text-rose-500">{error}</Text>
           </TremorCard>
         ) : null}
 
         {!hasMetrics && !loading ? (
-          <TremorCard>
+          <TremorCard className={tremorCardClass}>
             <Title>Sin datos todavía</Title>
             <Text>
               Ejecuta un dashboard o ajusta los filtros para ver estadísticas de
@@ -328,65 +538,59 @@ export default function AdminMetricsPage() {
         {hasMetrics ? (
           <div className="space-y-6">
             <Grid numItemsSm={2} numItemsLg={3} className="gap-4">
-              {summaryItems.map((item) => (
-                <TremorCard key={item.label} className="shadow-sm">
-                  <Text>{item.label}</Text>
-                  <Metric>{item.value}</Metric>
-                </TremorCard>
-              ))}
+              {summaryItems.map((item, index) => {
+                const theme = summaryCardThemes[index % summaryCardThemes.length];
+                const Icon = theme.icon;
+                return (
+                  <div
+                    key={item.label}
+                    className={`relative overflow-hidden rounded-2xl border ${theme.border} bg-gradient-to-br ${theme.gradient} p-5`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                          {item.label}
+                        </p>
+                        <p className="mt-3 text-3xl font-semibold text-white">{item.value}</p>
+                      </div>
+                      <div
+                        className={`flex h-11 w-11 items-center justify-center rounded-full ${theme.iconBg}`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </div>
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/20 to-transparent" />
+                  </div>
+                );
+              })}
             </Grid>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <TremorCard className="shadow-sm">
-                <Flex className="items-center justify-between">
-                  <Title>Duración media por fase</Title>
-                  <Text>Comparación media vs. p95</Text>
-                </Flex>
-                <BarChart
-                  className="mt-6 h-72"
-                  data={phaseChartData}
-                  index="phase"
-                  categories={['Media (s)', 'P95 (s)']}
-                  colors={['blue', 'fuchsia']}
-                  valueFormatter={(value) => `${value.toFixed(1)} s`}
-                />
-              </TremorCard>
-
-              <TremorCard className="shadow-sm">
-                <Flex className="items-center justify-between">
-                  <Title>Distribución por modelo</Title>
-                  <Text>Runs recientes</Text>
-                </Flex>
-                <DonutChart
-                  className="mt-6 h-72"
-                  data={modelListData}
-                  category="value"
-                  index="name"
-                  colors={['cyan', 'violet', 'amber', 'emerald', 'purple']}
-                  valueFormatter={(value) => `${value} runs`}
-                  showLabel
-                />
-              </TremorCard>
-            </div>
-
-            <TremorCard className="shadow-sm">
+            <TremorCard
+              className="border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900/60 to-slate-900/20 text-white"
+            >
               <Flex className="items-center justify-between">
-                <Title>Fases más costosas</Title>
-                <Text>Ordenadas por ejecuciones</Text>
+                <div>
+                  <Title>Duración por fase</Title>
+                  <Text className="text-sm text-slate-300">Orden secuencial del dashboard</Text>
+                </div>
+                <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-slate-100">
+                  <span className="h-2 w-2 rounded-full bg-sky-400" />
+                  Tiempo medio (s)
+                </div>
               </Flex>
-              <BarList
-                className="mt-6"
-                data={metrics!.phases
-                  .map((phase) => ({
-                    name: `${phaseLabels[phase.phase] ?? phase.phase} (${phase.executions})`,
-                    value: phase.avgDurationMs ? phase.avgDurationMs / 1000 : 0,
-                  }))
-                  .sort((a, b) => b.value - a.value)}
+              <BarChart
+                className="mt-6 h-72 text-white"
+                data={phaseChartData}
+                index="phase"
+                categories={['avgSeconds']}
+                colors={['sky']}
+                layout="vertical"
                 valueFormatter={(value) => `${value.toFixed(1)} s`}
+                yAxisWidth={160}
               />
             </TremorCard>
 
-            <TremorCard className="shadow-sm">
+            <TremorCard className={tremorCardClass}>
               <Title>Últimos runs</Title>
               <Text className="text-sm text-muted-foreground">
                 Historial más reciente limitado a 20 ejecuciones.
@@ -394,12 +598,12 @@ export default function AdminMetricsPage() {
               <div className="mt-4 overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Run</TableHead>
-                      <TableHead>Duración</TableHead>
-                      <TableHead>Modelo</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead>Fases</TableHead>
+                    <TableRow className="border-b border-white/10">
+                      <TableHead className="text-slate-300">Run</TableHead>
+                      <TableHead className="text-slate-300">Duración</TableHead>
+                      <TableHead className="text-slate-300">Modelo</TableHead>
+                      <TableHead className="text-slate-300">Estado</TableHead>
+                      <TableHead className="text-slate-300">Fases</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -408,7 +612,10 @@ export default function AdminMetricsPage() {
                         (phase) => phase.status === 'error',
                       );
                       return (
-                        <TableRow key={run.id}>
+                        <TableRow
+                          key={run.id}
+                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                        >
                           <TableCell>
                             <div className="text-sm font-medium">
                               {run.id.slice(-8)}

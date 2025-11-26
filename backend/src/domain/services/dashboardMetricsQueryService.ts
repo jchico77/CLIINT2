@@ -10,6 +10,7 @@ export interface DashboardMetricsFilters {
   from?: Date;
   to?: Date;
   vendorId?: string;
+  clientId?: string;
   model?: string;
   status?: DashboardRunStatus;
 }
@@ -88,6 +89,9 @@ export class DashboardMetricsQueryService {
 
     if (filters.vendorId) {
       runWhere.vendorId = filters.vendorId;
+    }
+    if (filters.clientId) {
+      runWhere.clientId = filters.clientId;
     }
     if (filters.model) {
       runWhere.llmModelUsed = filters.model;

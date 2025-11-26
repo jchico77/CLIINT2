@@ -38,7 +38,6 @@ import {
   Briefcase,
   Calendar,
   ArrowRight,
-  Building2,
   ExternalLink,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -46,43 +45,20 @@ import { es } from 'date-fns/locale';
 
 export default function OpportunitiesPage() {
   const router = useRouter();
-  const [vendorInput, setVendorInput] = useState('');
-  const [selectedVendor, setSelectedVendor] = useState<string | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [clients, setClients] = useState<Record<string, ClientAccount>>({});
   const [services, setServices] = useState<Record<string, ServiceOffering>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [vendorFilter, setVendorFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [dashboardByOpportunity, setDashboardByOpportunity] = useState<Record<string, DashboardSummary>>({});
 
   useEffect(() => {
-    const cachedVendor = typeof window !== 'undefined'
-      ? window.localStorage.getItem('cliint:lastVendorId')
-      : null;
-    if (cachedVendor) {
-      setVendorInput(cachedVendor);
-      setSelectedVendor(cachedVendor);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!selectedVendor) {
-      setOpportunities([]);
-      setClients({});
-      setServices({});
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
-    Promise.all([
-      getOpportunities(selectedVendor),
-      getClients(selectedVendor),
-      getServices(selectedVendor),
-      getAllDashboards(selectedVendor),
-    ])
+    Promise.all([getOpportunities(), getClients(), getServices(), getAllDashboards()])
       .then(([opps, clientList, serviceList, dashboards]) => {
         const clientMap = Object.fromEntries(clientList.map((c) => [c.id, c]));
         const serviceMap = Object.fromEntries(serviceList.map((s) => [s.id, s]));
@@ -100,15 +76,18 @@ export default function OpportunitiesPage() {
       })
       .catch((err) => setError(err instanceof Error ? err.message : 'Error desconocido'))
       .finally(() => setLoading(false));
-  }, [selectedVendor]);
-
-  useEffect(() => {
-    setSearchTerm('');
-  }, [selectedVendor]);
+  }, []);
 
   const filteredOpportunities = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
+    const vendorQuery = vendorFilter.trim().toLowerCase();
     return opportunities.filter((opportunity) => {
+      const matchesVendor = vendorQuery
+        ? opportunity.vendorId.toLowerCase().includes(vendorQuery)
+        : true;
+      if (!matchesVendor) {
+        return false;
+      }
       if (!query) {
         return true;
       }
@@ -117,27 +96,14 @@ export default function OpportunitiesPage() {
       const haystack = `${opportunity.name} ${clientName} ${serviceName}`.toLowerCase();
       return haystack.includes(query);
     });
-  }, [opportunities, searchTerm, clients, services]);
-
-  const handleVendorSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!vendorInput.trim()) {
-      setSelectedVendor(null);
-      return;
-    }
-    setSelectedVendor(vendorInput.trim());
-    window.localStorage.setItem('cliint:lastVendorId', vendorInput.trim());
-  };
+  }, [opportunities, searchTerm, clients, services, vendorFilter]);
 
   const headerDescription = useMemo(() => {
-    if (!selectedVendor) {
-      return 'Introduce un vendorId para ver sus oportunidades en memoria.';
-    }
     if (loading) {
-      return `Cargando oportunidades de ${selectedVendor}...`;
+      return 'Cargando oportunidades globales...';
     }
-    return `${filteredOpportunities.length} oportunidad(es) visibles para ${selectedVendor}`;
-  }, [selectedVendor, loading, filteredOpportunities.length]);
+    return `${filteredOpportunities.length} oportunidad(es) visibles en memoria`;
+  }, [loading, filteredOpportunities.length]);
 
   return (
     <AppShell
@@ -161,45 +127,39 @@ export default function OpportunitiesPage() {
       <div className="space-y-6">
         <Card>
           <CardHeader className="flex flex-col gap-2">
-            <CardTitle>Vendor ID</CardTitle>
+            <CardTitle>Filtros rápidos</CardTitle>
             <CardDescription>
-              Trabajamos en memoria, así que indica el vendorId que quieras consultar.
+              Explora todas las oportunidades en memoria y acótalas si lo necesitas.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleVendorSubmit} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-                <div className="space-y-2">
-                  <Label htmlFor="vendor-id">Vendor ID</Label>
-                  <Input
-                    id="vendor-id"
-                    value={vendorInput}
-                    onChange={(event) => setVendorInput(event.target.value)}
-                    placeholder="vendor_123..."
-                    className="text-sm"
-                  />
-                </div>
-                <Button type="submit" className="gap-2" disabled={loading}>
-                  <Building2 className="h-4 w-4" />
-                  {loading ? 'Cargando...' : 'Cargar oportunidades'}
-                </Button>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="vendor-filter">Filtrar por vendorId</Label>
+                <Input
+                  id="vendor-filter"
+                  value={vendorFilter}
+                  onChange={(event) => setVendorFilter(event.target.value)}
+                  placeholder="vendor_123..."
+                  className="text-sm"
+                />
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-            </form>
+              <div className="space-y-2">
+                <Label htmlFor="search-term">Buscar por nombre, cliente o servicio</Label>
+                <Input
+                  id="search-term"
+                  placeholder="Escribe un nombre de oportunidad, cliente o servicio"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  className="text-sm"
+                />
+              </div>
+            </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
           </CardContent>
         </Card>
 
-        {!selectedVendor ? (
-          <Card className="border-dashed">
-            <CardContent className="py-12 text-center space-y-3">
-              <Briefcase className="h-14 w-14 text-muted-foreground mx-auto" />
-              <h2 className="text-xl font-semibold">Selecciona un vendor</h2>
-              <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                Una vez creado tu vendor desde “Nueva oportunidad”, podrás ver todas sus oportunidades y filtrarlas por nombre, cliente o servicio.
-              </p>
-            </CardContent>
-          </Card>
-        ) : loading ? (
+        {loading ? (
           <Card>
             <CardContent className="flex items-center justify-center py-12 text-muted-foreground">
               Cargando pipeline...
@@ -207,21 +167,11 @@ export default function OpportunitiesPage() {
           </Card>
         ) : (
           <Card>
-            <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <CardTitle>Pipeline activo</CardTitle>
-                <CardDescription>
-                  {filteredOpportunities.length} registros — vendor {selectedVendor}
-                </CardDescription>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Input
-                  placeholder="Buscar por nombre, cliente o servicio"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  className="sm:w-64"
-                />
-              </div>
+            <CardHeader>
+              <CardTitle>Pipeline activo</CardTitle>
+              <CardDescription>
+                {filteredOpportunities.length} registros filtrados — total cargado {opportunities.length}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {filteredOpportunities.length === 0 ? (
@@ -230,7 +180,7 @@ export default function OpportunitiesPage() {
                   <div>
                     <h3 className="text-lg font-semibold">No hay oportunidades que coincidan</h3>
                     <p className="text-sm text-muted-foreground">
-                      Ajusta los filtros o crea una nueva oportunidad para {selectedVendor}.
+                      Ajusta los filtros o crea una nueva oportunidad desde el botón superior.
                     </p>
                   </div>
                   <Link href="/opportunities/new">
@@ -243,6 +193,7 @@ export default function OpportunitiesPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Oportunidad</TableHead>
+                        <TableHead>Vendor</TableHead>
                         <TableHead>Cliente</TableHead>
                         <TableHead>Servicio</TableHead>
                         <TableHead>Último dashboard</TableHead>
@@ -272,6 +223,11 @@ export default function OpportunitiesPage() {
                               <p className="text-xs text-muted-foreground line-clamp-2">
                                 {opportunity.notes || 'Sin notas registradas.'}
                               </p>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-xs font-semibold uppercase tracking-wide">
+                                {opportunity.vendorId}
+                              </div>
                             </TableCell>
                             <TableCell>
                               <div className="text-sm font-semibold">{clientName}</div>

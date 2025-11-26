@@ -51,15 +51,21 @@ interface FinishPhaseInput {
 }
 
 export class DashboardMetricsService {
-  private static handlePersistenceError(error: unknown, action: string): void {
+  private static handlePersistenceError(error: unknown, action: string): never {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2021') {
-      logger.warn({ action, code: error.code }, 'Dashboard metrics tables unavailable');
-      return;
+      const message =
+        'Las tablas de métricas no existen. Ejecuta "pnpm prisma migrate deploy" antes de volver a generar dashboards.';
+      logger.error({ action, code: error.code }, message);
+      throw new Error(message);
     }
-    logger.warn({ action, error }, 'Dashboard metrics persistence failed');
+    logger.error({ action, error }, 'Dashboard metrics persistence failed');
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(`Dashboard metrics ${action} failed`);
   }
 
-  static async startRun(input: StartRunInput): Promise<RunHandle | null> {
+  static async startRun(input: StartRunInput): Promise<RunHandle> {
     try {
       const run = await prisma.dashboardGenerationRun.create({
         data: {
@@ -78,7 +84,6 @@ export class DashboardMetricsService {
       return run;
     } catch (error) {
       this.handlePersistenceError(error, 'startRun');
-      return null;
     }
   }
 
@@ -108,7 +113,7 @@ export class DashboardMetricsService {
     }
   }
 
-  static async startPhase(input: StartPhaseInput): Promise<PhaseHandle | null> {
+  static async startPhase(input: StartPhaseInput): Promise<PhaseHandle> {
     try {
       const phase = await prisma.dashboardPhaseMetric.create({
         data: {
@@ -127,7 +132,6 @@ export class DashboardMetricsService {
       return phase;
     } catch (error) {
       this.handlePersistenceError(error, 'startPhase');
-      return null;
     }
   }
 

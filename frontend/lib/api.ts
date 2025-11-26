@@ -31,9 +31,11 @@ interface APIError {
 
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    cache: 'no-store',
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
       ...options?.headers,
     },
   });
@@ -99,8 +101,11 @@ export async function createService(
   });
 }
 
-export async function getServices(vendorId: string): Promise<ServiceOffering[]> {
-  return fetchAPI<ServiceOffering[]>(`/vendors/${vendorId}/services`);
+export async function getServices(vendorId?: string): Promise<ServiceOffering[]> {
+  if (vendorId) {
+    return fetchAPI<ServiceOffering[]>(`/vendors/${vendorId}/services`);
+  }
+  return fetchAPI<ServiceOffering[]>('/services');
 }
 
 export async function getService(serviceId: string): Promise<ServiceOffering> {
@@ -118,8 +123,11 @@ export async function createClient(
   });
 }
 
-export async function getClients(vendorId: string): Promise<ClientAccount[]> {
-  return fetchAPI<ClientAccount[]>(`/vendors/${vendorId}/clients`);
+export async function getClients(vendorId?: string): Promise<ClientAccount[]> {
+  if (vendorId) {
+    return fetchAPI<ClientAccount[]>(`/vendors/${vendorId}/clients`);
+  }
+  return fetchAPI<ClientAccount[]>('/clients');
 }
 
 export async function getClient(clientId: string): Promise<ClientAccount> {
@@ -148,8 +156,11 @@ export async function createOpportunity(
   });
 }
 
-export async function getOpportunities(vendorId: string): Promise<Opportunity[]> {
-  return fetchAPI<Opportunity[]>(`/vendors/${vendorId}/opportunities`);
+export async function getOpportunities(vendorId?: string): Promise<Opportunity[]> {
+  if (vendorId) {
+    return fetchAPI<Opportunity[]>(`/vendors/${vendorId}/opportunities`);
+  }
+  return fetchAPI<Opportunity[]>('/opportunities');
 }
 
 export async function getOpportunity(opportunityId: string): Promise<Opportunity> {
@@ -495,6 +506,9 @@ export async function getDashboardMetrics(
   }
   if (filters.vendorId) {
     params.set('vendorId', filters.vendorId);
+  }
+  if (filters.clientId) {
+    params.set('clientId', filters.clientId);
   }
   if (filters.model) {
     params.set('model', filters.model);

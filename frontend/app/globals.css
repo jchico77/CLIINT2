@@ -24,6 +24,20 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    /* Tremor tokens (light) */
+    --tremor-background: hsl(var(--background));
+    --tremor-foreground: hsl(var(--foreground));
+    --tremor-muted: hsl(var(--muted));
+    --tremor-muted-foreground: hsl(var(--muted-foreground));
+    --tremor-border: hsl(var(--border));
+    --tremor-ring: hsl(var(--ring));
+    --tremor-primary: hsl(222.2 47.4% 11.2%);
+    --tremor-primary-foreground: hsl(210 40% 98%);
+    --tremor-secondary: hsl(219 84% 67%);
+    --tremor-secondary-foreground: hsl(222.2 47.4% 11.2%);
+    --tremor-destructive: hsl(var(--destructive));
+    --tremor-destructive-foreground: hsl(var(--destructive-foreground));
   }
 
   .dark {
@@ -46,6 +60,20 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* Tremor tokens (dark) */
+    --tremor-background: hsl(var(--background));
+    --tremor-foreground: hsl(var(--foreground));
+    --tremor-muted: hsl(var(--muted));
+    --tremor-muted-foreground: hsl(var(--muted-foreground));
+    --tremor-border: hsl(var(--border));
+    --tremor-ring: hsl(var(--ring));
+    --tremor-primary: hsl(210 40% 98%);
+    --tremor-primary-foreground: hsl(222.2 47.4% 11.2%);
+    --tremor-secondary: hsl(191 97% 77%);
+    --tremor-secondary-foreground: hsl(222.2 47.4% 11.2%);
+    --tremor-destructive: hsl(var(--destructive));
+    --tremor-destructive-foreground: hsl(var(--destructive-foreground));
   }
 }
 
@@ -62,6 +90,42 @@
   /* Progress indicator dynamic transform using CSS custom property */
   .progress-indicator {
     transform: translateX(calc(-1 * var(--progress-translate, 0%)));
+  }
+
+  /* Recharts & Tremor visual adjustments */
+  .dark .recharts-cartesian-grid-horizontal line,
+  .dark .recharts-cartesian-grid-vertical line {
+    stroke: hsl(var(--border)) !important;
+  }
+
+  .dark .recharts-cartesian-axis-tick tspan,
+  .dark .recharts-polar-angle-axis-tick text,
+  .dark .recharts-default-legend,
+  .dark .recharts-text tspan {
+    fill: hsl(var(--muted-foreground)) !important;
+  }
+
+  .dark .recharts-legend-item-text {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  .recharts-default-tooltip {
+    background-color: hsl(var(--card)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.65rem !important;
+    color: hsl(var(--card-foreground)) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    font-size: 0.85rem;
+  }
+
+  .recharts-tooltip-label {
+    color: hsl(var(--muted-foreground)) !important;
+    margin-bottom: 0.25rem;
+  }
+
+  .recharts-tooltip-item-list .recharts-tooltip-item {
+    color: hsl(var(--card-foreground)) !important;
   }
 }
 

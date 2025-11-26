@@ -31,6 +31,10 @@ adminMetricsRouter.get('/', async (req: Request, res: Response) => {
       typeof req.query.vendorId === 'string' && req.query.vendorId.length > 0
         ? req.query.vendorId
         : undefined;
+    const clientId =
+      typeof req.query.clientId === 'string' && req.query.clientId.length > 0
+        ? req.query.clientId
+        : undefined;
     const model =
       typeof req.query.model === 'string' && req.query.model.length > 0
         ? req.query.model
@@ -72,6 +76,7 @@ adminMetricsRouter.get('/', async (req: Request, res: Response) => {
       from: parsedFrom ?? undefined,
       to: parsedTo ?? undefined,
       vendorId,
+      clientId,
       model,
       status: runStatus,
     });

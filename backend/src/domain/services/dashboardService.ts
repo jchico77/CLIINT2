@@ -492,7 +492,7 @@ export class DashboardService {
     const deepPersisted = await loadPersistedPhase<ClientDeepResearchReport>('deepResearch');
     let deepResearchReport = deepPersisted.value;
     const deepPhaseMetadata = {
-      source: 'dashboardService',
+      source: 'dashboardService' as const,
       vendorId: vendor.id,
       clientId: client.id,
       serviceId: service.id,

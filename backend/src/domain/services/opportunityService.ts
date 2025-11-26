@@ -52,12 +52,16 @@ export class OpportunityService {
     return opportunity ? mapOpportunity(opportunity) : null;
   }
 
-  static async listOpportunitiesByVendor(vendorId: string): Promise<Opportunity[]> {
+  static async listOpportunities(params?: { vendorId?: string }): Promise<Opportunity[]> {
     const records = await prisma.opportunity.findMany({
-      where: { vendorId },
+      where: params?.vendorId ? { vendorId: params.vendorId } : undefined,
       orderBy: { createdAt: 'desc' },
     });
     return records.map(mapOpportunity);
+  }
+
+  static async listOpportunitiesByVendor(vendorId: string): Promise<Opportunity[]> {
+    return this.listOpportunities({ vendorId });
   }
 }
 

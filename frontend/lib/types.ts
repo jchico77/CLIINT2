@@ -459,6 +459,7 @@ export interface AdminSettings {
 
 export interface DashboardMetricsFilters {
   vendorId?: string;
+  clientId?: string;
   model?: string;
   status?: DashboardRunStatus;
   from?: string;
