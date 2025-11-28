@@ -6,6 +6,7 @@ import { llmConfig } from '../config/llm';
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
+import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
 
 export interface VendorResearchOutput {
   serviceOfferings: Array<{
@@ -131,24 +132,31 @@ SERVICIO FOCO
 Genera serviceOfferings, differentiators y un evidencePack con items relevantes. 
 Si no hay evidencias específicas disponibles, crea ejemplos plausibles para este tipo de servicio basados en mejores prácticas del sector.`;
 
+    const model = llmConfig.vendorResearchModel;
+    const capabilities = getModelCapabilities(model);
+    const temperature = capabilities.supportsTemperature
+      ? llmConfig.temperatureOverrides.vendorResearchTemp ?? capabilities.defaultTemperature
+      : undefined;
+    const maxOutputTokens = capabilities.supportsMaxOutputTokens
+      ? llmConfig.tokenLimits.vendorResearchTokens
+      : undefined;
     const canUseFileSearch =
       Boolean(llmConfig.vendorEvidenceVectorStoreId) && llmConfig.featureToggles.fileSearch;
-    const tools = canUseFileSearch
-      ? ([{ type: 'file_search' }] as OpenAI.Responses.ResponseCreateParams['tools'])
-      : undefined;
-    const toolResources = canUseFileSearch && llmConfig.vendorEvidenceVectorStoreId
-      ? { file_search: { vector_store_ids: [llmConfig.vendorEvidenceVectorStoreId] } }
-      : undefined;
+    const { tools, toolResources, usesFileSearch } = buildToolsForModel(model, {
+      allowWebSearch: false,
+      allowFileSearch: canUseFileSearch,
+      vectorStoreId: llmConfig.vendorEvidenceVectorStoreId,
+    });
 
     try {
       logPhaseStart('vendorResearch', {
         source: 'agent' as const,
         vendorId: vendor.id,
         serviceId: service.id,
-        model: llmConfig.vendorResearchModel,
+        model,
         reasoningEffort: llmConfig.vendorResearchReasoningEffort,
         usesWebSearch: false,
-        usesFileSearch: canUseFileSearch,
+        usesFileSearch,
       });
       logger.info(
         { vendorId: vendor.id, serviceId: service.id },
@@ -156,8 +164,14 @@ Si no hay evidencias específicas disponibles, crea ejemplos plausibles para est
       );
 
       const requestPayload = {
-        model: llmConfig.vendorResearchModel,
-        reasoning: { effort: llmConfig.vendorResearchReasoningEffort },
+        model,
+        ...(capabilities.supportsReasoning
+          ? { reasoning: { effort: llmConfig.vendorResearchReasoningEffort } }
+          : {}),
+        ...(typeof temperature === 'number' ? { temperature } : {}),
+        ...(typeof maxOutputTokens === 'number'
+          ? { max_output_tokens: maxOutputTokens }
+          : {}),
         input: [
           {
             role: 'system',

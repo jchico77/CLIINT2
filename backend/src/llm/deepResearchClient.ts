@@ -7,6 +7,7 @@ import {
 import { LLMError } from '../domain/errors/AppError';
 import { logger } from '../lib/logger';
 import { logPhaseStart } from './phaseLogger';
+import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
 
 const openai = new OpenAI({
   apiKey: llmConfig.openaiApiKey,
@@ -169,6 +170,18 @@ export async function runClientDeepResearch(
   const reasoningEffort: ReasoningEffort =
     options.reasoningEffort || llmConfig.deepResearchReasoningEffort || 'low';
   const debugEnabled = llmConfig.deepResearchDebug;
+  const capabilities = getModelCapabilities(model);
+  const temperature = capabilities.supportsTemperature
+    ? llmConfig.temperatureOverrides.deepResearchTemp ?? capabilities.defaultTemperature
+    : undefined;
+  const maxOutputTokens = capabilities.supportsMaxOutputTokens
+    ? llmConfig.tokenLimits.deepResearchTokens
+    : undefined;
+
+  const { tools, usesWebSearch } = buildToolsForModel(model, {
+    allowWebSearch: llmConfig.featureToggles.webSearch,
+    allowFileSearch: false,
+  });
 
   const start = Date.now();
   logPhaseStart('deepResearch', {
@@ -177,7 +190,7 @@ export async function runClientDeepResearch(
     serviceOfferingName: input.serviceOfferingName,
     model,
     reasoningEffort,
-    usesWebSearch: true,
+    usesWebSearch,
     usesFileSearch: false,
   });
   logger.info(
@@ -215,15 +228,17 @@ export async function runClientDeepResearch(
   }, HEARTBEAT_INTERVAL_MS);
 
   try {
-    const tools = llmConfig.featureToggles.webSearch
-      ? ([{ type: 'web_search' }] as OpenAI.Responses.ResponseCreateParams['tools'])
-      : undefined;
-
     const response = (await withTimeout(
       openai.responses.create(
         {
           model,
-          reasoning: { effort: reasoningEffort },
+          ...(capabilities.supportsReasoning
+            ? { reasoning: { effort: reasoningEffort } }
+            : {}),
+          ...(typeof temperature === 'number' ? { temperature } : {}),
+          ...(typeof maxOutputTokens === 'number'
+            ? { max_output_tokens: maxOutputTokens }
+            : {}),
           ...(tools ? { tools } : {}),
           input: [
             {

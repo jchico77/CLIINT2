@@ -16,8 +16,7 @@ import { llmConfig } from '../config/llm';
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-
-type ResponseTool = NonNullable<OpenAI.Responses.ResponseCreateParams['tools']>[number];
+import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
 
 export interface FitAndStrategyOutput {
   stakeholderMap: StakeholderMapSection;
@@ -99,20 +98,32 @@ export class FitAndStrategyAgent {
     const openai = ensureOpenAIClient();
     const enableFitStrategyWebSearch = false;
     const enableFitStrategyFileSearch = false;
-    const usesWebSearch = enableFitStrategyWebSearch && llmConfig.featureToggles.webSearch;
+    const model = llmConfig.fitStrategyModel;
+    const capabilities = getModelCapabilities(model);
+    const temperature = capabilities.supportsTemperature
+      ? llmConfig.temperatureOverrides.fitStrategyTemp ?? capabilities.defaultTemperature
+      : undefined;
+    const maxOutputTokens = capabilities.supportsMaxOutputTokens
+      ? llmConfig.tokenLimits.fitStrategyTokens
+      : undefined;
     const allowFileSearch =
       enableFitStrategyFileSearch &&
       Boolean(dossierVectorStoreId) &&
       llmConfig.featureToggles.fileSearch;
+    const { tools, toolResources, usesWebSearch, usesFileSearch } = buildToolsForModel(model, {
+      allowWebSearch: enableFitStrategyWebSearch && llmConfig.featureToggles.webSearch,
+      allowFileSearch,
+      vectorStoreId: dossierVectorStoreId,
+    });
     logPhaseStart('fitStrategy', {
       source: 'agent' as const,
       vendorId: vendor.id,
       clientId: client.id,
       serviceId: service.id,
-      model: llmConfig.fitStrategyModel,
+      model,
       reasoningEffort: llmConfig.fitStrategyReasoningEffort,
       usesWebSearch,
-      usesFileSearch: allowFileSearch,
+      usesFileSearch,
     });
 
     const systemPrompt = `Eres un estratega de ventas B2B experto con acceso a información en tiempo real. 
@@ -267,18 +278,6 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
   }
 }`;
 
-    const tools: OpenAI.Responses.ResponseCreateParams['tools'] = [];
-    if (usesWebSearch) {
-      tools.push({ type: 'web_search' });
-    }
-    if (allowFileSearch && dossierVectorStoreId) {
-      tools.push({ type: 'file_search' } as ResponseTool);
-    }
-
-    const toolResources = allowFileSearch && dossierVectorStoreId
-      ? { file_search: { vector_store_ids: [dossierVectorStoreId] } }
-      : undefined;
-
     try {
       logger.info(
         { vendorId: vendor.id, clientId: client.id, serviceId: service.id },
@@ -286,8 +285,14 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
       );
 
       const requestPayload = {
-        model: llmConfig.fitStrategyModel,
-        reasoning: { effort: llmConfig.fitStrategyReasoningEffort },
+        model,
+        ...(capabilities.supportsReasoning
+          ? { reasoning: { effort: llmConfig.fitStrategyReasoningEffort } }
+          : {}),
+        ...(typeof temperature === 'number' ? { temperature } : {}),
+        ...(typeof maxOutputTokens === 'number'
+          ? { max_output_tokens: maxOutputTokens }
+          : {}),
         input: [
           {
             role: 'system',
@@ -307,7 +312,7 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
         },
       } as Record<string, unknown>;
 
-      if (tools.length) {
+      if (tools && tools.length) {
         requestPayload.tools = tools;
       }
       if (toolResources) {
