@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { AdminSettings } from '../models/adminSettings';
 
-const modelOptions = ['gpt-5.1', 'gpt-5.1-mini', 'gpt-5-mini'] as const;
+const modelOptions = [
+  'gpt-5.1',
+  'gpt-5.1-mini',
+  'gpt-5-mini',
+  'gpt-4o',
+  'gpt-4o-mini',
+  'o3-mini',
+] as const;
 const reasoningEffort = ['low', 'medium', 'high'] as const;
 const loggingLevels = ['silent', 'info', 'debug'] as const;
 const languages = ['es', 'en', 'mix'] as const;

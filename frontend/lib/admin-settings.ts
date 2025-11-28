@@ -49,10 +49,48 @@ export const ADMIN_PHASES: Array<{
   },
 ];
 
-export const MODEL_OPTIONS: Array<{ value: AdminModelOption; label: string }> = [
-  { value: 'gpt-5.1', label: 'GPT-5.1 (full)' },
-  { value: 'gpt-5.1-mini', label: 'GPT-5.1 Mini' },
-  { value: 'gpt-5-mini', label: 'GPT-5 Mini' },
+export const MODEL_OPTIONS: Array<{
+  value: AdminModelOption;
+  label: string;
+  description?: string;
+  capabilities?: string[];
+}> = [
+  {
+    value: 'gpt-5.1',
+    label: 'GPT-5.1 (full)',
+    description: 'Máxima calidad y multimodalidad, con herramientas.',
+    capabilities: ['Web search', 'File search', 'Reasoning', 'Temp control'],
+  },
+  {
+    value: 'gpt-5.1-mini',
+    label: 'GPT-5.1 Mini',
+    description: 'Rápido y económico; soporta web/file search.',
+    capabilities: ['Web search', 'File search', 'Reasoning', 'Temp control'],
+  },
+  {
+    value: 'gpt-5-mini',
+    label: 'GPT-5 Mini',
+    description: 'Ligero de la serie GPT-5, texto puro.',
+    capabilities: ['File search', 'Reasoning', 'Temp control'],
+  },
+  {
+    value: 'gpt-4o',
+    label: 'GPT-4o',
+    description: 'Multimodal con herramientas y calidad 4o.',
+    capabilities: ['Web search', 'File search', 'Temp control'],
+  },
+  {
+    value: 'gpt-4o-mini',
+    label: 'GPT-4o Mini',
+    description: 'Versión mini optimizada en coste con tools.',
+    capabilities: ['Web search', 'File search', 'Temp control'],
+  },
+  {
+    value: 'o3-mini',
+    label: 'O3 Mini (reasoning)',
+    description: 'Modelo de razonamiento; coste/latencia bajos.',
+    capabilities: ['Reasoning', 'Max output tokens'],
+  },
 ];
 
 export const REASONING_OPTIONS: Array<{ value: AdminReasoningEffort; label: string }> = [

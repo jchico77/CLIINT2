@@ -10,8 +10,7 @@ import {
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-
-type ResponseTool = NonNullable<OpenAI.Responses.ResponseCreateParams['tools']>[number];
+import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
 
 const proposalOutlineSchema = loadDashboardSchema('proposalOutline') as Record<
   string,
@@ -111,47 +110,55 @@ Límites:
 - Usa evidencias reales cuando existan, si no, deja el array vacío
 - Mantén el contenido ejecutivo y accionable`;
 
-    const tools: OpenAI.Responses.ResponseCreateParams['tools'] = [];
-    if (llmConfig.featureToggles.webSearch) {
-      tools.push({ type: 'web_search' });
-    }
+    const model = llmConfig.proposalOutlineModel;
+    const capabilities = getModelCapabilities(model);
+    const temperature = capabilities.supportsTemperature
+      ? llmConfig.temperature || capabilities.defaultTemperature
+      : undefined;
+    const maxOutputTokens = capabilities.supportsMaxOutputTokens
+      ? llmConfig.tokenLimits.fitStrategyTokens
+      : undefined;
+    const allowWebSearch = llmConfig.featureToggles.webSearch;
     const allowFileSearch =
       Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch;
-    if (allowFileSearch && dossierVectorStoreId) {
-      tools.push({ type: 'file_search' } as ResponseTool);
-    }
-
-    const toolResources =
-      allowFileSearch && dossierVectorStoreId
-        ? { file_search: { vector_store_ids: [dossierVectorStoreId] } }
-        : undefined;
+    const { tools, toolResources, usesWebSearch, usesFileSearch } = buildToolsForModel(model, {
+      allowWebSearch,
+      allowFileSearch,
+      vectorStoreId: dossierVectorStoreId,
+    });
 
     logPhaseStart('proposalOutline', {
       source: 'agent' as const,
       clientId: params.client.id,
       serviceId: params.service.id,
-      model: llmConfig.proposalOutlineModel,
+      model,
       reasoningEffort: llmConfig.proposalOutlineReasoningEffort,
-      usesWebSearch: llmConfig.featureToggles.webSearch,
-      usesFileSearch: allowFileSearch,
+      usesWebSearch,
+      usesFileSearch,
     });
     logger.info(
       {
         phase: 'proposalOutline',
         clientId: params.client.id,
         serviceId: params.service.id,
-        model: llmConfig.proposalOutlineModel,
+        model,
         reasoning: llmConfig.proposalOutlineReasoningEffort,
-        usesWebSearch: llmConfig.featureToggles.webSearch,
-        usesFileSearch: allowFileSearch,
+        usesWebSearch,
+        usesFileSearch,
       },
       'ProposalOutlineAgent starting',
     );
 
     try {
       const requestPayload = {
-        model: llmConfig.proposalOutlineModel,
-        reasoning: { effort: llmConfig.proposalOutlineReasoningEffort },
+        model,
+        ...(capabilities.supportsReasoning
+          ? { reasoning: { effort: llmConfig.proposalOutlineReasoningEffort } }
+          : {}),
+        ...(typeof temperature === 'number' ? { temperature } : {}),
+        ...(typeof maxOutputTokens === 'number'
+          ? { max_output_tokens: maxOutputTokens }
+          : {}),
         input: [
           { role: 'system', content: [{ type: 'input_text', text: systemPrompt }] },
           { role: 'user', content: [{ type: 'input_text', text: userPrompt }] },
@@ -165,7 +172,7 @@ Límites:
         },
       } as Record<string, unknown>;
 
-      if (tools.length) {
+      if (tools && tools.length) {
         requestPayload.tools = tools;
       }
       if (toolResources) {

@@ -14,6 +14,7 @@ import {
   loadDashboardSchema,
 } from './schemas';
 import { logPhaseStart } from './phaseLogger';
+import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
 
 interface ClientResearchOutput {
   accountSnapshot: AccountSnapshotSection;
@@ -90,6 +91,21 @@ export class ClientResearchAgent {
     dossierVectorStoreId?: string,
   ): Promise<ClientResearchOutput> {
     const openai = ensureOpenAIClient();
+    const model = llmConfig.clientResearchModel;
+    const capabilities = getModelCapabilities(model);
+    const temperature = capabilities.supportsTemperature
+      ? llmConfig.temperatureOverrides.clientResearchTemp ?? capabilities.defaultTemperature
+      : undefined;
+    const maxOutputTokens = capabilities.supportsMaxOutputTokens
+      ? llmConfig.tokenLimits.clientResearchTokens
+      : undefined;
+    const allowFileSearch =
+      Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch;
+    const { tools, toolResources, usesFileSearch } = buildToolsForModel(model, {
+      allowWebSearch: false,
+      allowFileSearch,
+      vectorStoreId: dossierVectorStoreId,
+    });
     logger.info(
       { clientId: client.id, serviceOfferingId: service.id },
       'ClientResearchAgent synthesising deep research report',
@@ -98,10 +114,10 @@ export class ClientResearchAgent {
       source: 'agent' as const,
       clientId: client.id,
       serviceId: service.id,
-      model: llmConfig.clientResearchModel,
+      model,
       reasoningEffort: llmConfig.clientResearchReasoningEffort,
       usesWebSearch: false,
-      usesFileSearch: Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch,
+      usesFileSearch,
     };
     logPhaseStart('clientResearch', phaseContext);
 
@@ -179,18 +195,15 @@ Transforma la información en el siguiente esquema:
 }`;
 
     try {
-      const allowFileSearch =
-        Boolean(dossierVectorStoreId) && llmConfig.featureToggles.fileSearch;
-      const tools = allowFileSearch
-        ? ([{ type: 'file_search' }] as OpenAI.Responses.ResponseCreateParams['tools'])
-        : undefined;
-      const toolResources = allowFileSearch && dossierVectorStoreId
-        ? { file_search: { vector_store_ids: [dossierVectorStoreId] } }
-        : undefined;
-
       const requestPayload = {
-        model: llmConfig.clientResearchModel,
-        reasoning: { effort: llmConfig.clientResearchReasoningEffort },
+        model,
+        ...(capabilities.supportsReasoning
+          ? { reasoning: { effort: llmConfig.clientResearchReasoningEffort } }
+          : {}),
+        ...(typeof temperature === 'number' ? { temperature } : {}),
+        ...(typeof maxOutputTokens === 'number'
+          ? { max_output_tokens: maxOutputTokens }
+          : {}),
         input: [
           {
             role: 'system',
@@ -228,6 +241,7 @@ Transforma la información en el siguiente esquema:
           clientId: client.id,
           serviceOfferingId: service.id,
           responseId: response.id,
+          usesFileSearch,
         },
         'ClientResearchAgent completed synthesis',
       );

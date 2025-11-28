@@ -5,7 +5,13 @@ export type AdminPhaseId =
   | 'fitAndStrategy'
   | 'proposalOutline';
 
-export type AdminModelOption = 'gpt-5.1' | 'gpt-5.1-mini' | 'gpt-5-mini';
+export type AdminModelOption =
+  | 'gpt-5.1'
+  | 'gpt-5.1-mini'
+  | 'gpt-5-mini'
+  | 'gpt-4o'
+  | 'gpt-4o-mini'
+  | 'o3-mini';
 export type AdminReasoningEffort = 'low' | 'medium' | 'high';
 export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy';
 export type AdminFeatureToggleId = 'webSearch' | 'fileSearch' | 'dossierContext' | 'proposalBeta';

@@ -449,8 +449,32 @@ export default function AdminPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {MODEL_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                      className="py-2"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span>{option.label}</span>
+                        {option.description ? (
+                          <span className="text-[11px] text-muted-foreground">
+                            {option.description}
+                          </span>
+                        ) : null}
+                        {option.capabilities?.length ? (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {option.capabilities.map((capability) => (
+                              <Badge
+                                key={capability}
+                                variant="secondary"
+                                className="px-2 py-0 text-[10px] font-normal"
+                              >
+                                {capability}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
