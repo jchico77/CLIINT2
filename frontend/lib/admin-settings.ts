@@ -5,6 +5,8 @@ import {
   AdminModelOption,
   AdminPhaseId,
   AdminReasoningEffort,
+  AdminRetryId,
+  AdminSectionLimitId,
   AdminSettings,
   AdminTemperatureId,
   AdminTimeoutId,
@@ -21,31 +23,37 @@ export const ADMIN_PHASES: Array<{
     id: 'deepResearch',
     label: 'Deep Research',
     description: 'Investigación inicial con web search y generación del informe base.',
-    defaultModel: 'gpt-5.1',
+    defaultModel: 'gpt-4o',
   },
   {
     id: 'clientResearch',
     label: 'Client Research Agent',
     description: 'Sintetiza el informe estructurado en secciones ejecutivas.',
-    defaultModel: 'gpt-5.1',
+    defaultModel: 'gpt-4o',
   },
   {
     id: 'vendorResearch',
     label: 'Vendor Research Agent',
     description: 'Analiza servicios, diferenciadores y evidencias del vendor.',
-    defaultModel: 'gpt-5.1',
+    defaultModel: 'gpt-4o',
+  },
+  {
+    id: 'vendorDeepResearch',
+    label: 'Vendor Deep Research',
+    description: 'Investigación profunda del vendor (servicios, noticias, vídeos, RRSS).',
+    defaultModel: 'gpt-4o',
   },
   {
     id: 'fitAndStrategy',
     label: 'Fit & Strategy Agent',
     description: 'Crea stakeholder map, plays y gaps estratégicos.',
-    defaultModel: 'gpt-5.1',
+    defaultModel: 'gpt-4o-mini',
   },
   {
     id: 'proposalOutline',
     label: 'Proposal Outline Agent',
     description: 'Genera el esquema corto de la propuesta comercial.',
-    defaultModel: 'gpt-5.1-mini',
+    defaultModel: 'gpt-4o-mini',
   },
 ];
 
@@ -55,24 +63,6 @@ export const MODEL_OPTIONS: Array<{
   description?: string;
   capabilities?: string[];
 }> = [
-  {
-    value: 'gpt-5.1',
-    label: 'GPT-5.1 (full)',
-    description: 'Máxima calidad y multimodalidad, con herramientas.',
-    capabilities: ['Web search', 'File search', 'Reasoning', 'Temp control'],
-  },
-  {
-    value: 'gpt-5.1-mini',
-    label: 'GPT-5.1 Mini',
-    description: 'Rápido y económico; soporta web/file search.',
-    capabilities: ['Web search', 'File search', 'Reasoning', 'Temp control'],
-  },
-  {
-    value: 'gpt-5-mini',
-    label: 'GPT-5 Mini',
-    description: 'Ligero de la serie GPT-5, texto puro.',
-    capabilities: ['File search', 'Reasoning', 'Temp control'],
-  },
   {
     value: 'gpt-4o',
     label: 'GPT-4o',
@@ -86,10 +76,52 @@ export const MODEL_OPTIONS: Array<{
     capabilities: ['Web search', 'File search', 'Temp control'],
   },
   {
+    value: 'gpt-4.1',
+    label: 'GPT-4.1',
+    description: 'Modelo flagship con reasoning integrado y herramientas.',
+    capabilities: ['Web search', 'File search', 'Reasoning'],
+  },
+  {
+    value: 'gpt-4.1-mini',
+    label: 'GPT-4.1 Mini',
+    description: 'Versión reducida enfocada en latencia, soporta tools.',
+    capabilities: ['Web search', 'File search', 'Reasoning'],
+  },
+  {
+    value: 'gpt-5',
+    label: 'GPT-5',
+    description: 'Modelo GPT-5 equilibrado para agentes y coding.',
+    capabilities: ['Reasoning', 'Web search', 'File search', 'Temp control'],
+  },
+  {
+    value: 'gpt-5-mini',
+    label: 'GPT-5 Mini',
+    description: 'Versión rápida/coste eficiente de GPT-5.',
+    capabilities: ['Reasoning', 'Web search', 'File search', 'Temp control'],
+  },
+  {
+    value: 'gpt-5-nano',
+    label: 'GPT-5 Nano',
+    description: 'Opción más económica para tareas muy acotadas.',
+    capabilities: ['Web search', 'File search', 'Temp control'],
+  },
+  {
+    value: 'gpt-5.1',
+    label: 'GPT-5.1',
+    description: 'Última generación con reasoning configurable.',
+    capabilities: ['Reasoning', 'Web search', 'File search'],
+  },
+  {
     value: 'o3-mini',
     label: 'O3 Mini (reasoning)',
     description: 'Modelo de razonamiento; coste/latencia bajos.',
     capabilities: ['Reasoning', 'Max output tokens'],
+  },
+  {
+    value: 'o3-deep-research',
+    label: 'O3 Deep Research',
+    description: 'Modelo especializado en investigación profunda con web search.',
+    capabilities: ['Reasoning', 'Web search integrado'],
   },
 ];
 
@@ -133,6 +165,15 @@ export const TIMEOUT_FIELDS: Array<{
     defaultValue: 300000,
     min: 120000,
     max: 600000,
+    step: 15000,
+    unit: 'ms',
+  },
+  {
+    id: 'vendorDeepResearch',
+    label: 'Vendor Deep Research timeout (ms)',
+    defaultValue: 480000,
+    min: 120000,
+    max: 900000,
     step: 15000,
     unit: 'ms',
   },
@@ -215,6 +256,15 @@ export const TOKEN_FIELDS: Array<{
     step: 500,
     unit: 'tokens',
   },
+  {
+    id: 'vendorDeepResearchTokens',
+    label: 'Vendor Deep Research máx. tokens',
+    defaultValue: 9000,
+    min: 2000,
+    max: 20000,
+    step: 500,
+    unit: 'tokens',
+  },
 ];
 
 export const TEMPERATURE_FIELDS: Array<{
@@ -258,6 +308,15 @@ export const TEMPERATURE_FIELDS: Array<{
     id: 'fitStrategyTemp',
     label: 'Fit & Strategy temperatura',
     defaultValue: 0.15,
+    min: 0,
+    max: 1,
+    step: 0.05,
+    decimals: 2,
+  },
+  {
+    id: 'vendorDeepResearchTemp',
+    label: 'Vendor Deep Research temperatura',
+    defaultValue: 0.2,
     min: 0,
     max: 1,
     step: 0.05,
@@ -399,11 +458,12 @@ export const DENSE_GRID_CLASS = 'grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-c
 
 export const defaultAdminSettings: AdminSettings = {
   modelConfig: {
-    deepResearch: 'gpt-5.1',
-    clientResearch: 'gpt-5.1',
-    vendorResearch: 'gpt-5.1',
-    fitAndStrategy: 'gpt-5.1',
-    proposalOutline: 'gpt-5.1-mini',
+    deepResearch: 'gpt-4o',
+    clientResearch: 'gpt-4o',
+    vendorResearch: 'gpt-4o',
+    fitAndStrategy: 'gpt-4o-mini',
+    proposalOutline: 'gpt-4o-mini',
+    vendorDeepResearch: 'gpt-4o',
   },
   reasoningConfig: {
     deepResearch: 'low',
@@ -411,11 +471,13 @@ export const defaultAdminSettings: AdminSettings = {
     vendorResearch: 'medium',
     fitAndStrategy: 'high',
     proposalOutline: 'medium',
+    vendorDeepResearch: 'medium',
   },
   timeoutConfig: {
     deepResearch: 600000,
     agent: 240000,
     fitStrategy: 300000,
+    vendorDeepResearch: 480000,
   },
   featureToggles: {
     webSearch: true,
@@ -428,12 +490,14 @@ export const defaultAdminSettings: AdminSettings = {
     clientResearchTokens: 6000,
     vendorResearchTokens: 5000,
     fitStrategyTokens: 7000,
+    vendorDeepResearchTokens: 9000,
   },
   temperatureConfig: {
     deepResearchTemp: 0.1,
     clientResearchTemp: 0.2,
     vendorResearchTemp: 0.25,
     fitStrategyTemp: 0.15,
+    vendorDeepResearchTemp: 0.2,
   },
   sectionLimits: {
     maxStakeholders: 8,
@@ -460,5 +524,14 @@ export const defaultAdminSettings: AdminSettings = {
   },
   sandboxMode: true,
   preferredLanguage: 'es',
+  vendorAnalysis: {
+    autoRunOnCreate: true,
+  },
+  vendorDeepResearchParallel: {
+    gpt4ParallelEnabled: true,
+    gpt5ParallelEnabled: true,
+    maxConcurrentPhases: 3,
+    interPhaseDelayMs: 1200,
+  },
 };
 

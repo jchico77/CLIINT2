@@ -8,16 +8,18 @@ datasource db {
 }
 
 model Vendor {
-  id              String             @id @default(cuid())
-  name            String
-  websiteUrl      String
-  description     String?
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  clients         ClientAccount[]
-  serviceOffering ServiceOffering[]
-  opportunities   Opportunity[]
-  dashboards      Dashboard[]
+  id                       String                     @id @default(cuid())
+  name                     String
+  websiteUrl               String
+  description              String?
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  clients                  ClientAccount[]
+  serviceOffering          ServiceOffering[]
+  opportunities            Opportunity[]
+  dashboards               Dashboard[]
+  vendorDeepResearchReport VendorDeepResearchReport?
+  vendorDeepResearchPhaseMetrics VendorDeepResearchPhaseMetric[]
 }
 
 model ClientAccount {
@@ -175,6 +177,49 @@ model AdminSettingsSnapshot {
   settings  Json
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+}
+
+model VendorDeepResearchReport {
+  id           String                     @id @default(cuid())
+  vendorId     String                     @unique
+  vendor       Vendor                     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  status       VendorDeepResearchStatus   @default(PENDING)
+  errorMessage String?
+  report       Json?
+  llmModelUsed String?
+  analysisId   String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime                   @default(now())
+  updatedAt    DateTime                   @updatedAt
+}
+
+model VendorDeepResearchPhaseMetric {
+  id                 String   @id @default(cuid())
+  vendorId           String
+  vendor             Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  analysisId         String
+  phase              String
+  subPhase           String
+  durationMs         Int?
+  startedAt          DateTime?
+  finishedAt         DateTime?
+  analysisStartedAt  DateTime @default(now())
+  analysisCompletedAt DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([vendorId, analysisStartedAt])
+  @@index([analysisId])
+  @@index([phase])
+  @@index([subPhase])
+}
+
+enum VendorDeepResearchStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
 }
 
 enum PhaseCacheStatus {

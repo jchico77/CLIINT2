@@ -1,0 +1,130 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica",
+    "industry": "Telecomunicaciones",
+    "headquarters": "unknown",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica es la principal operadora de telecomunicaciones de España y una de las grandes multinacionales del sector, con operaciones en Europa y Latinoamérica. Su modelo de negocio es híbrido: ingresos recurrentes por conectividad fija y móvil (Movistar), servicios de valor añadido (contenidos, TV) y una unidad B2B (Telefónica Tech) que agrupa cloud, ciberseguridad, IoT y servicios gestionados.\n\nLa compañía está priorizando la modernización de redes (FTTH y 5G), la expansión de servicios digitales y cloud para empresas, la ciberseguridad y la monetización de activos de infraestructura. Para una Plataforma de Transformación Digital representa un cliente estratégico por su necesidad de acelerar proyectos cloud-native, edge y automatización, y por su ecosistema de partners e hipótesis comerciales con hyperscalers.",
+    "keyMetrics": [
+      {
+        "label": "Unidades de negocio clave",
+        "value": "Movistar (B2C), Telefónica Tech (B2B), Wholesale/Infraestructuras"
+      },
+      {
+        "label": "Segmentos de mercado",
+        "value": "7 segmentos identificados (Residencial, PYME, Grandes empresas, Sector público, Wholesale, Verticales industriales, Regiones: España/Europa/LatAm)"
+      },
+      {
+        "label": "Temas estratégicos prioritarios",
+        "value": "FTTH/5G, servicios digitales B2B, alianzas hyperscalers, cloud-native & edge, ciberseguridad, sostenibilidad"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Despliegue masivo de FTTH y 5G",
+        "impact": "high",
+        "description": "Expansión de fibra y 5G que habilita nuevos servicios B2B (private 5G, URLLC) y genera demanda de soluciones de orquestación, monetización y edge."
+      },
+      {
+        "trend": "Migración a cloud y arquitectura multinube",
+        "impact": "high",
+        "description": "Aceleración de migraciones cloud, adopción de arquitecturas multinube y necesidad de orquestación y portabilidad entre hyperscalers."
+      },
+      {
+        "trend": "Adopción de IA y analítica avanzada",
+        "impact": "medium",
+        "description": "Creciente interés en IA generativa y analítica para automatización, gestión de red y nuevas ofertas para clientes empresariales."
+      },
+      {
+        "trend": "Ciberseguridad y cumplimiento normativo",
+        "impact": "high",
+        "description": "Mayor foco en seguridad, data residency y cumplimiento (GDPR y regulaciones locales) que impulsa demanda de servicios gestionados y garantías de soberanía."
+      },
+      {
+        "trend": "Digitalización de industrias (Industry 4.0)",
+        "impact": "medium",
+        "description": "Verticales como utilities, manufactura y salud demandan soluciones integradas (connectivity + edge + cloud + IA) con SLAs industriales."
+      },
+      {
+        "trend": "Sostenibilidad y reporting ESG",
+        "impact": "medium",
+        "description": "Presión por eficiencia energética de redes y reporting ESG que influye en decisiones de compra y diseño de infraestructuras."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "unknown",
+        "event": "Acuerdos estratégicos con hyperscalers (ej. colaboración pública con Google Cloud mencionada en fuentes)",
+        "significance": "Refuerza la estrategia de co-innovation y dependencia estratégica de hyperscalers; abre oportunidades de integración de plataformas cloud-native."
+      },
+      {
+        "date": "unknown",
+        "event": "Intenso despliegue de FTTH y planes de 5G",
+        "significance": "Impulsa casos de uso edge y private 5G para clientes industriales y demanda de soluciones de orquestación y baja latencia."
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Modernización cloud-native y automatización de infraestructuras",
+        "description": "Capacidades para migrar aplicaciones críticas a arquitecturas cloud-native (contenedores, Kubernetes), orquestación multicloud y automatización de operaciones de red.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_2",
+        "category": "requirement",
+        "title": "Seguridad, cumplimiento y soberanía de datos",
+        "description": "Soluciones integradas de ciberseguridad, data residency, cifrado y cumplimiento GDPR para clientes regulados y administraciones públicas.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_3",
+        "category": "scope",
+        "title": "Soporte a casos de uso 5G/edge y verticales",
+        "description": "Integración con private 5G y plataformas edge para casos industriales (latencia, AR/VR, control industrial) con aceleradores verticales.",
+        "priority": "medium",
+        "relevanceToService": 85
+      },
+      {
+        "id": "req_4",
+        "category": "criteria",
+        "title": "Modelos escalables y paquetes para PYME",
+        "description": "Ofertas preconfiguradas plug-and-play para PYME que combinen conectividad, seguridad y herramientas digitales con pricing y onboarding rápido.",
+        "priority": "medium",
+        "relevanceToService": 80
+      }
+    ],
+    "whatClientSeeks": [
+      "Acelerar transformación cloud-native y modernización de aplicaciones",
+      "Integraciones seguras y cumplimiento para clientes regulados",
+      "Pilotos de co-innovación en 5G/edge con KPI claros"
+    ],
+    "scope": [
+      "Migración de aplicaciones críticas y orquestación multicloud",
+      "Servicios gestionados de ciberseguridad y data residency",
+      "Pilotos y aceleradores verticales para manufactura/utilities/salud"
+    ],
+    "exclusions": [
+      "Proyectos exclusivamente de infraestructura física (despliegue de fibra/torres sin capas digitales)",
+      "Servicios residenciales B2C sin componente de plataforma digital",
+      "Acuerdos que requieran reemplazo completo de relaciones con hyperscalers existentes"
+    ],
+    "selectionCriteria": [
+      "Capacidad de integración nativa con Telefónica Tech y APIs existentes",
+      "Historial probado en reducción de TCO y métricas ROI claras",
+      "Garantías de cumplimiento y data residency",
+      "Modelos comerciales de co-selling y referencias de pilotos"
+    ],
+    "summary": "Telefónica busca un partner que acelere su transformación cloud-native y la monetización de redes 5G/FTTH, proporcionando automatización, seguridad y paquetes escalables para PYME y grandes cuentas. La plataforma debe integrarse nativamente con Telefónica Tech, ofrecer pruebas de ROI y permitir pilotos rápidos en verticales estratégicos."
+  }
+}

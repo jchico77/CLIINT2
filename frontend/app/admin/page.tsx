@@ -4,9 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -57,13 +56,13 @@ import {
   AdminReasoningEffort,
   AdminRetryId,
   AdminSectionLimitId,
-  AdminSettings,
   AdminTemperatureId,
   AdminTimeoutId,
   AdminTokenLimitId,
 } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { getAdminSettings, resetAdminSettings, updateAdminSettings } from '@/lib/api';
+import type { AdminSettings } from '@/lib/types';
 
 type Status = 'idle' | 'saving' | 'saved' | 'error';
 type LoadState = 'loading' | 'ready' | 'error';
@@ -94,6 +93,18 @@ const parseNumericInput = (value: number | string): number | null => {
   const parsed = Number(value);
   return Number.isNaN(parsed) ? null : parsed;
 };
+
+const vendorParallelLimits = {
+  maxConcurrentPhases: { min: 1, max: 6, step: 1, unit: 'fases' },
+  interPhaseDelayMs: { min: 0, max: 5000, step: 100, unit: 'ms' },
+} as const;
+
+const mergeVendorParallelConfig = (
+  payload?: AdminSettings['vendorDeepResearchParallel'],
+): AdminSettings['vendorDeepResearchParallel'] => ({
+  ...defaultAdminSettings.vendorDeepResearchParallel,
+  ...payload,
+});
 
 interface NumericSliderTileProps {
   label: string;
@@ -164,37 +175,23 @@ function NumericSliderTile({
 }
 
 export default function AdminPage() {
+  const normalizeSettings = (payload: AdminSettings): AdminSettings => ({
+    ...payload,
+    vendorAnalysis: payload.vendorAnalysis ?? defaultAdminSettings.vendorAnalysis,
+    vendorDeepResearchParallel: mergeVendorParallelConfig(payload.vendorDeepResearchParallel),
+  });
+
   const [settings, setSettings] = useState<AdminSettings>(defaultAdminSettings);
   const [status, setStatus] = useState<Status>('idle');
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [authToken, setAuthToken] = useState('');
-  const [tokenInput, setTokenInput] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
   const [isResetting, setIsResetting] = useState(false);
 
   const tileClass = TILE_CLASS;
   const denseGrid = DENSE_GRID_CLASS;
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const storedToken = window.localStorage.getItem('cliint-admin-token') ?? '';
-    setAuthToken(storedToken);
-    setTokenInput(storedToken);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    if (authToken) {
-      window.localStorage.setItem('cliint-admin-token', authToken);
-    } else {
-      window.localStorage.removeItem('cliint-admin-token');
-    }
-  }, [authToken]);
+  const modelGrid = 'grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3';
+  const modelTileClass = cn(tileClass, 'space-y-3');
 
   useEffect(() => {
     let cancelled = false;
@@ -203,11 +200,11 @@ export default function AdminPage() {
       setLoadState('loading');
       setErrorMessage(null);
       try {
-        const payload = await getAdminSettings(authToken || undefined);
+        const payload = await getAdminSettings();
         if (cancelled) {
           return;
         }
-        setSettings(payload);
+        setSettings(normalizeSettings(payload));
         setLoadState('ready');
         setStatus('idle');
       } catch (error) {
@@ -228,7 +225,7 @@ export default function AdminPage() {
     return () => {
       cancelled = true;
     };
-  }, [authToken, reloadKey]);
+  }, [reloadKey]);
 
   const resetStatus = () => {
     if (status !== 'idle') {
@@ -368,8 +365,8 @@ export default function AdminPage() {
     setStatus('saving');
     setErrorMessage(null);
     try {
-      const payload = await updateAdminSettings(settings, authToken || undefined);
-      setSettings(payload);
+      const payload = await updateAdminSettings(settings);
+      setSettings(normalizeSettings(payload));
       setStatus('saved');
     } catch (error) {
       setStatus('error');
@@ -386,8 +383,8 @@ export default function AdminPage() {
     setStatus('saving');
     setErrorMessage(null);
     try {
-      const payload = await resetAdminSettings(authToken || undefined);
-      setSettings(payload);
+      const payload = await resetAdminSettings();
+      setSettings(normalizeSettings(payload));
       setStatus('saved');
       setLoadState('ready');
     } catch (error) {
@@ -400,10 +397,6 @@ export default function AdminPage() {
     } finally {
       setIsResetting(false);
     }
-  };
-
-  const handleApplyToken = () => {
-    setAuthToken(tokenInput.trim());
   };
 
   const loadBadgeVariant =
@@ -421,7 +414,49 @@ export default function AdminPage() {
 
   const controlsDisabled =
     loadState !== 'ready' || status === 'saving' || isResetting;
-  const canApplyToken = tokenInput.trim() !== authToken;
+
+  const updateVendorAnalysisAutoRun = (value: boolean) => {
+    setSettings((prev) => ({
+      ...prev,
+      vendorAnalysis: { ...prev.vendorAnalysis, autoRunOnCreate: value },
+    }));
+    resetStatus();
+  };
+
+  const updateVendorParallelConfig = (
+    field: 'maxConcurrentPhases' | 'interPhaseDelayMs',
+    value: number | string,
+  ) => {
+    const limits = vendorParallelLimits[field];
+    const parsed =
+      typeof value === 'number' ? value : parseNumericInput(value);
+    if (parsed === null) {
+      return;
+    }
+    const clamped = clampValue(parsed, limits.min, limits.max);
+    setSettings((prev) => ({
+      ...prev,
+      vendorDeepResearchParallel: {
+        ...prev.vendorDeepResearchParallel,
+        [field]: clamped,
+      },
+    }));
+    resetStatus();
+  };
+
+  const updateVendorParallelToggle = (
+    field: 'gpt4ParallelEnabled' | 'gpt5ParallelEnabled',
+    checked: boolean,
+  ) => {
+    setSettings((prev) => ({
+      ...prev,
+      vendorDeepResearchParallel: {
+        ...prev.vendorDeepResearchParallel,
+        [field]: checked,
+      },
+    }));
+    resetStatus();
+  };
 
   const leftColumn = (
     <>
@@ -429,9 +464,9 @@ export default function AdminPage() {
         title="Selección de modelos por fase"
         helpText="Mapea las fases de los agentes a la configuración del backend."
       >
-        <div className={denseGrid}>
+        <div className={modelGrid}>
           {ADMIN_PHASES.map((phase) => (
-            <div key={phase.id} className={tileClass} title={phase.description}>
+            <div key={phase.id} className={modelTileClass}>
               <p className="text-sm font-semibold">{phase.label}</p>
               <Select
                 disabled={controlsDisabled}
@@ -442,39 +477,20 @@ export default function AdminPage() {
               >
                 <SelectTrigger
                   id={`model-${phase.id}`}
-                  className="h-8 text-xs"
+                  className="h-10 text-sm"
                   disabled={controlsDisabled}
                 >
-                  <SelectValue placeholder="Modelo" />
+                  <SelectValue placeholder="Selecciona modelo" />
                 </SelectTrigger>
                 <SelectContent>
                   {MODEL_OPTIONS.map((option) => (
                     <SelectItem
                       key={option.value}
                       value={option.value}
-                      className="py-2"
+                      className="py-2 text-sm"
+                      title={option.description || option.label}
                     >
-                      <div className="flex flex-col gap-0.5">
-                        <span>{option.label}</span>
-                        {option.description ? (
-                          <span className="text-[11px] text-muted-foreground">
-                            {option.description}
-                          </span>
-                        ) : null}
-                        {option.capabilities?.length ? (
-                          <div className="mt-1 flex flex-wrap gap-1">
-                            {option.capabilities.map((capability) => (
-                              <Badge
-                                key={capability}
-                                variant="secondary"
-                                className="px-2 py-0 text-[10px] font-normal"
-                              >
-                                {capability}
-                              </Badge>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
+                      {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -645,6 +661,106 @@ export default function AdminPage() {
       </AdminSection>
 
       <AdminSection
+        title="Vendor analysis"
+        helpText="Controla el análisis automático y recursos asignados al deep research de vendors."
+      >
+        <div className={`${tileClass} flex items-center justify-between`}>
+          <div>
+            <p className="text-sm font-semibold">Lanzar análisis al crear vendor</p>
+            <p className="text-xs text-muted-foreground">
+              Ejecuta automáticamente el vendor deep research en background tras guardar.
+            </p>
+          </div>
+          <Checkbox
+            checked={settings.vendorAnalysis?.autoRunOnCreate}
+            onCheckedChange={(checked) => updateVendorAnalysisAutoRun(Boolean(checked))}
+          />
+        </div>
+        <div className={`${tileClass} space-y-4`}>
+          <div>
+            <p className="text-sm font-semibold">Paralelismo GPT-4 / GPT-5</p>
+            <p className="text-xs text-muted-foreground">
+              Activa el paralelismo por familia de modelo y define los límites globales
+              (`VENDOR_DEEP_RESEARCH_GPT5_MAX_PARALLEL`, `VENDOR_DEEP_RESEARCH_GPT5_DELAY_MS`).
+            </p>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <label className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2">
+              <Checkbox
+                disabled={controlsDisabled}
+                checked={settings.vendorDeepResearchParallel.gpt4ParallelEnabled}
+                onCheckedChange={(checked) =>
+                  updateVendorParallelToggle('gpt4ParallelEnabled', Boolean(checked))
+                }
+                className="mt-1"
+              />
+              <div>
+                <p className="text-sm font-semibold leading-tight">Activar en GPT-4*</p>
+                <p className="text-xs text-muted-foreground">
+                  Aplica a gpt-4o, gpt-4o mini, gpt-4.1 y gpt-4.1 mini.
+                </p>
+              </div>
+            </label>
+            <label className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2">
+              <Checkbox
+                disabled={controlsDisabled}
+                checked={settings.vendorDeepResearchParallel.gpt5ParallelEnabled}
+                onCheckedChange={(checked) =>
+                  updateVendorParallelToggle('gpt5ParallelEnabled', Boolean(checked))
+                }
+                className="mt-1"
+              />
+              <div>
+                <p className="text-sm font-semibold leading-tight">Activar en GPT-5*</p>
+                <p className="text-xs text-muted-foreground">
+                  Se aplica a gpt-5, gpt-5 mini/nano y gpt-5.1.
+                </p>
+              </div>
+            </label>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <NumericSliderTile
+              className="space-y-3"
+              label="Máx. fases concurrentes"
+              value={settings.vendorDeepResearchParallel.maxConcurrentPhases}
+              min={vendorParallelLimits.maxConcurrentPhases.min}
+              max={vendorParallelLimits.maxConcurrentPhases.max}
+              step={vendorParallelLimits.maxConcurrentPhases.step}
+              unit={vendorParallelLimits.maxConcurrentPhases.unit}
+              disabled={controlsDisabled}
+              inputId="vendor-parallel-max"
+              onSliderCommit={(value) =>
+                updateVendorParallelConfig('maxConcurrentPhases', value)
+              }
+              onInputChange={(value) =>
+                updateVendorParallelConfig('maxConcurrentPhases', value)
+              }
+            />
+            <NumericSliderTile
+              className="space-y-3"
+              label="Delay entre llamadas (ms)"
+              value={settings.vendorDeepResearchParallel.interPhaseDelayMs}
+              min={vendorParallelLimits.interPhaseDelayMs.min}
+              max={vendorParallelLimits.interPhaseDelayMs.max}
+              step={vendorParallelLimits.interPhaseDelayMs.step}
+              unit={vendorParallelLimits.interPhaseDelayMs.unit}
+              disabled={controlsDisabled}
+              inputId="vendor-parallel-delay"
+              onSliderCommit={(value) =>
+                updateVendorParallelConfig('interPhaseDelayMs', value)
+              }
+              onInputChange={(value) =>
+                updateVendorParallelConfig('interPhaseDelayMs', value)
+              }
+            />
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Se ejecuta únicamente cuando el análisis usa las familias activadas (GPT-4* o GPT-5*).
+          </p>
+        </div>
+      </AdminSection>
+
+      <AdminSection
         title="Calidad / límites"
         helpText="Define tokens máximos, temperatura y límites por sección."
       >
@@ -811,31 +927,8 @@ export default function AdminPage() {
           description="Los cambios se guardan vía /api/admin/settings y se aplican en caliente sobre llmConfig."
         >
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
-              <div className="space-y-2">
-                <Label htmlFor="admin-token">Token de administración</Label>
-                <Input
-                  id="admin-token"
-                  type="password"
-                  autoComplete="off"
-                  value={tokenInput}
-                  onChange={(event) => setTokenInput(event.target.value)}
-                  placeholder="x-admin-token"
-                />
-                {errorMessage && loadState === 'error' ? (
-                  <p className="text-xs text-destructive">{errorMessage}</p>
-                ) : null}
-              </div>
-              <div className="flex flex-wrap items-center justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={!canApplyToken}
-                  onClick={handleApplyToken}
-                >
-                  Aplicar token
-                </Button>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
                 <Button
                   type="button"
                   variant="ghost"
@@ -845,6 +938,9 @@ export default function AdminPage() {
                 >
                   Recargar
                 </Button>
+                {errorMessage && loadState === 'error' ? (
+                  <p className="text-xs text-destructive">{errorMessage}</p>
+                ) : null}
               </div>
             </div>
 

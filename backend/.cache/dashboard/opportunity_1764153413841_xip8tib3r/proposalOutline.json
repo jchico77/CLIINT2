@@ -1,0 +1,71 @@
+{
+  "sections": [
+    {
+      "id": "sec-1",
+      "title": "Resumen ejecutivo y objetivos del proyecto",
+      "purpose": "Definir el objetivo operativo y de reporting: medir y certificar la mejora de eficiencia energética y la reducción de huella de carbono en la cartera (26 edificios, Madrid) para incorporación en el Informe Anual 2024, y alinear alcance, KRIs y modelo comercial con plazos del RFP.",
+      "suggestedContent": [
+        "Objetivo principal y alcance resumido (26 edificios; auditorías ASHRAE Level II en 12 activos prioritarios: p.ej. Castellana 81, ARQBÓREA, Oxxeo).",
+        "KPIs objetivo para el Informe Anual 2024: ahorro energético esperado por activo, reducción tCO2e y % de cartera cubierto por certificaciones.",
+        "Rangos de ahorro y expectativas de payback (benchmark sectorial y escenarios conservador/realista/optimista).",
+        "Propuesta comercial: honorarios fijos + mecanismo de ahorro garantizado (estructura y métricas de aceptación).",
+        "Fechas clave del proceso: entrega propuesta 10-dic-2025; shortlist 20-dic-2025; adjudicación 15-ene-2026; hitos de entrega alineados con cierre fiscal/fechas de reporte."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-001",
+        "cs-001"
+      ]
+    },
+    {
+      "id": "sec-2",
+      "title": "Metodología técnica y entregables",
+      "purpose": "Describir de forma accionable cómo realizaremos las auditorías y el modelado, la digitalización de datos y el M&V necesario para certificar mejoras y soportar reporting CSRD/Taxonomía.",
+      "suggestedContent": [
+        "Alcance de auditoría: ASHRAE Level II para 12 activos (método, muestras in situ, checklist, entregables por activo).",
+        "Modelado energético: desarrollo de modelos digitales/digital twins para simular optimización HVAC e iluminación (escenarios, supuestos, sensibilidad).",
+        "Plan de digitalización y metering: especificación de submetering, integración BMS/IoT, estructura de datos y KPIs normalizados para reporting trimestral al comité.",
+        "Protocolo de M&V y validación para certificación (metodología para atribuir ahorro y reducción de emisiones).",
+        "Entregables técnicos: informes de auditoría por activo, modelos de simulación, plataforma de datos configurada, dashboards para comité y pack de evidencia para certificadoras."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-002",
+        "cs-001",
+        "cert-001"
+      ]
+    },
+    {
+      "id": "sec-3",
+      "title": "Roadmap de inversión CAPEX y plan de certificaciones",
+      "purpose": "Presentar un roadmap priorizado por activo con medidas CAPEX, payback estimado y pasos concretos para obtener LEED O+M y WELL Portfolio en los edificios priorizados.",
+      "suggestedContent": [
+        "Matriz de priorización (impacto energético vs coste vs tiempo de implementación) para los 12 activos auditados y extensión al resto de la cartera.",
+        "Listado de medidas por activo (HVAC, controles, iluminación, envolvente ligera) con estimación CAPEX, ahorro anual y payback (3–6 años referencia).",
+        "Roadmap de certificación LEED O+M y WELL Portfolio: hitos, documentación requerida, auditorías in situ y timeline por activo.",
+        "Estimación de costes asociados a certificaciones y valoración del beneficio reputacional / financiero en el Informe Anual.",
+        "Modelo de negocio y oferta comercial: opciones de co-financiación, garantía de ahorro y cláusulas de aceptación."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-001",
+        "cert-001",
+        "cs-001"
+      ]
+    },
+    {
+      "id": "sec-4",
+      "title": "Implementación, pilotos, formación y gobernanza",
+      "purpose": "Detallar la hoja de ruta de ejecución operativa, incluir un pilotaje referencial (showcase), plan de formación ejecutiva y modelo de gobernanza para asegurar entrega antes del cierre fiscal y reporting trimestral.",
+      "suggestedContent": [
+        "Plan piloto (recomendado: ARQBÓREA‑style): alcance del pilotaje, objetivos demostrables, duración, criterios de éxito y paquete de marketing/PR para comunicación interna y externa.",
+        "Programa de formación: módulos ejecutivos y técnicos para Facilities y Comités ESG (contenido, duración, entregables).",
+        "Gobernanza y reporting: comités, frecuencia (reporting trimestral al comité), formatos de dashboard y rutinas de revisión operativa.",
+        "Plan de despliegue y transición a operaciones (hand‑over), soporte post‑implementación y contrato de seguimiento/optimización.",
+        "Riesgos principales y plan de mitigación (calidad de datos, timelines de instalación, aceptación de ahorros) y métricas de aceptación para la garantía de ahorro."
+      ],
+      "linkedEvidenceIds": [
+        "test-001",
+        "award-001",
+        "cs-001"
+      ]
+    }
+  ]
+}

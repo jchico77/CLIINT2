@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { AppShell } from '@/components/app-shell';
@@ -22,23 +23,86 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useVendors } from '@/hooks/useVendors';
+import type { Vendor } from '@/lib/types';
 import { logger } from '@/lib/logger';
-import { Building2, ExternalLink, RefreshCw, Sparkles } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Building2, ExternalLink, RefreshCw, Sparkles, RotateCw, FileSearch, Trash2 } from 'lucide-react';
+import { reanalyzeVendor, deleteVendor } from '@/lib/api';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 export default function VendorsPage() {
   const router = useRouter();
   const { vendors, loading, error, refresh } = useVendors();
+  const [reanalyzingVendorId, setReanalyzingVendorId] = useState<string | null>(null);
+  const [deletingVendorId, setDeletingVendorId] = useState<string | null>(null);
+  const [vendorToDelete, setVendorToDelete] = useState<Vendor | null>(null);
 
   const description = loading
     ? 'Cargando vendors registrados...'
     : `${vendors.length} vendor(s) en memoria`;
 
-  const handleStartAnalysis = (vendorId: string) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('cliint:lastVendorId', vendorId);
+  const handleViewAnalysis = (vendorId: string) => {
+    router.push(`/vendors/${vendorId}/analysis`);
+  };
+
+  const handleReanalyze = async (vendorId: string) => {
+    setReanalyzingVendorId(vendorId);
+    try {
+      await reanalyzeVendor(vendorId);
+      logger.info('Vendor analysis requeued', { vendorId });
+      await refresh();
+    } catch (err) {
+      logger.error('Failed to reanalyze vendor', {
+        vendorId,
+        message: err instanceof Error ? err.message : err,
+      });
+    } finally {
+      setReanalyzingVendorId(null);
     }
-    logger.info('Vendor analysis initiated from list', { vendorId });
-    router.push(`/opportunities/new?vendorId=${vendorId}`);
+  };
+
+  const handleDeleteClick = (vendor: Vendor) => {
+    setVendorToDelete(vendor);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!vendorToDelete) return;
+
+    setDeletingVendorId(vendorToDelete.id);
+    try {
+      await deleteVendor(vendorToDelete.id);
+      logger.info('Vendor deleted', { vendorId: vendorToDelete.id });
+      setVendorToDelete(null);
+      await refresh();
+    } catch (err) {
+      logger.error('Failed to delete vendor', {
+        vendorId: vendorToDelete.id,
+        message: err instanceof Error ? err.message : err,
+      });
+    } finally {
+      setDeletingVendorId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setVendorToDelete(null);
+  };
+
+  const statusConfig: Record<
+    NonNullable<Vendor['analysisStatus']>,
+    { label: string; variant: 'secondary' | 'default' | 'destructive' | 'outline' }
+  > = {
+    PENDING: { label: 'Pendiente', variant: 'outline' },
+    IN_PROGRESS: { label: 'En progreso', variant: 'secondary' },
+    COMPLETED: { label: 'Listo', variant: 'default' },
+    FAILED: { label: 'Error', variant: 'destructive' },
   };
 
   return (
@@ -107,6 +171,8 @@ export default function VendorsPage() {
                       <TableHead>Website</TableHead>
                       <TableHead>Descripción</TableHead>
                       <TableHead>Registrado</TableHead>
+                      <TableHead>Estado análisis</TableHead>
+                      <TableHead>Modelo</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -138,16 +204,80 @@ export default function VendorsPage() {
                             locale: es,
                           })}
                         </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {vendor.analysisStatus ? (
+                            <div className="space-y-1">
+                              <Badge variant={statusConfig[vendor.analysisStatus].variant}>
+                                {statusConfig[vendor.analysisStatus].label}
+                              </Badge>
+                              {vendor.analysisStatus === 'COMPLETED' && vendor.analysisCompletedAt ? (
+                                <p className="text-xs text-muted-foreground">
+                                  Actualizado{' '}
+                                  {formatDistanceToNow(new Date(vendor.analysisCompletedAt), {
+                                    addSuffix: true,
+                                    locale: es,
+                                  })}
+                                </p>
+                              ) : null}
+                              {vendor.analysisStatus === 'FAILED' && vendor.analysisErrorMessage ? (
+                                <p className="text-xs text-destructive line-clamp-2">
+                                  {vendor.analysisErrorMessage}
+                                </p>
+                              ) : null}
+                              {vendor.analysisStatus === 'IN_PROGRESS' ? (
+                                <p className="text-xs text-muted-foreground">Análisis en progreso…</p>
+                              ) : null}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Sin análisis aún</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {vendor.analysisModelUsed ? (
+                            <Badge variant="outline">{vendor.analysisModelUsed}</Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="gap-1"
-                            onClick={() => handleStartAnalysis(vendor.id)}
-                          >
-                            <Sparkles className="h-3 w-3" />
-                            Iniciar análisis
-                          </Button>
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1"
+                              onClick={() => handleViewAnalysis(vendor.id)}
+                            >
+                              <FileSearch className="h-3 w-3" />
+                              Ver análisis
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1"
+                              disabled={
+                                reanalyzingVendorId === vendor.id ||
+                                vendor.analysisStatus === 'IN_PROGRESS'
+                              }
+                              onClick={() => handleReanalyze(vendor.id)}
+                            >
+                              {reanalyzingVendorId === vendor.id ? (
+                                <RotateCw className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="h-3 w-3" />
+                              )}
+                              Reanalizar
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1 text-destructive hover:text-destructive"
+                              disabled={deletingVendorId === vendor.id}
+                              onClick={() => handleDeleteClick(vendor)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                              Borrar
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -158,6 +288,35 @@ export default function VendorsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={!!vendorToDelete} onOpenChange={(open) => !open && handleDeleteCancel()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar borrado de vendor</DialogTitle>
+            <DialogDescription>
+              Vas a borrar el vendor <strong>{vendorToDelete?.name}</strong>. Esta acción es
+              irreversible y se eliminarán todos los datos relacionados (clientes, oportunidades,
+              análisis, etc.).
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleDeleteCancel}
+              disabled={deletingVendorId !== null}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deletingVendorId !== null}
+            >
+              {deletingVendorId ? 'Borrando...' : 'Borrar vendor'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }

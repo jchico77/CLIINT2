@@ -1,0 +1,425 @@
+{
+  "stakeholderMap": {
+    "stakeholders": [
+      {
+        "id": "stakeholder_1",
+        "name": "José María Álvarez‑Pallete",
+        "role": "CEO",
+        "department": "Dirección Corporativa",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Impulsa la estrategia de crecimiento y monetización de activos. Prioriza partnerships que aceleren ingresos y reduzcan TTM.",
+        "priorities": [
+          "Monetización de infraestructura",
+          "Crecimiento de servicios digitales",
+          "Alianzas estratégicas con hyperscalers y SIs"
+        ]
+      },
+      {
+        "id": "stakeholder_2",
+        "name": "Director de Tecnología / CTO de Redes (nombre orientativo: Nacho López)",
+        "role": "CTO - Redes y Arquitectura",
+        "department": "Redes / Tecnología",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Responsable de roadmap 5G, FTTH y adopción de cloud-native en la capa infra/edge. Busca automatización y orquestación multicloud.",
+        "priorities": [
+          "Modernización cloud-native",
+          "Automatización de operaciones de red",
+          "Edge computing y orquestación 5G"
+        ]
+      },
+      {
+        "id": "stakeholder_3",
+        "name": "Directora Telefónica Tech (nombre orientativo: María García)",
+        "role": "Head Telefónica Tech / VP Cloud & Services",
+        "department": "Telefónica Tech (Cloud, Ciberseguridad, IoT)",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Líder de la unidad B2B. Responsable de catálogos cloud, ciber y servicios gestionados para empresas. Valora aceleradores verticales y soluciones empaquetadas.",
+        "priorities": [
+          "Oferta de servicios cloud para empresas",
+          "Ciberseguridad integrada",
+          "Paquetes escalables para PYME"
+        ]
+      },
+      {
+        "id": "stakeholder_4",
+        "name": "Chief Information Security Officer (CISO) (nombre orientativo: Pablo Martín)",
+        "role": "CISO",
+        "department": "Seguridad / Compliance",
+        "influence": "high",
+        "stance": "skeptic",
+        "notes": "Controla requisitos de residencia de datos, GDPR y acuerdos para clientes regulados. Exige pruebas claras de seguridad y soberanía.",
+        "priorities": [
+          "Soberanía y residencia de datos",
+          "Cumplimiento GDPR y sectorial",
+          "Arquitecturas de cifrado y zero trust"
+        ]
+      },
+      {
+        "id": "stakeholder_5",
+        "name": "Head of Enterprise Sales / B2B (nombre orientativo: Laura Fernández)",
+        "role": "Directora Ventas Empresas",
+        "department": "Ventas B2B",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Interesada en soluciones empaquetadas para PYMEs y en acelerar pipeline con ofertas comerciales listas para co‑sell.",
+        "priorities": [
+          "Paquetes plug-and-play para PYMEs",
+          "Modelos de pricing simples",
+          "Habilitación comercial rápida"
+        ]
+      },
+      {
+        "id": "stakeholder_6",
+        "name": "Director de Operaciones de Red / NetOps (nombre orientativo: Raúl Sánchez)",
+        "role": "Head Network Operations",
+        "department": "Operaciones de Red",
+        "influence": "medium",
+        "stance": "neutral",
+        "notes": "Responsable de estabilidad y automatización operacional. Preocupado por riesgos de migración y continuidad de servicio.",
+        "priorities": [
+          "Automatización y reducción OPEX",
+          "Orquestación y observabilidad",
+          "Minimizar riesgo en migraciones"
+        ]
+      },
+      {
+        "id": "stakeholder_7",
+        "name": "VP Procurement & Vendor Management (nombre orientativo: Sofía Ruiz)",
+        "role": "Procurement / Compras",
+        "department": "Compras / Contratación",
+        "influence": "high",
+        "stance": "skeptic",
+        "notes": "Controla modelos contractuales, SLA y TCO. Valora transparencia en precios y garantías de entrega.",
+        "priorities": [
+          "Optimización TCO",
+          "Modelos contractuales flexibles",
+          "Mitigación de riesgo contractual"
+        ]
+      }
+    ],
+    "summary": "Mapa de stakeholders enfocado en decisión ejecutiva (CEO, Telefónica Tech), técnicos (CTO redes, NetOps), seguridad (CISO) y comerciales/procurement que controlan la selección de partners. El éxito comercial requiere alinear casos de uso técnicos (cloud-native, edge/5G), garantías de soberanía y una propuesta comercial empaquetada para B2B/PYME."
+  },
+  "competitiveLandscape": {
+    "clientCompetitors": [
+      {
+        "id": "comp_1",
+        "name": "Vodafone España",
+        "type": "client_competitor",
+        "description": "Operador Móvil y Fijo en España y Europa; competidor directo en clientes residenciales y empresariales.",
+        "strengths": [
+          "Capacidad de red y cobertura móvil amplia",
+          "Ofertas convergentes con enfoque B2C/B2B",
+          "Inversión en 5G y servicios IoT"
+        ],
+        "weaknesses": [
+          "Menor presencia en algunos mercados latinoamericanos frente a Telefónica",
+          "Más dependiente de partners para soluciones cloud‑native complejas"
+        ]
+      },
+      {
+        "id": "comp_2",
+        "name": "Orange España",
+        "type": "client_competitor",
+        "description": "Operador convergente franco‑español con foco en digitalización y servicios empresariales.",
+        "strengths": [
+          "Fuerte oferta convergente y fibra",
+          "Alianzas con hyperscalers y oferta cloud para empresas",
+          "Estrategia B2B activa"
+        ],
+        "weaknesses": [
+          "Menor foco en mercados latinoamericanos",
+          "Capacidad de R&D en ciertos verticales inferior a líderes globales"
+        ]
+      },
+      {
+        "id": "comp_3",
+        "name": "MásMóvil Group",
+        "type": "client_competitor",
+        "description": "Operador disruptivo en España que compite en precios y paquetes flexibles para residenciales y pymes.",
+        "strengths": [
+          "Oferta competitiva de coste",
+          "Agilidad comercial y paquetes simples",
+          "Crecimiento rápido en cuota de mercado"
+        ],
+        "weaknesses": [
+          "Menor capacidad global e internacional",
+          "Menos inversión en I+D y servicios gestionados complejos"
+        ]
+      }
+    ],
+    "vendorCompetitors": [
+      {
+        "id": "comp_4",
+        "name": "Accenture",
+        "type": "vendor_competitor",
+        "description": "Gran consultora global con fuerte práctica de cloud, migración y transformación digital.",
+        "strengths": [
+          "Escala global y experiencia cross‑industry",
+          "Relaciones estratégicas con hyperscalers",
+          "Modelos de delivery industrializados"
+        ],
+        "weaknesses": [
+          "Costes elevados",
+          "Menor foco en soberanía/localización específica (a nivel local puede depender de partners)"
+        ]
+      },
+      {
+        "id": "comp_5",
+        "name": "Capgemini",
+        "type": "vendor_competitor",
+        "description": "Consultora y SI con presencia fuerte en Europa y práctica de telecomunicaciones.",
+        "strengths": [
+          "Experiencia en proyectos de telco y cloud",
+          "Ofertas integradas de servicios gestionados",
+          "Presencia en mercados europeos clave"
+        ],
+        "weaknesses": [
+          "Menor huella en América Latina comparado con Indra en ciertos segmentos",
+          "Posible solapamiento con otros partners locales"
+        ]
+      },
+      {
+        "id": "comp_6",
+        "name": "IBM Consulting / Red Hat",
+        "type": "vendor_competitor",
+        "description": "Proveedor con fuerte stack en cloud híbrido, Red Hat OpenShift y consultoría IT.",
+        "strengths": [
+          "Capacidades sólidas en cloud híbrido y OpenShift",
+          "Fuerte oferta en seguridad y cumplimiento",
+          "Experiencia en migraciones críticas"
+        ],
+        "weaknesses": [
+          "Menor especialización local en algunos sectores frente a players locales",
+          "Modelo de precios y licenciamiento complejo"
+        ]
+      },
+      {
+        "id": "comp_7",
+        "name": "NTT Data (incl. Everis)",
+        "type": "vendor_competitor",
+        "description": "Consultora con fuerte presencia en España y Latinoamérica, amplia práctica de servicios managed.",
+        "strengths": [
+          "Fuerte presencia local en España y LATAM",
+          "Capacidad de ejecución en proyectos telco",
+          "Oferta combinada de consultoría + outsourcing"
+        ],
+        "weaknesses": [
+          "Menor reconocimiento global en ciertos nichos cloud",
+          "Capacidad de innovación comparada con gigantes puede ser menor"
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "alt_1",
+        "name": "Build in‑house (Telefónica as builder)",
+        "type": "alternative_solution",
+        "description": "Desarrollar capacidades internas aprovechando Telefónica Tech y equipos propios para la transformación (posible mayor control y coste inicial alto)."
+      },
+      {
+        "id": "alt_2",
+        "name": "Hyperscaler‑led (AWS/Azure/GCP) con partner reducido",
+        "type": "alternative_solution",
+        "description": "Delegar transformación cloud-native y operaciones a un hyperscaler y sus managed services (rapidez, pero retos de soberanía y dependencia)."
+      },
+      {
+        "id": "alt_3",
+        "name": "Alianza con SI global (Accenture/Capgemini) + local SI",
+        "type": "alternative_solution",
+        "description": "Combinar capacidad global de un SI grande con un partner local para cobertura y soberanía; equilibrado pero más costoso."
+      },
+      {
+        "id": "alt_4",
+        "name": "No‑change / Evolución incremental",
+        "type": "alternative_solution",
+        "description": "Mantener evolución progresiva en lugar de una plataforma transformacional (riesgo de perder competitividad)."
+      }
+    ],
+    "summary": "Telefónica compite con operadores locales (Vodafone, Orange, MásMóvil) mientras que Indra compite con grandes consultoras/globales (Accenture, Capgemini, IBM, NTT Data). Indra aporta ventaja local y conocimiento sectorial en España y LATAM; sus rivales tienen mayor escala global y relaciones profundas con hyperscalers. Alternativas incluyen construir internamente o aliarse directamente con hyperscalers, cada una con trade‑offs sobre soberanía, velocidad y coste."
+  },
+  "vendorFitAndPlays": {
+    "overallFit": "high",
+    "fitScore": 80,
+    "fitDimensions": [
+      {
+        "dimension": "Industry Experience (Telecom)",
+        "score": 90,
+        "reasoning": "Indra tiene historial en proyectos críticos con operadores y sector público en España y LATAM (redes, mantenimiento predictivo, sistemas core), lo que reduce riesgo de entrega y facilita alineamiento con procesos regulatorios y comerciales locales."
+      },
+      {
+        "dimension": "Technical Capability (Cloud‑native, IA, Automation)",
+        "score": 80,
+        "reasoning": "Evidencias de migraciones a microservicios, IA en producción y reducción de TCO sugieren capacidades técnicas coherentes con los requisitos; necesita demostrar profundidad en Kubernetes multicloud y pipelines de plataforma a escala telco."
+      },
+      {
+        "dimension": "Security & Data Sovereignty",
+        "score": 80,
+        "reasoning": "Fuerte presencia local y experiencia en administraciones públicas facilitan cumplimiento y residencia de datos; será clave evidenciar certificaciones, cifrado y arquitecturas de soberanía concretas."
+      },
+      {
+        "dimension": "Delivery Scale & Global Reach",
+        "score": 70,
+        "reasoning": "Buena cobertura en España y LATAM, pero inferior a competidores globales en capacidad de delivery masivo y acceso preferente a recursos de hyperscalers a escala global."
+      },
+      {
+        "dimension": "Commercial Fit & Go‑to‑Market",
+        "score": 75,
+        "reasoning": "Capacidad para co‑desarrollar paquetes para PYME y ofertas gestionadas; sin embargo, necesita propuestas de pricing y modelos de co‑venta alineados con Telefónica y rapidez de onboarding."
+      }
+    ],
+    "recommendedPlays": [
+      {
+        "id": "play_1",
+        "name": "Sovereign Cloud & Compliance Fast‑Track",
+        "description": "Oferta empaquetada de plataforma cloud‑native con residencia de datos en España/EU, cifrado end‑to‑end, y módulos de compliance (GDPR/sectorial) listos para clientes regulados y administraciones.",
+        "rationale": "Atiende directamente la prioridad alta de soberanía y seguridad; reduce barreras del CISO y facilita ventas a sectores regulados.",
+        "targetStakeholders": [
+          "stakeholder_4",
+          "stakeholder_3",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Demostrar certificaciones (ISO 27001, ENS, GDPR) y arquitectura de cifrado",
+          "Datacenters/localización que cumplan residencia de datos",
+          "Modelos contractuales claros y SLAs para datos sensibles"
+        ]
+      },
+      {
+        "id": "play_2",
+        "name": "Cloud‑Native Migration Factory (Telco Apps)",
+        "description": "Planta de migración acelerada: assessment, refactor, pipelines CI/CD, plataforma Kubernetes gestionada (multicloud/hybrid) y runbook de rollback para migración de aplicaciones críticas del core y OSS/BSS.",
+        "rationale": "Resuelve la prioridad máxima de modernización cloud‑native y reduce tiempo a mercado, mostrando resultados rápidos y medibles (TCO/TTM).",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_6",
+          "stakeholder_3"
+        ],
+        "successFactors": [
+          "Casos pilotos con KPIs claros (reducción OPEX, TTM)",
+          "Garantías de continuidad de servicio y playbooks de rollback",
+          "Equipo mixto (Indra + Telefónica Tech) y acceso a entornos productivos"
+        ]
+      },
+      {
+        "id": "play_3",
+        "name": "Edge & Private 5G Vertical Accelerators",
+        "description": "Conjunto de aceleradores por vertical (industrial, salud, retail) que combinan private 5G, edge computing y plantillas de integración para casos de baja latencia y control industrial.",
+        "rationale": "Aborda la prioridad medio‑alta de 5G/edge y permite a Telefónica monetizar infraestructura con ofertas verticales empaquetadas.",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_3",
+          "stakeholder_5"
+        ],
+        "successFactors": [
+          "Demostradores/PoCs con clientes verticales clave",
+          "Paquetes comerciales listos para co‑sell con Telefónica",
+          "Integración con orquestación de red y mecanismos de SLA"
+        ]
+      },
+      {
+        "id": "play_4",
+        "name": "SME Quick‑Start Packs (Co‑sell)",
+        "description": "Ofertas preconfiguradas ‘connect+security+productivity’ empaquetadas, con onboarding automático, pricing sencillo y trial/seed customers para acelerar adopción en PYMEs.",
+        "rationale": "Atiende la prioridad de paquetes para PYME, reduce fricción comercial y abre canales de ingresos recurrentes gestionados por Telefónica Tech.",
+        "targetStakeholders": [
+          "stakeholder_5",
+          "stakeholder_3",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Modelos de pricing simples y pruebas piloto regionales",
+          "Material de venta y enablement para fuerza comercial",
+          "Soporte y SLA adaptados a PYMEs"
+        ]
+      }
+    ],
+    "summary": "Indra presenta un encaje alto con Telefónica para la Plataforma de Transformación Digital gracias a experiencia sectorial, capacidad de implementación y propuestas de soberanía. Las tácticas ganadoras combinan: (1) garantías de residencia y seguridad, (2) una migration factory para apps críticas, (3) aceleradores edge/5G por vertical y (4) packs para PYME co‑vendidos con Telefónica Tech. El principal riesgo es demostrar escala global y acuerdos preferentes con hyperscalers para orquestación multicloud."
+  },
+  "gapsAndQuestions": {
+    "gaps": [
+      {
+        "id": "gap_1",
+        "topic": "Compromisos actuales con hyperscalers y contratos cloud",
+        "impact": "high",
+        "description": "Falta detalle sobre acuerdos existentes con AWS/Azure/GCP (tipo de acuerdos, exclusividades, niveles de descuento y responsabilidades de gestión). Es crítico para diseñar propuesta multicloud y modelo comercial.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_2",
+        "topic": "Inventario y prioridad de aplicaciones para migración",
+        "impact": "high",
+        "description": "No hay lista priorizada de aplicaciones core/OSS/BSS objetivo, su criticidad, y restricciones (latencia, cumplimiento). Necesario para dimensionar la migration factory y estimar esfuerzo/ROI.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_3",
+        "topic": "Requisitos de residencia y esquema de soberanía para clientes regulados",
+        "impact": "high",
+        "description": "Necesitamos detalles concretos sobre exigencias regulatorias por mercado (España vs LATAM), niveles de cifrado exigidos y si Telefónica mantiene data centers propios para ciertas cargas.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_4",
+        "topic": "Modelo comercial y objetivos de monetización 2025",
+        "impact": "medium",
+        "description": "Claridad sobre objetivos de ingresos/OPEX para 2025, targets de monetización de infra y expectativa de márgenes por línea de servicio para diseñar propuestas de pricing alineadas.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_5",
+        "topic": "Capacidad interna y equipos asignables (Telefónica Tech)",
+        "impact": "medium",
+        "description": "No está claro cuánta capacidad técnica y de gestión Telefónica Tech puede dedicar a un partnership con Indra (equipo, rapidez de approvals). Impacta el modelo operativo y timeline de entrega.",
+        "priorityLevel": "should"
+      }
+    ],
+    "questions": [
+      {
+        "id": "question_1",
+        "question": "¿Qué hyperscalers y en qué términos contractuales (duración, descuentos, responsabilidad de gestión) tiene Telefónica para workloads estratégicos actualmente?",
+        "context": "Determina si la solución debe ser neutral multicloud, optimizada para un hyperscaler, o basada en datacenters propios; afecta precios y arquitectura.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": true
+      },
+      {
+        "id": "question_2",
+        "question": "¿Podemos obtener el inventario priorizado de 10 aplicaciones críticas que Telefónica pretende migrar en 2025 (incluyendo SLAs, dependencia de red y requisitos de latencia)?",
+        "context": "Necesario para dimensionar pilotajes, estimar TCO y definir el alcance de la migration factory.",
+        "targetStakeholder": "stakeholder_2",
+        "isCritical": true
+      },
+      {
+        "id": "question_3",
+        "question": "¿Qué requisitos de residencia de datos y certificaciones son obligatorios para sus clientes regulados en España y en los principales países de LATAM donde opera?",
+        "context": "Impacta diseño arquitectural, selección de datacenter y argumentos ante CISO y clientes regulados.",
+        "targetStakeholder": "stakeholder_4",
+        "isCritical": true
+      },
+      {
+        "id": "question_4",
+        "question": "¿Cuál es el objetivo comercial (ARR/Nuevo negocio) atribuible a la Plataforma de Transformación Digital para 2025 y cuál es la flexibilidad presupuestaria para pilotos?",
+        "context": "Permite estructurar propuestas comerciales (capex vs opex, modelos de revenue share) y dimensionar la inversión en PoCs.",
+        "targetStakeholder": "stakeholder_1",
+        "isCritical": false
+      },
+      {
+        "id": "question_5",
+        "question": "¿Qué experiencia y recursos (roles y FTEs) puede asignar Telefónica Tech para proyectos conjuntos durante el primer año?",
+        "context": "Define velocidad de ejecución y governance del proyecto; imprescindible para planificar entregas y riesgos.",
+        "targetStakeholder": "stakeholder_3",
+        "isCritical": true
+      },
+      {
+        "id": "question_6",
+        "question": "¿Qué criterios de evaluación (KPI) priorizará el comité de compras para seleccionar al partner: coste total de propiedad, rapidez de despliegue, cumplimiento regulatorio, o potencial de co‑ingresos?",
+        "context": "Orientará la propuesta comercial y materiales de RFP para maximizar alineamiento con Procurement.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": false
+      }
+    ],
+    "summary": "Existen gaps críticos sobre compromisos con hyperscalers, lista/prioridad de aplicaciones a migrar y requisitos de residencia/regulatorios; son must para diseñar oferta competitiva. Preguntas dirigidas a Procurement, CTO Redes, CISO y Telefónica Tech son necesarias antes de firmar un engagement para un piloto 2025."
+  }
+}

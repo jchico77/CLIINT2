@@ -1,11 +1,12 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { AdminSettingsService } from '../../domain/services/adminSettingsService';
 import { requireAdminAuth } from '../middleware/adminAuth';
 import { logger } from '../../lib/logger';
 import { ValidationError } from '../../domain/errors/AppError';
 import { applyAdminSettings } from '../../config/llm';
 
-export const adminSettingsRouter = Router();
+export const adminSettingsRouter: ExpressRouter = Router();
 
 const handleError = (error: unknown, res: Response) => {
   if (error instanceof ValidationError) {

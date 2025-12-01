@@ -6,6 +6,22 @@ import { secretsConfig } from './secrets';
 
 type ReasoningEffort = 'low' | 'medium' | 'high';
 
+const parseBoolean = (raw: string | undefined, fallback: boolean): boolean => {
+  if (raw === undefined) {
+    return fallback;
+  }
+  const normalized = raw.trim().toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes';
+};
+
+const parsePositiveInteger = (raw: string | undefined, fallback: number): number => {
+  if (!raw) {
+    return fallback;
+  }
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+};
+
 export interface LLMConfig {
   openaiApiKey: string;
   defaultModel: string;
@@ -18,6 +34,9 @@ export interface LLMConfig {
   clientResearchReasoningEffort: ReasoningEffort;
   vendorResearchModel: string;
   vendorResearchReasoningEffort: ReasoningEffort;
+  vendorDeepResearchModel: string;
+  vendorDeepResearchReasoningEffort: ReasoningEffort;
+  vendorDeepResearchTimeoutMs: number;
   fitStrategyModel: string;
   fitStrategyReasoningEffort: ReasoningEffort;
   proposalOutlineModel: string;
@@ -35,6 +54,13 @@ export interface LLMConfig {
   alertToggles: AdminSettings['alertToggles'];
   dashboardVisibility: AdminSettings['dashboardVisibility'];
   vendorEvidenceVectorStoreId?: string;
+  vendorAnalysisAutoRun: boolean;
+  vendorDeepResearchParallelConfig: {
+    gpt4ParallelEnabled: boolean;
+    gpt5ParallelEnabled: boolean;
+    maxConcurrentPhases: number;
+    interPhaseDelayMs: number;
+  };
 }
 
 const parseTimeout = (raw: string | undefined, fallback: number): number => {
@@ -70,6 +96,15 @@ export const llmConfig: LLMConfig = {
   vendorResearchReasoningEffort:
     (process.env.VENDOR_RESEARCH_REASONING as ReasoningEffort) ||
     adminDefaults.reasoningConfig.vendorResearch,
+  vendorDeepResearchModel:
+    process.env.VENDOR_DEEP_RESEARCH_MODEL || adminDefaults.modelConfig.vendorDeepResearch,
+  vendorDeepResearchReasoningEffort:
+    (process.env.VENDOR_DEEP_RESEARCH_REASONING as ReasoningEffort) ||
+    adminDefaults.reasoningConfig.vendorDeepResearch,
+  vendorDeepResearchTimeoutMs: parseTimeout(
+    process.env.VENDOR_DEEP_RESEARCH_TIMEOUT_MS,
+    adminDefaults.timeoutConfig.vendorDeepResearch,
+  ),
   fitStrategyModel: process.env.FIT_STRATEGY_MODEL || adminDefaults.modelConfig.fitAndStrategy,
   fitStrategyReasoningEffort:
     (process.env.FIT_STRATEGY_REASONING as ReasoningEffort) ||
@@ -99,6 +134,25 @@ export const llmConfig: LLMConfig = {
   alertToggles: { ...adminDefaults.alertToggles },
   dashboardVisibility: { ...adminDefaults.dashboardVisibility },
   vendorEvidenceVectorStoreId: process.env.VENDOR_EVIDENCE_VECTOR_STORE_ID,
+  vendorAnalysisAutoRun: adminDefaults.vendorAnalysis.autoRunOnCreate,
+  vendorDeepResearchParallelConfig: {
+    gpt4ParallelEnabled: parseBoolean(
+      process.env.VENDOR_DEEP_RESEARCH_GPT4_PARALLEL,
+      true,
+    ),
+    gpt5ParallelEnabled: parseBoolean(
+      process.env.VENDOR_DEEP_RESEARCH_GPT5_PARALLEL,
+      true,
+    ),
+    maxConcurrentPhases: parsePositiveInteger(
+      process.env.VENDOR_DEEP_RESEARCH_GPT5_MAX_PARALLEL,
+      3,
+    ),
+    interPhaseDelayMs: parsePositiveInteger(
+      process.env.VENDOR_DEEP_RESEARCH_GPT5_DELAY_MS,
+      800,
+    ),
+  },
 };
 
 export const applyAdminSettings = (settings: AdminSettings): void => {
@@ -107,16 +161,19 @@ export const applyAdminSettings = (settings: AdminSettings): void => {
   llmConfig.vendorResearchModel = settings.modelConfig.vendorResearch;
   llmConfig.fitStrategyModel = settings.modelConfig.fitAndStrategy;
   llmConfig.proposalOutlineModel = settings.modelConfig.proposalOutline;
+  llmConfig.vendorDeepResearchModel = settings.modelConfig.vendorDeepResearch;
 
   llmConfig.deepResearchReasoningEffort = settings.reasoningConfig.deepResearch;
   llmConfig.clientResearchReasoningEffort = settings.reasoningConfig.clientResearch;
   llmConfig.vendorResearchReasoningEffort = settings.reasoningConfig.vendorResearch;
   llmConfig.fitStrategyReasoningEffort = settings.reasoningConfig.fitAndStrategy;
   llmConfig.proposalOutlineReasoningEffort = settings.reasoningConfig.proposalOutline;
+  llmConfig.vendorDeepResearchReasoningEffort = settings.reasoningConfig.vendorDeepResearch;
 
   llmConfig.deepResearchTimeoutMs = settings.timeoutConfig.deepResearch;
   llmConfig.agentTimeoutMs = settings.timeoutConfig.agent;
   llmConfig.fitStrategyTimeoutMs = settings.timeoutConfig.fitStrategy;
+  llmConfig.vendorDeepResearchTimeoutMs = settings.timeoutConfig.vendorDeepResearch;
 
   llmConfig.loggingLevel = settings.loggingLevel;
   llmConfig.sandboxMode = settings.sandboxMode;
@@ -129,6 +186,14 @@ export const applyAdminSettings = (settings: AdminSettings): void => {
   llmConfig.retryConfig = { ...settings.retryConfig };
   llmConfig.alertToggles = { ...settings.alertToggles };
   llmConfig.dashboardVisibility = { ...settings.dashboardVisibility };
+  llmConfig.vendorAnalysisAutoRun = settings.vendorAnalysis.autoRunOnCreate;
+  llmConfig.vendorDeepResearchParallelConfig = {
+    ...llmConfig.vendorDeepResearchParallelConfig,
+    gpt4ParallelEnabled: settings.vendorDeepResearchParallel.gpt4ParallelEnabled,
+    gpt5ParallelEnabled: settings.vendorDeepResearchParallel.gpt5ParallelEnabled,
+    maxConcurrentPhases: settings.vendorDeepResearchParallel.maxConcurrentPhases,
+    interPhaseDelayMs: settings.vendorDeepResearchParallel.interPhaseDelayMs,
+  };
 
   logger.info('[LLMConfig] Admin overrides applied');
   logger.level = settings.loggingLevel;

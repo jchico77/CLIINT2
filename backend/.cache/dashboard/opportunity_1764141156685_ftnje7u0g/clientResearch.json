@@ -1,0 +1,135 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica (España)",
+    "industry": "Telecomunicaciones",
+    "headquarters": "Madrid, Spain",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica es uno de los principales operadores de telecomunicaciones con fuerte presencia en España y Latinoamérica. Opera un modelo híbrido que combina ingresos regulados y recurrentes de conectividad (fija, móvil, fibra) con una apuesta creciente por servicios digitales B2B a través de unidades como Telefónica Tech y Movistar Empresas.\n\nSu estrategia reciente se centra en la transformación hacia una compañía de plataformas y servicios gestionados (cloud, ciberseguridad, IoT, analytics) con prioridad en monetizar redes (5G, edge, fibra), mejorar eficiencia operativa mediante virtualización y automatización, y cumplir objetivos ESG. Esto genera oportunidades para ofertar plataformas de modernización, orquestación y capacidades de IA integradas, así como retos por la competencia de hyperscalers y la modernización de legacy.",
+    "keyMetrics": [
+      {
+        "label": "Unidades estratégicas relevantes",
+        "value": "Telefónica Tech, Movistar Empresas"
+      },
+      {
+        "label": "Presencia geográfica clave",
+        "value": "España + Latinoamérica"
+      },
+      {
+        "label": "Prioridades estratégicas",
+        "value": "Plataformización, monetización 5G, ciberseguridad, eficiencia operativa"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Despliegue 5G y convergencia 5G–edge–IoT",
+        "impact": "high",
+        "description": "Expansión del 5G y capacidades de edge computing habilitan casos industriales con baja latencia (manufactura, logística, salud) que pueden monetizarse como servicios B2B."
+      },
+      {
+        "trend": "Adopción multi-cloud y arquitecturas cloud-native",
+        "impact": "high",
+        "description": "Las empresas demandan plataformas abiertas, APIs y servicios gestionados multi-cloud; los operadores deben integrar y orquestar infraestructuras heterogéneas."
+      },
+      {
+        "trend": "Demanda creciente de ciberseguridad gestionada",
+        "impact": "high",
+        "description": "La preocupación por privacidad y continuidad del negocio eleva la necesidad de SOC, SASE y gestión continua de vulnerabilidades como parte de ofertas B2B."
+      },
+      {
+        "trend": "Plataformización y marketplaces B2B",
+        "impact": "medium",
+        "description": "Los clientes prefieren catálogos integrados y marketplaces que faciliten la compra/composición de servicios; esto favorece modelos de co-selling y white-label."
+      },
+      {
+        "trend": "Integración de IA y analítica avanzada",
+        "impact": "medium",
+        "description": "IA aplicada a datos de red y clientes permite monetización (network analytics, churn, pricing dinámico) y mejora de operaciones."
+      },
+      {
+        "trend": "Foco ESG y eficiencia energética",
+        "impact": "medium",
+        "description": "Clientes e inversores exigen trazabilidad y reducción de emisiones; las soluciones que aporten métricas y optimización energética ganan ventaja comercial."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "unknown",
+        "event": "Consolidación y enfoque de Telefónica en Telefónica Tech como vector de servicios digitales",
+        "significance": "Alta — refuerza la prioridad por integrar plataformas y ofrecer soluciones gestionadas B2B."
+      },
+      {
+        "date": "unknown",
+        "event": "Impulso a despliegues 5G y pruebas piloto en verticales industriales",
+        "significance": "Media-Alta — crea oportunidades para pilotos de edge y casos de uso industriales con retorno medible."
+      },
+      {
+        "date": "unknown",
+        "event": "Alianzas y relación con hyperscalers y grandes integradores",
+        "significance": "Alta — define tanto riesgo competitivo como palanca de aceptación para integraciones multi-cloud y co-venta."
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Integración nativa con stack existente",
+        "description": "Conectores y APIs para OSS/BSS, plataformas IoT, sistemas de gestión de red y marketplaces de Telefónica; migración incremental y soporte a entornos híbridos.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_2",
+        "category": "requirement",
+        "title": "Capacidades de piloto 5G/edge en verticales",
+        "description": "Proponer pilotos de corto plazo en manufactura, logística o energía que demuestren ROI (reducción downtime, optimización operativa) usando 5G/edge.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_3",
+        "category": "requirement",
+        "title": "Seguridad y cumplimiento desde diseño",
+        "description": "Incluir certificaciones, GDPR, gestión de identidades, SASE y capacidades SOC integradas como parte de la plataforma.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_4",
+        "category": "constraint",
+        "title": "Modelo comercial flexible y co-selling",
+        "description": "Opciones SaaS, consumo/usage, servicios gestionados y modelos de co-branding/white-label que encajen con canales y financiación de Telefónica.",
+        "priority": "medium",
+        "relevanceToService": 80
+      }
+    ],
+    "whatClientSeeks": [
+      "Aceleración de la transformación digital 2025 con un partner estratégico",
+      "Soluciones que se integren en el portfolio de Telefónica Tech y que puedan vender sus equipos comerciales",
+      "Pilotos rápidos y medibles en verticales industriales"
+    ],
+    "scope": [
+      "Plataforma de modernización: orquestación, low-code, data mesh, APIs",
+      "Pilotos 5G/edge y soluciones integradas de ciberseguridad",
+      "Opciones gestionadas y modelos SaaS/white-label"
+    ],
+    "exclusions": [
+      "Reemplazo completo inmediato de OSS/BSS legacy (debe ser migración incremental)",
+      "Despliegues que requieran dependencia exclusiva de un hyperscaler sin opción de multi-cloud",
+      "Soluciones sin cumplimiento normativo o certificaciones relevantes"
+    ],
+    "selectionCriteria": [
+      "Capacidad de integración con OSS/BSS y plataformas de red",
+      "Pruebas de concepto con KPIs financieros y operativos claros (ROI, TTM)",
+      "Cumplimiento de seguridad y regulatorio (GDPR, certificaciones relevantes)",
+      "Modelos comerciales compatibles con co-venta y white-label"
+    ],
+    "summary": "Telefónica busca un partner que aporte una plataforma de transformación integrable con su stack existente, capaz de ejecutar pilotos 5G/edge en verticales estratégicos, asegurar cumplimiento y seguridad desde el diseño, y ofrecer modelos comerciales flexibles que permitan co-venta con Telefónica Tech y Movistar Empresas."
+  }
+}

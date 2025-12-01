@@ -1,0 +1,134 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica (España)",
+    "industry": "Telecomunicaciones",
+    "headquarters": "Madrid, España",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica es el principal operador integrado en España (marca Movistar) que combina oferta masiva de conectividad (FTTH, 5G, móvil, TV) con una apuesta por plataformas digitales y servicios B2B a través de Telefónica Tech, Kernel/Aura y su ecosistema de innovación (Wayra). Su modelo busca monetizar datos y capacidades de IA mientras mantiene la operación y modernización de redes e infraestructuras.\n\nEn 2023‑2025 la compañía ha priorizado la digitalización interna, alianzas estratégicas con hyperscalers y la adopción de IA/Cloud para escalar servicios gestionados y plataformas. El contexto local se ha endurecido por la reconfiguración competitiva (MasOrange, movimientos en Vodafone) y riesgos regulatorios y de suministro que impactan ejecución y reputación.",
+    "keyMetrics": [
+      {
+        "label": "Posición en mercado español",
+        "value": "Operador líder por facturación en España (fuente: Statista / reportes 2023‑24)"
+      },
+      {
+        "label": "Unidades estratégicas clave",
+        "value": "Telefónica España, Telefónica Tech, Kernel/Aura, Telxius (infraestructura)"
+      },
+      {
+        "label": "Prioridades estratégicas",
+        "value": "Plataformas & datos, modernización de red (FTTH/5G/edge), alianzas con hyperscalers"
+      },
+      {
+        "label": "Riesgos relevantes",
+        "value": "Presión regulatoria y de competencia, dependencia de proveedores de red, ejecución de migraciones legacy"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Consolidación del mercado y presión competitiva",
+        "impact": "high",
+        "description": "Fusiones y JVs (ej. MasOrange) reconfiguran cuota y fuerza competitiva en residencial y convergente, presionando precios y necesidad de diferenciación."
+      },
+      {
+        "trend": "Adopción masiva de IA y cloud‑native",
+        "impact": "high",
+        "description": "Empresas aceleran modernización hacia arquitecturas cloud y capacidades de IA (incl. generativa), demandando soluciones de datos gobernados y MLOps/LLMOps."
+      },
+      {
+        "trend": "Despliegue de fibra, 5G y edge computing",
+        "impact": "high",
+        "description": "Completar FTTH y densificar 5G, además de demanda por private 5G y edge para verticales industriales exige integración red‑cloud‑aplicación."
+      },
+      {
+        "trend": "Ciberseguridad y soberanía digital",
+        "impact": "high",
+        "description": "Creciente demanda de servicios gestionados con requisitos de soberanía, cumplimiento regulatorio y trazabilidad de datos para sectores críticos."
+      },
+      {
+        "trend": "Eficiencia energética y sostenibilidad en infraestructuras",
+        "impact": "medium",
+        "description": "Presión regulatoria y de mercado para reducir consumo energético en redes y data centers y reportar métricas ESG."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "2025-07-30",
+        "event": "Telefónica anuncia reemplazo de equipamiento Huawei en España y Alemania",
+        "significance": "Alto impacto operativo y de coste; ejemplifica riesgo de cadena de suministro y necesidad de planes de reemplazo y comunicaciones."
+      },
+      {
+        "date": "2025-07-28",
+        "event": "CNMC impone multa de €20M a Telefónica",
+        "significance": "Riesgo regulatorio y reputacional que refuerza necesidad de compliance comercial y revisiones de procesos de venta/contratación."
+      },
+      {
+        "date": "2025-08-29",
+        "event": "Gobierno español cancela contrato con Telefónica por uso de equipamiento Huawei (reportado por Reuters)",
+        "significance": "Señala riesgo en contratos públicos y la importancia de capacidades de soberanía y propuestas 'security by design' para recuperar confianza."
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Integración nativa con Kernel/Aura y Telefónica Tech",
+        "description": "La solución debe poder integrarse técnica y comercialmente con Kernel/Aura para exponer/consumir APIs, pipelines de datos y capacidades IA, acelerando go‑to‑market conjunto.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_2",
+        "category": "scope",
+        "title": "Migración cloud y modernización IT para PYMEs y sector público",
+        "description": "Paquetes 'quick‑start' que reduzcan complejidad, cubran cumplimiento y ofrezcan SLAs y pricing por resultados para acelerar adopción en PYMEs y administraciones.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_3",
+        "category": "requirement",
+        "title": "Soluciones verticales de Private 5G + Edge para industria",
+        "description": "Ofertas empaquetadas de private network as a service + edge computing + orquestación AI para casos en manufactura, logística y salud con PoC medibles.",
+        "priority": "medium",
+        "relevanceToService": 80
+      },
+      {
+        "id": "req_4",
+        "category": "constraint",
+        "title": "Regulatory & security by design",
+        "description": "Capacidad demostrable de soberanía de datos, gestión de consentimientos, auditoría y cumplimiento CNMC/UE, requerida para contratos públicos y clientes regulados.",
+        "priority": "high",
+        "relevanceToService": 92
+      }
+    ],
+    "whatClientSeeks": [
+      "Partner estratégico para acelerar la transformación digital 2025 (integración técnica y comercial con Kernel/Aura)",
+      "Soluciones empaquetadas de migración cloud + seguridad + data governance para PYMEs y sector público",
+      "Casos de uso rápidos (PoC) que demuestren TCO y KPIs en 3–6 meses"
+    ],
+    "scope": [
+      "Integración con plataformas y APIs de Kernel/Aura y Telefónica Tech",
+      "Migración/modernización cloud‑native y servicios gestionados (MLOps/LLMOps incluído)",
+      "PoC verticales de Private 5G + edge con medición de latencia, seguridad y TCO"
+    ],
+    "exclusions": [
+      "Reemplazo masivo de capa física de red (e.g., proyectos de sustitución HW de gran escala fuera de PoC)",
+      "Servicios de consumo retail no relacionados con B2B/plataformas",
+      "Desarrollos punto a medida sin integración con Kernel/Aura"
+    ],
+    "selectionCriteria": [
+      "Capacidad de integración técnica con Kernel/Aura y cumplimiento de APIs y seguridad",
+      "Experiencia demostrada en migraciones cloud, MLOps y servicios gestionados para PYMEs/Administración",
+      "Propuesta de valor comercial clara (pricing por resultados, SLAs, modelos de co‑venta)",
+      "Estrategia de seguridad/soberanía y roadmap de cumplimiento regulatorio"
+    ],
+    "summary": "Telefónica busca un partner que entregue integración técnica con Kernel/Aura, soluciones empaquetadas de modernización cloud y PoC rápidos en verticales industriales y sector público, todo con enfoque fuerte en seguridad y cumplimiento regulatorio para mitigar riesgos reputacionales y contractuales."
+  }
+}

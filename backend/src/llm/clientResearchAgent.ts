@@ -14,7 +14,11 @@ import {
   loadDashboardSchema,
 } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
+import {
+  buildToolsForModel,
+  getModelCapabilities,
+  requiresLegacyJsonSchemaFormat,
+} from './modelCapabilities';
 
 interface ClientResearchOutput {
   accountSnapshot: AccountSnapshotSection;
@@ -195,7 +199,17 @@ Transforma la información en el siguiente esquema:
 }`;
 
     try {
-      const requestPayload = {
+      const jsonSchemaDefinition = {
+        name: clientResearchResponseSchema.name,
+        schema: clientResearchResponseSchema.schema,
+      };
+      const schemaFormat = {
+        type: 'json_schema' as const,
+        ...jsonSchemaDefinition,
+      };
+      const useLegacyResponseFormat = requiresLegacyJsonSchemaFormat(model);
+
+      const requestPayload: Record<string, unknown> = {
         model,
         ...(capabilities.supportsReasoning
           ? { reasoning: { effort: llmConfig.clientResearchReasoningEffort } }
@@ -214,14 +228,18 @@ Transforma la información en el siguiente esquema:
             content: [{ type: 'input_text', text: userPrompt }],
           },
         ],
-        text: {
-          format: {
-            type: 'json_schema',
-            name: clientResearchResponseSchema.name,
-            schema: clientResearchResponseSchema.schema,
-          },
-        },
-      } as Record<string, unknown>;
+      };
+
+      if (useLegacyResponseFormat) {
+        requestPayload.response_format = {
+          type: 'json_schema',
+          json_schema: jsonSchemaDefinition,
+        };
+      } else {
+        requestPayload.text = {
+          format: schemaFormat,
+        };
+      }
 
       if (tools) {
         requestPayload.tools = tools;

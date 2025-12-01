@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_evidence_phase",
+  "type": "object",
+  "properties": {
+    "caseStudies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "client": { "type": "string" },
+          "challenge": { "type": "string" },
+          "solution": { "type": "string" },
+          "results": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "metrics": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source": { "type": "string" }
+        },
+        "required": ["title", "client", "challenge", "solution", "results", "metrics", "source"],
+        "additionalProperties": false
+      }
+    },
+    "partnerships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "partner": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "announcedAt": { "type": "string" }
+        },
+        "required": ["partner", "type", "description", "announcedAt"],
+        "additionalProperties": false
+      }
+    },
+    "awards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "organization": { "type": "string" },
+          "year": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["name", "organization", "year", "description"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["caseStudies", "partnerships", "awards"],
+  "additionalProperties": false
+}
+

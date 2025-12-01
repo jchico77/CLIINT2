@@ -1,8 +1,9 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { ServiceOfferingService } from '../../domain/services/serviceOfferingService';
 import { CreateServiceOfferingInput } from '../../domain/models/serviceOffering';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {

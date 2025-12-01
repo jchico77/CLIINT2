@@ -1,0 +1,135 @@
+{
+  "clientName": "GMP (Grupo Gmp)",
+  "summary": "Informe estratégico para posicionar un servicio de Energy & Sustainability Services dirigido al Grupo Gmp (Gmp), actor patrimonialista y promotor inmobiliario español focalizado en oficinas y parques empresariales. El documento resume el modelo de negocio de Gmp, los segmentos relevantes, temas estratégicos de interés para venta de servicios energéticos y de sostenibilidad, riesgos clave, macro‑tendencias que impulsan demanda, competidores directos/indirectos en España, oportunidades comerciales y ángulos recomendados para la oferta.",
+  "businessModel": "Gmp es un grupo inmobiliario patrimonialista y promotor (fundado en 1979) que desarrolla, invierte y gestiona activos, principalmente oficinas y parques empresariales de alta calidad en Madrid. Opera tanto la promoción y rehabilitación de edificios como la explotación de un portfolio propio (SOCIMI/Gmp Property en su estructura histórica), con foco en la creación de activos premium y su comercialización a empresas/inquilinos corporativos. Ha participado en operaciones de compra/venta de sedes corporativas y en desarrollos certificados (ej. edificio ARQBÓREA con certificaciones de sostenibilidad). citeturn4search0turn6search0",
+  "marketSegments": [
+    "Oficinas prime (Madrid, Las Tablas, Parque Norte, Castellana)",
+    "Parques empresariales y business parks",
+    "Activos en proceso de rehabilitación/repowering (en cartera propia o por cliente)",
+    "Gestión de facilities y explotación (tenants corporativos)",
+    "Proyectos de certificación y reposicionamiento ESG (LEED, WELL, WiredScore, energy upgrades)"
+  ],
+  "strategicThemes": [
+    "Descarbonización y planes de reducción de emisiones del portfolio (roadmaps de Net Zero/Net Zero Carbon)",
+    "Rehabilitación energética y mejora de la envolvente para cumplir PNIEC / directivas europeas",
+    "Certificaciones y labels (LEED, WELL, Smart/WiredScore, Energy A/B) como driver de ocupación y valor",
+    "Digitalización de consumo y reporting ESG (medición, dashboards, plataforma de datos)",
+    "Modelos de financiación verde / acceso a capital (green loans, bonos verdes, NextGeneration / fondos europeos para rehabilitación)",
+    "Optimización OPEX/CAPEX mediante contratos energético‑servicios / modelos ESCO / PPP",
+    "Estrategia de tenant experience y salud (WELL/indoor air quality) como ventaja comercial"
+  ],
+  "keyRisks": [
+    "Riesgo regulatorio y de cumplimiento: transposición de directivas europeas (EPBD, CSRD/ESRS) y actualizaciones de RITE/PNIEC que elevan obligaciones para edificios terciarios. citeturn5search7turn5search8",
+    "Riesgo de obsolescencia técnica: activos no adaptados energéticamente pierden valor y ocupación frente a producto certificado. citeturn6search1",
+    "Riesgo de costes energéticos y volatilidad: subidas de precios y demanda de gestión activa de contratos y generación renovable on‑site.",
+    "Riesgo financiero / de mercado: revalorización del asset depende de inversión para mejoras; disponibilidad de financiación condiciona ritmo de ejecución (p.ej. NextGeneration/PNRR). citeturn5search9",
+    "Riesgo operativo y de ejecución: complejidad en obras de rehabilitación en activos ocupados, coordinación con facility management y posibles sobrecostes"
+  ],
+  "macroTrends": [
+    "Ambición europea de eficiencia y rehabilitación del parque edificado (objetivos PNIEC: rehabilitación masiva; 1,2M viviendas hasta 2030; 10M con necesidades de reforma en España). Esto sostiene pipelines de proyectos de retrofit y demanda de servicios técnicos y financiación vinculada. citeturn5search7turn5search9",
+    "Fondos NextGeneration / Plan de Recuperación: subvenciones y líneas de financiación que facilitan la viabilidad económica de rehabilitaciones energéticas. citeturn5search1turn5search9",
+    "Creciente importancia del dato y plataformas ESG: las grandes carteras usan soluciones SaaS/analytics para medir, priorizar intervenciones y reportar bajo Taxonomía/CSRD. (adopción de empresas como Deepki). citeturn7search0",
+    "Preferences de ocupantes e inversores por activos certificados (LEED/WELL/Smart) que facilitan ocupación y mejores precios de renta. Ejemplos de edificios certificados con efecto comercial y de valoración. citeturn6search0turn6search7",
+    "Escenario tecnológico: proliferación de autoconsumo fotovoltaico, baterías, heat pumps y soluciones de gestión energética/IoT en edificios terciarios"
+  ],
+  "competitors": [
+    {
+      "name": "PGI Engineering",
+      "description": "Consultora/ingeniería con división Energy & Sustainability que ofrece diagnósticos, proyectos, comisionamiento y certificaciones (LEED, BREEAM, WELL, RESET). Ha participado en proyectos con altos estándares (p. ej. ARQBÓREA instalaciones). Relevante por capacidades técnicas integradas y experiencia en edificios de alta complejidad en España.",
+      "relevance": "high"
+    },
+    {
+      "name": "Deepki",
+      "description": "Plataforma SaaS de datos ESG especializada en real estate. Ofrece captura/armonización de datos, benchmarks, roadmaps de reducción de emisiones y reporting para cumplir taxonomía/CSRD. Muy relevante para servicios de digitalización y priorización de acciones en carteras grandes.",
+      "relevance": "high"
+    },
+    {
+      "name": "Acciona / Acciona Facility Services",
+      "description": "Grupo integrado con capacidades en generación renovable, proyectos EPC y facility services. Opera contratos de mantenimiento y servicios energéticos en edificios; fuerte presencia en España y capacidad para ofrecer soluciones ‘on‑site’ y financiación integrada. Relevancia alta en contratos integrales y obra/operación. ",
+      "relevance": "high"
+    },
+    {
+      "name": "ENGIE / Veolia / Ferrovial Servicios (grandes ESCOs & FM providers)",
+      "description": "Operadores globales de servicios energéticos, mantenimiento y concesiones (ESCO / facility management) con ofertas de eficiencia, contratos con garantía de ahorro y proyectos de generación distribuida. Competencia directa en contratos de explotación y soluciones llave en mano.",
+      "relevance": "high"
+    },
+    {
+      "name": "Consultoras/ingenierías medianas (Sener, AYESA, Sacyr Facilities, Cobify/Cobra)",
+      "description": "Empresas con capacidad técnica y experiencia en grandes proyectos de instalaciones y rehabilitación energética; competencia para proyectos específicos de ingeniería y ejecución.",
+      "relevance": "medium"
+    },
+    {
+      "name": "Proveedores tecnológicos y proptech especializadas (p.ej. plataformas de monitorización, empresas de IA/IoT y proveedores de hardware: Siemens, Johnson Controls)",
+      "description": "Ofrecen soluciones de monitorización, BMS, control y optimización energética que se integran en proyectos de mejora y operación. Relevancia alta para la capa tecnológica de la oferta.",
+      "relevance": "high"
+    }
+  ],
+  "opportunities": [
+    "Posicionar una oferta integral ‘one‑stop shop’ dirigida a patrimonialistas: diagnóstico + roadmap + ejecución (retrofit + generación renovable) + operación/optimización (contrato ESCO) y reporting ESG.",
+    "Oferta de digitalización (metering + plataforma de datos + KPIs) para cumplir CSRD/ESRS y Taxonomía Europeo: priorización de medidas y reporting automatizado (valor para Gmp como propietario). citeturn7search0",
+    "Uso de fondos europeos y mecanismos locales (programas PREE, NextGeneration, mecanismos municipales como MES Barcelona) para co‑financiar rehabilitaciones: packaging financiero + técnico aumenta tasa de éxito comercial. citeturn5search10turn8search0",
+    "Pilotaje de proyectos ‘showcase’ en activos de Gmp (p. ej. ARQBÓREA‑style retrofit o rooftop PV en parque propio) que actúen como referencia de marketing y de venta cruzada a inquilinos y fondos.",
+    "Modelo de contrato de valor compartido (Energy Performance Contracting / guaranteed savings / PPA para autoconsumo) que mejore OPEX y facilite CAPEX con terceros inversores/ESCOs.",
+    "Servicios de indoor air quality y WELL / RESET para diferenciar product market fit en post‑COVID y orientación a bienestar del ocupante. citeturn6search7"
+  ],
+  "recommendedAngles": [
+    "Mensaje principal: ‘Aumentamos el valor del activo disminuyendo riesgo regulatorio y OPEX’ — traducir intervenciones energéticas a impacto en NOI, Tasa de vacancia y valor de revalorización.",
+    "Pack ‘Diagnóstico rápido + Roadmap 2 años + Pilot’ (low friction): ofrecer un 'Quick Scan' de 6‑8 semanas que combine consumo, medido/estimado, y una cartera priorizada por ROI y riesgo regulatorio.",
+    "Financiación combinada: presentar soluciones de co‑financiación (subvención + PPA/contrato ESCO + green loan) y un business case claro por activo para acelerar decisión de inversión. citeturn5search9",
+    "Enfoque en reporting y compliance: ofrecer módulos de datos que preparen la información necesaria para CSRD/ESRS y criterios de Taxonomía (reduce coste de cumplimiento y acelera acceso a capital verde). citeturn7search0",
+    "Casos de éxito & certificación: proponer la obtención/renovación de certificados (LEED, WELL, SmartScore) como parte del proyecto para mejorar marketability y renta; usar un activo referencial de Gmp como piloto.",
+    "Alianza con proveedores tecnológicos y ESCOs: construir una red de partners (plataformas de medición, instaladores PV, integradores BMS) para ofrecer una solución llave en mano; posicionamiento como socio de transformación a largo plazo."
+  ],
+  "sources": [
+    {
+      "title": "Informe anual / Perfil Gmp (extracto)",
+      "snippet": "Gmp, fundado en 1979, es un grupo inmobiliario patrimonialista español especializado en oficinas y business parks; actividad de promoción, inversión y gestión de patrimonio propio.",
+      "url": "https://esdocs.com/doc/1502601/informe-anual-annual-report"
+    },
+    {
+      "title": "ARQBÓREA — artículo (edificio propiedad de Gmp, LEED Platinum)",
+      "snippet": "El edificio ARQBÓREA, propiedad de GMP, es un inmueble moderno y eficiente con certificación LEED Platinum en Madrid (Las Tablas).",
+      "url": "https://elinmobiliariomesames.com/oficinas/grupo-esprinet-estrena-sede-de-2-200-m2-en-el-edificio-arqborea/"
+    },
+    {
+      "title": "PGI Engineering – Energy & Sustainability (servicios)",
+      "snippet": "Division Energy & Sustainability: servicios de diagnóstico, proyecto, comisionamiento, certificaciones (LEED, BREEAM, WELL, RESET) y puesta en marcha y seguimiento.",
+      "url": "https://www.pgiengineering.com/divisiones/energy-sustainability"
+    },
+    {
+      "title": "Deepki – About / Deepki España (SaaS ESG para Real Estate)",
+      "snippet": "Deepki ofrece plataforma de datos ESG para carteras inmobiliarias; presencia y clientes en España; herramienta para priorizar acciones y reporting bajo Taxonomía/CSRD.",
+      "url": "https://www.deepki.com/es/sobre-deepki/"
+    },
+    {
+      "title": "PNIEC / rehabilitación de edificios — referencias y contexto (Congreso / PNIEC)",
+      "snippet": "El PNIEC 2021‑2030 identifica 10 millones de viviendas con necesidades de rehabilitación en España y fija objetivos ambiciosos de renovación y descarbonización del parque edificado.",
+      "url": "https://www.congreso.es/es/busqueda-de-publicaciones?_publicaciones_id_texto=%28BOCG-14-D-180.CODI.%29&_publicaciones_legislatura=XIV&_publicaciones_mode=mostrarTextoIntegro&p_p_id=publicaciones&p_p_lifecycle=0&p_p_mode=view&p_p_state=normal"
+    },
+    {
+      "title": "NextGeneration / Fondos europeos y rehabilitación — CaixaBank Research",
+      "snippet": "Los fondos NextGeneration impulsan la rehabilitación energética en España; PNIEC prevé renovar 1,2M viviendas hasta 2030; las ayudas facilitan la viabilidad económica de proyectos de retrofit.",
+      "url": "https://www.caixabankresearch.com/es/economia-y-mercados/sector-publico/ngeu-oportunidad-relanzar-sector-inmobiliario-espanol"
+    },
+    {
+      "title": "Idealista: claves de RITE y regulación (eficiencia energética en instalaciones)",
+      "snippet": "RITE y actualizaciones regulatorias obligan a justificar instalaciones y priorizar medidas más eficientes; obligaciones de transparencia para edificios administrativos >1.000 m2.",
+      "url": "https://www.idealista.com/news/inmobiliario/construccion/2021/04/29/790189-las-claves-de-rite-el-nuevo-reglamento-para-mejorar-la-eficiencia-energetica-de"
+    },
+    {
+      "title": "Noticia: GIC invierte en Gmp (Idealista 2014)",
+      "snippet": "En 2014 GIC (fondo soberano de Singapur) entró en el capital de Gmp, reforzando su posición financiera en inversiones y desarrollo.",
+      "url": "https://www.idealista.com/news/inmobiliario/empresas/2014/10/02/731673-el-fondo-soberano-de-singapur-gic-entra-en-gmp-la-inmobiliaria-de-la-familia-montoro"
+    },
+    {
+      "title": "EjePrime: operaciones recientes (venta de edificio sede Huawei por Gmp)",
+      "snippet": "Cobertura de operaciones de Gmp en Mercado de oficinas (venta/salida al mercado de activos emblemáticos como la sede de Huawei).",
+      "url": "https://www.ejeprime.com/empresa/la-semana-del-real-state-de-la-venta-de-la-sede-de-huawei-al-nuevo-fondo-de-asg"
+    },
+    {
+      "title": "Veolia / ejemplos de contratos públicos y servicios energéticos en España",
+      "snippet": "Veolia y otras grandes compañías (Engie, Acciona, Ferrovial) son proveedores habituales de servicios energéticos y facility management en licitaciones públicas y privadas en España.",
+      "url": "https://es.openprocurements.com/supplier/veolia-servicios-lecam-s-a-u/"
+    }
+  ]
+}

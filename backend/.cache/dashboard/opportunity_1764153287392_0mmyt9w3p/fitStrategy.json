@@ -1,0 +1,412 @@
+{
+  "stakeholderMap": {
+    "stakeholders": [
+      {
+        "id": "stakeholder_1",
+        "name": "Marc Murtra",
+        "role": "Executive Chairman (Presidente Ejecutivo)",
+        "department": "Chair Office / Consejo de Administración",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Nombrado presidente ejecutivo en enero 2025; ex‑presidente de Indra — influencia alta sobre dirección estratégica y revisión de proyectos. Potencial percepción pública de conflicto de interés a gestionar con transparencia. Fundamental para aprobaciones estratégicas y alianzas a gran escala.",
+        "priorities": [
+          "Revisión estratégica y mejora de rentabilidad",
+          "Consolidación del sector y lobby regulatorio",
+          "Desinversiones / racionalización de proyectos poco rentables"
+        ]
+      },
+      {
+        "id": "stakeholder_2",
+        "name": "Emilio Gayo",
+        "role": "Chief Operating Officer / Consejero Delegado (CEO)",
+        "department": "Operaciones / Grupo",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Nombrado consejero delegado en marzo 2025; orientado a ejecución y resultados operativos rápidos. Priorización de iniciativas con retorno claro y reducción de complejidad operacional.",
+        "priorities": [
+          "Entregas con impacto en EBITDA y cash",
+          "Escalado rápido de ofertas comerciales",
+          "Reducción de deuda técnica y aceleración del time-to-market"
+        ]
+      },
+      {
+        "id": "stakeholder_3",
+        "name": "Sofía Collado",
+        "role": "CEO Telefónica Tech",
+        "department": "Telefónica Tech (B2B, Cloud, Cyber, IA)",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Asignada a Telefónica Tech en abril 2025 (procedente de Indra/Minsait). Controla la unidad B2B que deberá certificar y comercializar soluciones conjuntas con partners.",
+        "priorities": [
+          "Ecosistema de partners verificables",
+          "Oferta de servicios gestionados Cloud/IA para clientes B2B",
+          "Velocidad de comercialización y responsabilidad por SLAs"
+        ]
+      },
+      {
+        "id": "stakeholder_4",
+        "name": "Sebas (Sebastián) Muriel",
+        "role": "Chief Digital Officer (CDO)",
+        "department": "Digital / Kernel / Plataformas",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Reincorporado como CDO en marzo 2025 para liderar la transición digital tras cambios en la cúpula. Es el nodo técnico‑producto relevante para integración con Kernel/Aura y roadmap de plataformas.",
+        "priorities": [
+          "Orientar plataformas a resultados de negocio",
+          "Simplificar y acelerar adopción de APIs internas",
+          "Garantizar gobernanza de datos y seguridad en plataformas"
+        ]
+      },
+      {
+        "id": "stakeholder_5",
+        "name": "Andrea Folgueiras",
+        "role": "Chief Technology & Information Officer (CTIO)",
+        "department": "Tecnología e Infraestructura",
+        "influence": "high",
+        "stance": "neutral",
+        "notes": "Responsable de arquitectura global, modernización IT y migración cloud. Evaluará riesgo técnico, compatibilidad y requisitos de integración (APIs, seguridad, RTO/RPO).",
+        "priorities": [
+          "Robustez de la modernización cloud",
+          "Reducción de RTO/RPO y deuda técnica",
+          "Compatibilidad con redes (5G/Edge) y orquestación"
+        ]
+      },
+      {
+        "id": "stakeholder_6",
+        "name": "Laura Abasolo",
+        "role": "CFO / Directora General de Finanzas y Control",
+        "department": "Finanzas",
+        "influence": "high",
+        "stance": "neutral",
+        "notes": "Foco en modelos de coste, impacto en OPEX/CapEX y planes de financiación. Decisiva para aprobar modelos comerciales como 'pricing por resultados' o proyectos con plazos de retorno largos.",
+        "priorities": [
+          "Preservar cash / optimizar CapEx",
+          "Modelos comerciales basados en resultados y mitigación de riesgo",
+          "Control de provisiones y reporting financiero"
+        ]
+      },
+      {
+        "id": "stakeholder_7",
+        "name": "Pablo de Carvajal",
+        "role": "Secretary General & Head Regulatory Affairs",
+        "department": "Regulación y Gobierno Corporativo",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Clave para cumplimiento CNMC/UE, supervisión de políticas de soberanía de datos y validación de acuerdos con sector público. Velará por compliance frente a tensiones regulatorias tras consolidación sectorial.",
+        "priorities": [
+          "Cumplimiento regulatorio CNMC / UE",
+          "Soberanía y protección de datos",
+          "Transparencia en contratos con el sector público"
+        ]
+      },
+      {
+        "id": "stakeholder_8",
+        "name": "Borja Ochoa",
+        "role": "Presidenta / CEO Telefónica España",
+        "department": "Telefónica España (mercado local)",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Líder local con foco en despliegues comerciales en España (PYMES, administraciones públicas). Importante para pilotos regionales y escalado comercial en mercado doméstico.",
+        "priorities": [
+          "Crecimiento de fibra/5G en España",
+          "Ofertas empaquetadas para PYMEs y sector público",
+          "Cumplimiento y SLAs locales"
+        ]
+      }
+    ],
+    "summary": "Mapa de stakeholders clave construido a partir de la reestructuración directiva de Telefónica (enero‑marzo 2025) y los responsables de las áreas tecnológicas, comerciales y regulatorias que decidirán sobre partnerships de transformación digital. Fuentes: comunicados y cobertura pública de nombramientos (Murtra, Gayo, Sofía Collado, Sebas Muriel). citeturn0news12turn3search0turn1search0"
+  },
+  "competitiveLandscape": {
+    "clientCompetitors": [
+      {
+        "id": "comp_1",
+        "name": "MasOrange (Orange España + MásMóvil JV)",
+        "type": "client_competitor",
+        "description": "Entidad resultante de la integración de Orange España y MásMóvil que ha reconfigurado la competencia en España y busca liderazgo en 5G y fibra.",
+        "strengths": [
+          "Posición consolidada en clientes y espectro (ventaja en bandas 3.5GHz y capacidad 5G).",
+          "Economías de escala en red y sinergias operativas post‑fusión."
+        ],
+        "weaknesses": [
+          "Complejidad de gobernanza JV y necesidad de integración de sistemas heredados.",
+          "Presión de deuda / objetivos de sinergias que pueden limitar inversión en nuevas plataformas B2B."
+        ]
+      },
+      {
+        "id": "comp_2",
+        "name": "Vodafone España",
+        "type": "client_competitor",
+        "description": "Operador global con presencia significativa en España; competidor directo en móvil, fija y servicios empresariales.",
+        "strengths": [
+          "Capacidad global de soluciones enterprise y acuerdos con operadores/hyperscalers.",
+          "Oferta convergente y experiencia en servicios gestionados."
+        ],
+        "weaknesses": [
+          "Necesidad de modernización de parte de su parque de fibra en ciertas zonas; menor cuota en algunos segmentos frente a MasOrange/Movistar.",
+          "Presión en márgenes en mercados europeos, enfoque conservador en inversiones disruptivas."
+        ]
+      },
+      {
+        "id": "comp_3",
+        "name": "DIGI (Digi Spain)",
+        "type": "client_competitor",
+        "description": "Operador alternativo de crecimiento rápido que ha firmado acuerdos de roaming y bitstream con los grandes; ejerce presión de precio en mercado de consumo y PYME.",
+        "strengths": [
+          "Agresividad comercial y foco en coste‑efectividad.",
+          "Flexibilidad para acuerdos mayoristas (bitstream / roaming)."
+        ],
+        "weaknesses": [
+          "Menor capacidad de despliegue propio de infraestructuras que los grandes.",
+          "Perfil de cliente más sensible al precio que al servicio avanzado / plataformas IA."
+        ]
+      }
+    ],
+    "vendorCompetitors": [
+      {
+        "id": "comp_4",
+        "name": "Accenture",
+        "type": "vendor_competitor",
+        "description": "Consultora global con fuerte práctica en cloud, IA, transformación de operadores y partnerships con hyperscalers.",
+        "strengths": [
+          "Capacidad global y escalado masivo en proyectos multi‑país.",
+          "Relaciones sólidas con hyperscalers (AWS, Azure, GCP) y oferta de servicios gestionados."
+        ],
+        "weaknesses": [
+          "Coste relativamente alto; menor positioning ‘local’ en sectores regulados que requieren soberanía de datos específica.",
+          "Posible competencia con Telefónica Tech en algunos servicios gestionados B2B."
+        ]
+      },
+      {
+        "id": "comp_5",
+        "name": "Capgemini",
+        "type": "vendor_competitor",
+        "description": "Gran integrador europeo con oferta en cloud y transformación y presencia fuerte en industria y sector público.",
+        "strengths": [
+          "Presencia fuerte en la UE y experiencia en contratos públicos.",
+          "Amplio portfolio de servicios y experiencia en orquestación de proyectos complejos."
+        ],
+        "weaknesses": [
+          "Procesos a veces más lentos en comparación con 'boutique' locales; dependiente de integraciones con terceros.",
+          "Relevancia en España comparada con proveedores locales (Indra/Minsait) puede ser menor en ciertas cuentas públicas."
+        ]
+      },
+      {
+        "id": "comp_6",
+        "name": "IBM / NTT DATA",
+        "type": "vendor_competitor",
+        "description": "Proveedores globales de servicios IT, cloud híbrido, y soluciones de seguridad/IA que compiten por proyectos de modernización y plataformas críticas.",
+        "strengths": [
+          "Capacidades técnicas maduras en mainframe, datos y seguridad; experiencia sectorial.",
+          "Ofertas de cloud híbrido y multicloud para entornos regulados."
+        ],
+        "weaknesses": [
+          "Menor agilidad comercial local frente a players nativos; precio/estructura compleja.",
+          "Posible solapamiento con socios hyperscaler preferentes de Telefónica."
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "alt_1",
+        "name": "Build in‑house (Desarrollar internamente)",
+        "type": "alternative_solution",
+        "description": "Telefónica decide mantener/expandir internalmente Kernel/Aura y desarrollar stacks cloud/IA con equipos propios — implica coste y tiempo, pero control total."
+      },
+      {
+        "id": "alt_2",
+        "name": "Partner with Hyperscaler (Azure / AWS / Google)",
+        "type": "alternative_solution",
+        "description": "Apostar por aceleradores y soluciones gestionadas de hyperscalers con co‑desarrollo — rápido pero con retos de soberanía/commercial split."
+      },
+      {
+        "id": "alt_3",
+        "name": "No change / Incremental improvements",
+        "type": "alternative_solution",
+        "description": "Continuar con roadmap actual sin incorporar un partner estratégico externo para 2025 — minimiza cambio pero retrasa ambiciones de monetización IA."
+      }
+    ],
+    "summary": "El mercado español está en plena reconfiguración: la unión Orange+MásMóvil (MasOrange) ha creado una nueva dinámica competitiva en 5G/fibra y las entradas/expansiones de operadores alternativos (DIGI) aumentan la presión en precio. Indra compite contra grandes integradores (Accenture, Capgemini, IBM/NTT) en modernización y transformaciones gestionadas, pero tiene ventaja local sectorial y conocimiento regulatorio. Las decisiones de Telefónica sobre partners estarán condicionadas por el trade‑off entre rapidez (hyperscalers/consultoras globales) y soberanía/localización (proveedores nacionales con credenciales sectoriales). Fuentes: cobertura de consolidación en España y listados de competidores del mercado de transformación digital. citeturn4search0turn4news14turn5search0turn6search2"
+  },
+  "vendorFitAndPlays": {
+    "overallFit": "high",
+    "fitScore": 82,
+    "fitDimensions": [
+      {
+        "dimension": "Technical Capability (Cloud / Modernización / IA)",
+        "score": 85,
+        "reasoning": "Indra/Minsait ha demostrado resultados en migraciones cloud, reducción de TCO y proyectos IA (evidencias de casos de uso y métricas de ahorro y detección de fraude provistas por el vendor). Capacidad técnica robusta para modernización de operadores y sector público."
+      },
+      {
+        "dimension": "Integration with Telefónica Kernel / Aura / Telefónica Tech",
+        "score": 70,
+        "reasoning": "Existen conexiones relacionales (ej. directivos con pasado en Indra en Telefónica Tech) que facilitan diálogo comercial; sin embargo, el estado operativo y roadmap de Kernel/Aura ha sido revisado en 2025, generando incertidumbre técnica y de APIs. Requiere validación técnica (sandbox/API) antes de PoC a escala. citeturn1search0turn0search1"
+      },
+      {
+        "dimension": "Regulatory & Security by Design",
+        "score": 88,
+        "reasoning": "Indra tiene experiencia sectorial en contratos regulados y ofertas con requisitos de soberanía; su track record en proyectos críticos (energía, seguridad) y posicionamiento local le dan ventaja para cumplir CNMC/UE y requisitos de data residency."
+      },
+      {
+        "dimension": "Commercial Alignment & GTM (PYMEs / Sector Público)",
+        "score": 78,
+        "reasoning": "Indra puede empaquetar ofertas para PYMEs y administraciones públicas, pero deberá co‑vender y coordinar modelos con Telefónica Tech (canal, pricing, SLAs); ventaja por capacidad integradora pero necesita acelerar modelos 'quick‑start' y pricing por resultados."
+      },
+      {
+        "dimension": "Cultural fit & Relationships",
+        "score": 80,
+        "reasoning": "Vínculos ejecutivos recientes entre Indra y Telefónica (nuevos nombramientos provenientes de Indra) reducen fricción comercial; hay riesgo reputacional a gestionar por percepción de puertas giratorias, pero relación local y conocimiento sectorial favorecen colaboración."
+      }
+    ],
+    "recommendedPlays": [
+      {
+        "id": "play_1",
+        "name": "Kernel/Aura Fast‑Integration PoC (30–60 días)",
+        "description": "Proponer un PoC acotado de 30–60 días que demuestre integración técnica (APIs, pipelines de datos y modelos IA) entre la Plataforma de Transformación Digital de Indra y Kernel/Aura en un caso de uso medible (p. ej. onboarding automatizado de PYMEs con SLA y facturación piloto).",
+        "rationale": "Valida compatibilidad técnica rápidamente, genera evidencias concretas para Telefónica Tech y permite construir un caso comercial replicable para PYMEs. Reduce incertidumbre sobre Kernel/Aura y acelera la decisión ejecutiva.",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_4",
+          "stakeholder_5"
+        ],
+        "successFactors": [
+          "Acceso a sandbox/API de Kernel con datos de ejemplo y contratos de NDAs firmados.",
+          "Equipo técnico conjunto (Indra + Telefónica Tech) con KPIs definidos (time‑to‑onboard, SLA, coste por cliente).",
+          "Aprobación ejecutiva para piloto y plan de co‑venta posterior."
+        ]
+      },
+      {
+        "id": "play_2",
+        "name": "PYME Quick‑Start Cloud Migration Pack (Outcome‑based)",
+        "description": "Diseñar un paquete estandarizado 'quick‑start' para migración cloud + seguridad + portal de gestión para PYMEs y administraciones locales: entrega en 8–12 semanas, SLA definidos y modelo de pricing por resultados (ej. reducción de coste operativo y disponibilidad).",
+        "rationale": "Cumple la prioridad alta de Telefónica para escalar soluciones a PYMEs/sector público con un producto replicable que Telefónica Tech puede comercializar a través de su canal.",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_6",
+          "stakeholder_8"
+        ],
+        "successFactors": [
+          "Paquetes estandarizados con plantillas de cumplimiento y certificaciones (CNMC/UE / datos personales).",
+          "Modelo comercial claro (revenue share / resultados medibles) aprobado por Finanzas.",
+          "Oferta de soporte y run‑operations por Telefónica Tech con SLAs comerciales."
+        ]
+      },
+      {
+        "id": "play_3",
+        "name": "Private 5G + Edge Vertical PoC (Manufactura / Logística / Salud)",
+        "description": "Lanzar 2 PoCs sectoriales (manufactura y logística o salud) que combinen private 5G as a Service, edge computing y orquestación IA para casos medibles (predictive maintenance, trazabilidad, telediagnóstico). Incluye roadmap de escalado y playbook de datos/soberanía.",
+        "rationale": "Dirección clara hacia verticales donde Telefónica quiere monetizar 5G/Edge; casos sectoriales sirven como referencia para ventas conjuntas y aceleran adopción industrial.",
+        "targetStakeholders": [
+          "stakeholder_5",
+          "stakeholder_3",
+          "stakeholder_8"
+        ],
+        "successFactors": [
+          "Acceso a ubicaciones piloto y clientes industriales dispuestos a medir KPIs.",
+          "Plan de responsabilidad y datos soberanos integrado (hosting local / auditabilidad).",
+          "Modelo comercial testado (Piloto -> MVP -> roll‑out) con hitos y financiación compartida."
+        ]
+      },
+      {
+        "id": "play_4",
+        "name": "Regulatory & Security by Design Assurance Pack",
+        "description": "Ofrecer un paquete pre‑validado de cumplimiento (plantillas de contratos, data‑sovereignty blueprint, gestión de consentimientos y auditoría automatizada) para acelerar licitaciones públicas y clientes regulados.",
+        "rationale": "Aborda una prioridad alta de Telefónica (Regulatory & security by design) y reduce fricción en adjudicaciones públicas y contratos sensibles.",
+        "targetStakeholders": [
+          "stakeholder_7",
+          "stakeholder_4",
+          "stakeholder_3"
+        ],
+        "successFactors": [
+          "Certificaciones / evidencias de auditoría previas y disposiciones de hosting local.",
+          "Plantillas contractuales aceptadas por el equipo legal y regulatory de Telefónica.",
+          "Alineamiento con la estrategia de data residency y mecanismo de reporting automatizado."
+        ]
+      }
+    ],
+    "summary": "Encaje elevado: Indra aporta capacidades técnicas, experiencia sectorial y casos de éxito cuantificados (reducción TCO, detección de fraude, time‑to‑market). El principal condicionante es la confirmación del estado y apertura de Kernel/Aura (APIs, roadmap), más la definición comercial conjunta con Telefónica Tech. Recomendación: ejecutar PoC corto en Kernel + paquetes estandarizados para PYMEs y verticales 5G/Edge; reforzar pack de cumplimiento para acelerar licitaciones públicas. citeturn6search10turn1search0turn0search1"
+  },
+  "gapsAndQuestions": {
+    "gaps": [
+      {
+        "id": "gap_1",
+        "topic": "Estado operativo y roadmap de Kernel/Aura (APIs y acceso sandbox)",
+        "impact": "high",
+        "description": "Necesitamos confirmar si Kernel/Aura mantiene APIs abiertas, versión de API, SLA de sandbox y roadmap de continuidad (existe evidencia de revisión/desmantelamiento parcial en 2025). Sin esta info, un PoC de integración no puede planificarse con precisión.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_2",
+        "topic": "Modelo comercial y reglas de co‑venta con Telefónica Tech",
+        "impact": "high",
+        "description": "Falta claridad sobre los requisitos de partner certification, revenue share, condiciones de canal y mecanismo de facturación para ofertas conjuntas dirigidas a PYMEs y sector público.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_3",
+        "topic": "Requisitos de soberanía de datos y hosting para contratos públicos",
+        "impact": "high",
+        "description": "Necesitamos detalle técnico/legal sobre ubicación de datos, auditorías requeridas, proveedores de hosting aceptados y cláusulas exigidas por CNMC/contratos públicos para preparar la oferta de 'security by design'.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_4",
+        "topic": "Expectativas de SLA y métricas de éxito para paquetes PYME (timelines y objetivos financieros)",
+        "impact": "medium",
+        "description": "Información sobre objetivos comerciales (número de PYMEs a abordar en X meses, target de ARPU, SLAs mínimos) permitiría diseñar pricing por resultados y dimensionar delivery.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_5",
+        "topic": "Alcance exacto de gobernanza interna tras la reestructuración 2025",
+        "impact": "medium",
+        "description": "Tras la llegada de Murtra y los cambios en la cúpula directiva hay cambios en agendas y propietarios de decisiones (por ejemplo, equipos de Kernel y Data han sido movidos). Necesitamos mapa RACI actualizado para aprobaciones.",
+        "priorityLevel": "should"
+      }
+    ],
+    "questions": [
+      {
+        "id": "question_1",
+        "question": "¿Puede Telefónica Tech proporcionar acceso sandbox (endpoints, especificaciones API, volúmenes de datos de ejemplo y credenciales) para Kernel/Aura para realizar un PoC de integración inmediato?",
+        "context": "Acceso técnico temprano es condición necesaria para el play de integración rápida (PoC 30–60 días).",
+        "targetStakeholder": "stakeholder_4",
+        "isCritical": true
+      },
+      {
+        "id": "question_2",
+        "question": "¿Cuáles son las condiciones de partner certification y el modelo comercial (revenue share, reseller vs. co‑sell, descuentos por canal) que Telefónica Tech exige para soluciones empaquetadas dirigidas a PYMEs?",
+        "context": "Necesario para definir pricing por resultados y plan de go‑to‑market conjunto.",
+        "targetStakeholder": "stakeholder_3",
+        "isCritical": true
+      },
+      {
+        "id": "question_3",
+        "question": "Para contratos públicos y clientes regulados, ¿qué requisitos de residencia de datos, auditoría y cifrado (a nivel de datos en reposo y en tránsito) son obligatorios y qué proveedores de hosting están pre‑aprobados?",
+        "context": "Definirá arquitectura de despliegue y el pack de 'Regulatory & Security by Design'.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": true
+      },
+      {
+        "id": "question_4",
+        "question": "¿Cuál es el target comercial 2025‑2026 para adopción PYME (número de clientes, ARPU objetivo, timeframe) que justificaría una inversión conjunta en ofertas quick‑start?",
+        "context": "Permite calibrar inversión, pricing outcome‑based y dimensionamiento de operations.",
+        "targetStakeholder": "stakeholder_6",
+        "isCritical": false
+      },
+      {
+        "id": "question_5",
+        "question": "¿Existe preocupación interna por la percepción pública o conflictos de interés por los vínculos recientes entre Indra y miembros del equipo directivo de Telefónica (necesidad de transparencia / comité de seguimiento)?",
+        "context": "Importante para diseñar governance, comunicación externa y controls de compliance en la relación vendor‑cliente.",
+        "targetStakeholder": "stakeholder_1",
+        "isCritical": false
+      },
+      {
+        "id": "question_6",
+        "question": "¿Qué KPIs técnicos (RTO/RPO, frecuencia de despliegue, disponibilidad) exige Andrea Folgueiras para aceptar un proyecto de modernización crítico en red/infraestructura?",
+        "context": "Permite alinear SLO/SLA de Indra con requisitos operativos de Telefónica y dimensionar run‑operations.",
+        "targetStakeholder": "stakeholder_5",
+        "isCritical": true
+      }
+    ],
+    "summary": "Principales gaps giran en torno al estado y accesibilidad de Kernel/Aura (necesidad de sandbox y APIs), claridad comercial para co‑venta con Telefónica Tech, requisitos de soberanía y SLAs esperados. Estas incógnitas deben resolverse como prioridad ('must') antes de escalar propuestas a producción y licitaciones públicas. Cobertura pública muestra cambios en la cúpula y revisiones a plataformas Kernel en 2025, lo que explica la urgencia de confirmar detalles técnicos y de governance. citeturn0search1turn3search6"
+  }
+}

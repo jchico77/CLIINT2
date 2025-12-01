@@ -10,6 +10,7 @@ import gapsAndQuestionsSchema from './gapsAndQuestions.json';
 import newsOfInterestSchema from './newsOfInterest.json';
 import criticalDatesSchema from './criticalDates.json';
 import proposalOutlineSchema from './proposalOutline.json';
+import vendorDeepResearchSchema from './vendorDeepResearch.json';
 
 type JsonSchema = Record<string, unknown>;
 
@@ -26,6 +27,7 @@ export const dashboardSchemas = {
   newsOfInterest: newsOfInterestSchema,
   criticalDates: criticalDatesSchema,
   proposalOutline: proposalOutlineSchema,
+  vendorDeepResearch: vendorDeepResearchSchema,
 } as const satisfies Record<string, JsonSchema>;
 
 export type DashboardSchemaName = keyof typeof dashboardSchemas;

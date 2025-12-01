@@ -1,0 +1,134 @@
+{
+  "accountSnapshot": {
+    "companyName": "GMP (Grupo Gmp)",
+    "industry": "Inmobiliario (promoción, gestión patrimonial y oficinas prime)",
+    "headquarters": "Madrid, Spain",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Gmp es un grupo inmobiliario patrimonialista y promotor fundado en 1979 que desarrolla, invierte y gestiona activos principalmente de oficinas y parques empresariales de alta calidad en Madrid. Opera promoción y rehabilitación de edificios así como la explotación de un portfolio propio (estructura histórica SOCIMI/Gmp Property), con foco en activos premium y certificaciones de sostenibilidad (ej. ARQBÓREA con LEED Platinum).\n\nActualmente Gmp ha lanzado una RFP (invitación directa desde ‘Gmp Innovation & Smart Buildings’) para medir y certificar la mejora de eficiencia energética y la reducción de huella de carbono en sus 26 edificios de oficinas en Madrid con el objetivo de reportarlo en el Informe Anual 2024. El alcance requerido incluye auditorías ASHRAE Level II en 12 activos prioritarios, modelos digitales de optimización HVAC/iluminación, CAPEX/payback, roadmap de certificaciones LEED O+M y WELL, y reporting trimestral al comité.",
+    "keyMetrics": [
+      {
+        "label": "Número de edificios objetivo",
+        "value": "26 oficinas en Madrid"
+      },
+      {
+        "label": "Activos prioritarios para auditoría",
+        "value": "12 activos (ASHRAE Level II) — p.ej. Castellana 81, ARQBÓREA, Oxxeo"
+      },
+      {
+        "label": "Plazo RFP",
+        "value": "Entrega propuesta 2025-12-10; shortlist 2025-12-20; adjudicación 2026-01-15"
+      },
+      {
+        "label": "Ejemplo de activo certificado",
+        "value": "ARQBÓREA — LEED Platinum (propiedad de Gmp)"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Ambición regulatoria y programas de rehabilitación (PNIEC)",
+        "impact": "high",
+        "description": "La agenda europea y española impulsa la rehabilitación energética masiva del parque edificado; esto genera pipelines sostenidos de proyectos de retrofit y demanda de servicios técnicos y financiación vinculada."
+      },
+      {
+        "trend": "Fondos NextGeneration y subvenciones públicas",
+        "impact": "high",
+        "description": "Líneas de financiación y subvenciones que mejoran la viabilidad económica de actuaciones de rehabilitación energética y permiten packaging financiero+técnico para clientes patrimonialistas."
+      },
+      {
+        "trend": "Digitalización de datos ESG y reporting (SaaS)",
+        "impact": "high",
+        "description": "Carteras grandes adoptan plataformas de captura/armonización de datos, benchmarks y reporting (CSRD/Taxonomía) para priorizar intervenciones y facilitar acceso a capital verde."
+      },
+      {
+        "trend": "Preferencia por activos certificados y tenant experience",
+        "impact": "high",
+        "description": "Inversores y ocupantes valoran certificaciones (LEED, WELL, Smart) y mejoras en salud/experiencia que aumentan ocupación y renta, impulsando la demanda de proyectos de reposicionamiento ESG."
+      },
+      {
+        "trend": "Despliegue de tecnologías on‑site (PV, baterías, bombas de calor, BMS/IoT)",
+        "impact": "medium",
+        "description": "Mayor adopción de autoconsumo, almacenamiento y soluciones IoT/BMS para optimización energética en edificios terciarios que permiten mejorar OPEX y resiliencia ante volatilidad energética."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "unknown",
+        "event": "PNIEC y objetivos de rehabilitación energética mencionados como driver de demanda",
+        "significance": "Refuerza pipeline de proyectos de retrofit y prioridad regulatoria para propietarios de edificios terciarios"
+      },
+      {
+        "date": "unknown",
+        "event": "Disponibilidad de fondos NextGeneration / programas PREE para rehabilitación",
+        "significance": "Mejora la viabilidad financiera de proyectos y permite estructuras de co‑financiación"
+      },
+      {
+        "date": "2025-12-10",
+        "event": "Fecha límite RFP — entrega propuesta para Energy & Sustainability Services de Gmp",
+        "significance": "Evento de oportunidad comercial inmediato; shortlist y adjudicación programadas para diciembre 2025/enero 2026"
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Auditorías y modelado energético multi‑activo",
+        "description": "Realizar ASHRAE Level II para 12 activos prioritarios y desarrollar modelos digitales para simular escenarios de optimización HVAC e iluminación.",
+        "priority": "high",
+        "relevanceToService": 100
+      },
+      {
+        "id": "req_2",
+        "category": "requirement",
+        "title": "Roadmap de inversión y certificaciones",
+        "description": "Elaborar plan CAPEX con payback por activo y roadmap para obtener LEED O+M y WELL Portfolio en los edificios priorizados.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_3",
+        "category": "scope",
+        "title": "Digitalización y reporting ESG",
+        "description": "Implementar metering, plataforma de datos y reporting trimestral al comité para cumplir CSRD/Taxonomía y facilitar el Informe Anual 2024.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_4",
+        "category": "scope",
+        "title": "Formación y pilotos",
+        "description": "Proveer formación ejecutiva, y ejecutar al menos un pilotaje ‘showcase’ en activo referencial (p.ej. ARQBÓREA‑style) para validación y marketing.",
+        "priority": "medium",
+        "relevanceToService": 75
+      }
+    ],
+    "whatClientSeeks": [
+      "Medir y certificar la mejora de eficiencia energética y reducción de huella de carbono en 26 edificios de oficinas en Madrid",
+      "Entregables rápidos y cuantificables (auditorías, modelos, CAPEX/payback, roadmap de certificación)",
+      "Reporting trimestral al comité y preparación para Informe Anual 2024"
+    ],
+    "scope": [
+      "Auditoría ASHRAE Level II en 12 activos prioritarios",
+      "Modelado energético y planes CAPEX con payback",
+      "Implementación de metering y plataforma de datos para reporting"
+    ],
+    "exclusions": [
+      "Ejecución de obras a gran escala fuera del alcance del retrofit definido (puede requerir contratación separada)",
+      "Provisión de financiación completa sin estructuración de co‑financiación (solo packaging y asesoramiento)",
+      "Gestión de inquilinos/arrendamientos (salvo coordinación necesaria para obras en activos ocupados)"
+    ],
+    "selectionCriteria": [
+      "Precio en honorarios fijos + esquema de ahorro garantizado",
+      "Experiencia demostrable en oficinas prime y proyectos certificados",
+      "Capacidad de entrega antes del cierre fiscal (plazos definidos en RFP)",
+      "Capacidad técnica para modelado energético y reporting CSRD/Taxonomía"
+    ],
+    "summary": "Gmp busca una oferta integral que combine auditoría técnica, modelado y priorización por ROI, roadmap de certificaciones, y una solución de datos/reporting que permita certificar y comunicar la mejora energética y reducción de huella en su portfolio de oficinas antes del cierre fiscal; la propuesta debe incluir honorarios fijos y opciones de garantía de ahorro, experiencia en oficinas prime y capacidad de entrega rápida."
+  }
+}

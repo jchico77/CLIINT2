@@ -2,11 +2,12 @@ import { AdminSettings } from '../domain/models/adminSettings';
 
 export const defaultAdminSettings: AdminSettings = {
   modelConfig: {
-    deepResearch: 'gpt-5.1',
-    clientResearch: 'gpt-5.1',
-    vendorResearch: 'gpt-5.1',
-    fitAndStrategy: 'gpt-5.1-mini',
-    proposalOutline: 'gpt-5.1-mini',
+    deepResearch: 'gpt-4o',
+    clientResearch: 'gpt-4o',
+    vendorResearch: 'gpt-4o',
+    fitAndStrategy: 'gpt-4o-mini',
+    proposalOutline: 'gpt-4o-mini',
+    vendorDeepResearch: 'gpt-4o',
   },
   reasoningConfig: {
     deepResearch: 'low',
@@ -14,11 +15,13 @@ export const defaultAdminSettings: AdminSettings = {
     vendorResearch: 'medium',
     fitAndStrategy: 'medium',
     proposalOutline: 'medium',
+    vendorDeepResearch: 'medium',
   },
   timeoutConfig: {
     deepResearch: 600000,
     agent: 240000,
     fitStrategy: 300000,
+    vendorDeepResearch: 480000,
   },
   featureToggles: {
     webSearch: true,
@@ -31,12 +34,14 @@ export const defaultAdminSettings: AdminSettings = {
     clientResearchTokens: 6000,
     vendorResearchTokens: 5000,
     fitStrategyTokens: 7000,
+    vendorDeepResearchTokens: 9000,
   },
   temperatureConfig: {
     deepResearchTemp: 0.1,
     clientResearchTemp: 0.2,
     vendorResearchTemp: 0.25,
     fitStrategyTemp: 0.15,
+    vendorDeepResearchTemp: 0.2,
   },
   sectionLimits: {
     maxStakeholders: 8,
@@ -63,5 +68,14 @@ export const defaultAdminSettings: AdminSettings = {
   },
   sandboxMode: true,
   preferredLanguage: 'es',
+  vendorAnalysis: {
+    autoRunOnCreate: true,
+  },
+  vendorDeepResearchParallel: {
+    gpt4ParallelEnabled: true,
+    gpt5ParallelEnabled: true,
+    maxConcurrentPhases: 3,
+    interPhaseDelayMs: 1200,
+  },
 };
 

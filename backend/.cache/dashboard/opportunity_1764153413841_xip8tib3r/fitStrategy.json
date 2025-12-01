@@ -1,0 +1,408 @@
+{
+  "stakeholderMap": {
+    "stakeholders": [
+      {
+        "id": "stakeholder_1",
+        "name": "D. Francisco Montoro Alemán",
+        "role": "Presidente & Consejero Delegado (CEO)",
+        "department": "Dirección / Consejo",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Presidente ejecutivo de GMP; encargará y validará la estrategia de reporting corporativo y reputacional. Foco en resultados financieros y posicionamiento de cartera premium. Es decisor final en grandes CAPEX y reporting corporativo. citeturn4search1turn4search3",
+        "priorities": [
+          "Protección del valor del activo y revalorización portfolio",
+          "Cumplimiento y calidad del Informe Anual 2024",
+          "Rentabilidad / payback de inversiones"
+        ]
+      },
+      {
+        "id": "stakeholder_2",
+        "name": "D. Jorge Calvo",
+        "role": "Director Financiero (CFO)",
+        "department": "Finanzas",
+        "influence": "high",
+        "stance": "skeptic",
+        "notes": "Responsable de presupuesto CAPEX y aprobaciones financieras para proyectos de eficiencia; exigirá claridad en payback, OPEX vs CAPEX y modelo de coste/beneficio por activo. Su apoyo es condicional al business case. citeturn4search3",
+        "priorities": [
+          "Payback por activo y robustez del CAPEX",
+          "Impacto en EBITDA y cashflow",
+          "Riesgo contractual y responsabilidades"
+        ]
+      },
+      {
+        "id": "stakeholder_3",
+        "name": "Dª. Silvia Llanes",
+        "role": "Directora de ESG, Marketing y Comunicación / Responsable Innovación",
+        "department": "ESG & Innovación",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Lidera reporting ESG y la agenda de innovación (unidad 'Gmp Innovation & Smart Buildings' referencia en la RFP). Motor interno para certificaciones (LEED/WELL) y exhibición de casos (ARQBÓREA). Será la interlocutora clave para el alcance de reporting trimestral y alineamiento CSRD/Taxonomía. citeturn4search3turn0search0",
+        "priorities": [
+          "Cifrar mejoras (kWh, tCO2e) y obtener certificaciones O+M",
+          "Visibilidad pública y reputacional (Informe Anual 2024)",
+          "Digitalización de datos y reporting trimestral al comité"
+        ]
+      },
+      {
+        "id": "stakeholder_4",
+        "name": "D. José Luis García de la Calle",
+        "role": "Chief Operating Officer (COO)",
+        "department": "Operaciones / Operativa de activos",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Encargado de la ejecución técnica y coordinación de operaciones y obra; prioridad en minimizar impacto operativo y tiempos de intervención. Necesitará plan de obra, acceso a BMS y coordinación con facility managers. citeturn4search3",
+        "priorities": [
+          "Ejecución sin afectar ocupación / inquilinos",
+          "Integración con BMS y FM",
+          "Mantenimiento y operación post‑implementación"
+        ]
+      },
+      {
+        "id": "stakeholder_5",
+        "name": "D. Lorenzo Castilla",
+        "role": "Director General de Negocio / Head Asset Management",
+        "department": "Gestión Patrimonial / Comercial",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Responsable de estrategia comercial de los activos y relación con inquilinos; valorará medidas que mejoren ocupación y renta (tenant experience). citeturn4search3",
+        "priorities": [
+          "Mejorar valor de leasing y ocupación",
+          "Aumentar atractivo para tenants premium",
+          "Roadmap de certificaciones que facilite marketing comercial"
+        ]
+      },
+      {
+        "id": "stakeholder_6",
+        "name": "Dª. Laura Yuste",
+        "role": "Directora de IT",
+        "department": "IT / Digitalización",
+        "influence": "medium",
+        "stance": "neutral",
+        "notes": "Interlocutor para integración de metering, plataformas de datos y seguridad; condiciona arquitectura técnica y accesos a sistemas (BMS/CMMS). citeturn4search3",
+        "priorities": [
+          "Seguridad de datos y governance del dato",
+          "Integración con plataformas existentes (BMS, CMMS)",
+          "Escalabilidad y mantenimiento de la solución de datos"
+        ]
+      },
+      {
+        "id": "stakeholder_7",
+        "name": "Dª. Vivianne Sabah",
+        "role": "Directora de Grandes Obras / Responsable Rehabilitación",
+        "department": "Construcción / Rehabilitación",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Lidera proyectos de rehabilitación (relevante para CAPEX retrofits y actuaciones en ARQBÓREA‑style). Evaluará viabilidad técnica y calendarización de obras. citeturn4search3",
+        "priorities": [
+          "Viabilidad técnica y calendarización",
+          "Coordinación con contratistas y permisos",
+          "Control de costes de ejecución"
+        ]
+      },
+      {
+        "id": "stakeholder_8",
+        "name": "Facility Manager / Responsable de Mantenimiento (por activo)",
+        "role": "Facility Manager",
+        "department": "Facilities / Operaciones locales",
+        "influence": "medium",
+        "stance": "champion",
+        "notes": "Interlocutor operativo en cada edificio para acceso a BMS, mediciones y ejecución de pilotos; clave para validar ahorros operativos y ajustes BMS. (nombre/descripción rol presente en los activos listados por GMP). citeturn0search0",
+        "priorities": [
+          "Sencillez operativa y herramientas de monitorización",
+          "Reducción de incidencias y mejora de OPEX",
+          "Formación operativa para nuevas medidas"
+        ]
+      }
+    ],
+    "summary": "Mapa de stakeholders alineado con la gobernanza publicada por GMP: decisores corporativos (Presidente/CEO, CFO), promotores del RFP (Directora ESG & Innovación), y ejecutores clave (COO, Director de Grandes Obras, IT y Facility Managers). El éxito requiere alinear business case (CFO), reporting/ESG (Silvia Llanes) y ejecución operativa (COO / FM). citeturn4search3turn0search0"
+  },
+  "competitiveLandscape": {
+    "clientCompetitors": [
+      {
+        "id": "comp_1",
+        "name": "Merlin Properties",
+        "type": "client_competitor",
+        "description": "Principal socimi española con un portfolio importante de oficinas en Madrid; fuerte inversión en certificaciones y digitalización de activos (división LOOM con múltiples certificados LEED/WELL y monitorización).",
+        "strengths": [
+          "Gran escala en oficinas prime en Madrid y recursos para inversión en eficiencia y digitalización.",
+          "Experiencia en certificaciones y programas de monitorización (WiredScore, LEED, WELL). citeturn10search5turn10search6"
+        ],
+        "weaknesses": [
+          "Cartera muy grande y procesos internos más lentos que un promotor patrimonial más ágil.",
+          "Foco diversificado (logística, retail) que puede dispersar prioridades."
+        ]
+      },
+      {
+        "id": "comp_2",
+        "name": "Inmobiliaria Colonial (Grupo Colonial)",
+        "type": "client_competitor",
+        "description": "SOCIMI con foco en oficinas prime y reposicionamiento de activos en CBDs; alto perfil institucional y foco en sostenibilidad de portfolio.",
+        "strengths": [
+          "Cartera de alta calidad en distritos prime; experiencia en rehabilitaciones y reposicionamientos.",
+          "Acceso a inversores institucionales y capacidad financiera para CAPEX relevantes. citeturn10search4"
+        ],
+        "weaknesses": [
+          "Estructura más corporativa que puede limitar velocidad de despliegue de pilotos.",
+          "Mayor exposición a procesos de gobernanza y comités que alargan decisiones."
+        ]
+      },
+      {
+        "id": "comp_3",
+        "name": "Pontegadea / Grandes propietarios y family offices",
+        "type": "client_competitor",
+        "description": "Grandes propietarios con activos prime en Madrid que compiten por inquilinos de alto nivel y participan en iniciativas de regeneración urbana (p.ej. Azca).",
+        "strengths": [
+          "Capacidad para ejecutar proyectos de alto presupuesto y colaborar en iniciativas de área (ej. Renazca Azca). citeturn4search4"
+        ],
+        "weaknesses": [
+          "Actitud más conservadora y menos foco en programas estandarizados de reporting ESG a escala de portfolio."
+        ]
+      }
+    ],
+    "vendorCompetitors": [
+      {
+        "id": "comp_4",
+        "name": "Savills (Savills Aguirre Newman) España",
+        "type": "vendor_competitor",
+        "description": "Consultora inmobiliaria global con una práctica consolidada en sostenibilidad, certificaciones LEED/BREEAM/WELL y servicios de advisory en eficiencia energética.",
+        "strengths": [
+          "Equipo local con experiencia certificando LEED/WELL y ofreciendo servicios integrados ESG + technical advisory. citeturn6search0turn6search1"
+        ],
+        "weaknesses": [
+          "Menor capacidad (en algunos casos) para desplegar plataformas tecnológicas propietarias frente a players más grandes o integradores industriales."
+        ]
+      },
+      {
+        "id": "comp_5",
+        "name": "Cushman & Wakefield España",
+        "type": "vendor_competitor",
+        "description": "Consultora global fuerte en asset services y consultoría estratégica; ha lanzado áreas de consultoría estratégica con foco en descarbonización y ESG para carteras. Ofrece gestión técnica y servicios de reporting. ",
+        "strengths": [
+          "Capacidad de ejecución a escala y experiencia en programas ESG en activos comerciales y oficinas. citeturn7search7turn7search3"
+        ],
+        "weaknesses": [
+          "Posible dependencia de subcontratistas para parte técnica (modelado HVAC/ingeniería detallada) frente a integradores de tecnología."
+        ]
+      },
+      {
+        "id": "comp_6",
+        "name": "Siemens / Schneider Electric (como integradores tecnológicos)",
+        "type": "vendor_competitor",
+        "description": "Grandes integradores industriales que ofrecen monitorización, gemelos digitales, y soluciones de eficiencia energética y electrificación para edificios.",
+        "strengths": [
+          "Capacidades fuertes en metering, BMS, gemelos digitales y ejecución técnica integrada (hardware + software). citeturn11search4turn11search3"
+        ],
+        "weaknesses": [
+          "Menor foco en consultoría inmobiliaria y certificaciones LEED/WELL end‑to‑end; suelen colaborar con consultoras para la parte de certificación y reporting."
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "alt_1",
+        "name": "Build in-house (GMP internal team / external engineers contratados por activo)",
+        "type": "alternative_solution",
+        "description": "GMP gestiona auditorías y modelado con su equipo interno y contratistas de ingeniería para control total del proyecto. Puede reducir fee de consultora pero requiere capacidad técnica interna para garantizar calidad y reporting ACV/LEED."
+      },
+      {
+        "id": "alt_2",
+        "name": "Contratar integrador tecnológico (Siemens/Schneider) + consultora pequeña para LEED/WELL",
+        "type": "alternative_solution",
+        "description": "Separar scope: integrador se encarga de medición, platform y gemelo digital; una consultora boutique gestiona certificaciones y reporting."
+      },
+      {
+        "id": "alt_3",
+        "name": "No hacer intervención (monitorización mínima y reporting estimado)",
+        "type": "alternative_solution",
+        "description": "Mantener estado actual y reportar sin medidas de retrofit significativas — reduce inversión pero limita mejoras reales y credibilidad de cifras en Informe Anual."
+      }
+    ],
+    "summary": "GMP compite en un mercado con grandes socimis y propietarios (Merlin, Colonial, Pontegadea) que ya invierten en certificaciones y monitorización; los competidores de CBRE en la oferta para esta RFP incluyen Savills y Cushman por consultoría ESG y grandes integradores (Siemens, Schneider) para la parte tecnológica. La decisión de GMP se moverá entre una oferta consultora integral (certificación + modelado + reporting) o una solución combinada integrador+consultora o internalizar parte del trabajo. citeturn10search5turn6search0turn7search7turn11search3"
+  },
+  "vendorFitAndPlays": {
+    "overallFit": "high",
+    "fitScore": 86,
+    "fitDimensions": [
+      {
+        "dimension": "Technical Capability (auditorías & energy modelling)",
+        "score": 90,
+        "reasoning": "CBRE tiene experiencia comprobada en rehabilitaciones energéticas, auditorías y modelado que han generado ahorros promedio del 10–25% y casos con ~18% reducción y payback ~3.8 años — encaja con el requirement ASHRAE Level II + modelado HVAC/iluminación. (evidencias internas del vendor incluidas en brief)."
+      },
+      {
+        "dimension": "Certifications & ESG Reporting",
+        "score": 85,
+        "reasoning": "CBRE gestiona certificaciones LEED/BREEAM y reporting investor‑grade; puede cubrir roadmap LEED O+M y WELL y alinear output con Informe Anual y requisitos CSRD/Taxonomía."
+      },
+      {
+        "dimension": "Digital & Data Platform (metering, monitoring, reporting)",
+        "score": 80,
+        "reasoning": "CBRE ha demostrado integración de equipos técnicos con plataformas de monitorización que validan ahorros; sin embargo, puede requerir partners tecnológicos o integradores locales para despliegue de metering masivo en 26 edificios."
+      },
+      {
+        "dimension": "Commercial / Pricing & Payback modelling",
+        "score": 82,
+        "reasoning": "CBRE puede entregar CAPEX/payback por activo; su track record de paybacks medios 3–6 años y casos con 3.8 años es relevante para convencer al CFO, pero la precisión requerirá acceso a históricos y datos de consumo."
+      },
+      {
+        "dimension": "Delivery Capacity & Programme Management",
+        "score": 84,
+        "reasoning": "CBRE opera a escala europea y gestiona proyectos multi‑activo; capacidad para coordinar auditorías en 12 activos prioritarios y reporting trimestral existe, aunque la logística local (permisos, accesos) será clave."
+      },
+      {
+        "dimension": "Relationship & Credibility with Investors",
+        "score": 88,
+        "reasoning": "CBRE es reconocido en el mercado y sus métricas y certificaciones aportan confianza para el investor reporting y reputación en Informe Anual."
+      }
+    ],
+    "recommendedPlays": [
+      {
+        "id": "play_1",
+        "name": "Pilot rápido 'ARQBÓREA Showcase' (Proof of Value)",
+        "description": "Proponer y ejecutar en plazo corto (6–10 semanas) un pilotaje completo en un activo referencial (p.ej. ARQBÓREA‑style): ASHRAE Level II, implementación de submetering temporal, modelo digital (digital twin) para optimización HVAC/iluminación, y informe CAPEX/payback.",
+        "rationale": "GMP ya usa ARQBÓREA como caso de referencia; un showcase demostrable con datos medibles y storytelling facilita la aprobación corporativa y acelera el buy‑in del comité de dirección y del mercado (Informe Anual).",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_4",
+          "stakeholder_1"
+        ],
+        "successFactors": [
+          "Acceso inmediato al edificio y al BMS para instalar submetering",
+          "Compromiso del facility manager para ejecutar pruebas operativas",
+          "Entrega de resultados medibles (kWh y tCO2e) en plazos cortos y visuales para reporting"
+        ]
+      },
+      {
+        "id": "play_2",
+        "name": "Paquete ASHRAE Level II + Modelado por Lotes (Fixed‑price MVP)",
+        "description": "Ofrecer una propuesta comercial por lote (12 activos prioritarios) con alcance definido: ASHRAE Level II, entrega de modelos digitales por activo, escenario de medidas (capex), payback y priorización por ROI y complejidad. Precio y tiempos fijos para facilitar decisión del CFO.",
+        "rationale": "Un fixed‑price por lote reduce fricción en aprobación presupuestaria y permite comparar alternativas; facilita roadmap y priorización de inversiones por impacto medible.",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_5",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Datos históricos de consumo por activo para calibrar modelos",
+          "Plantilla contractual clara que delegue accesos y responsabilidades",
+          "Metodología estandarizada y entregables replicables por activo"
+        ]
+      },
+      {
+        "id": "play_3",
+        "name": "Plataforma de datos + Reporting trimestral alineado CSRD/Taxonomía",
+        "description": "Proponer solución llave en mano (metering mínimo viable por activo + ingesta a plataforma cloud + dashboards de KPIs y reporting trimestral al comité) con entregables alineados a CSRD y Taxonomía, y paquete de formación para comité e inversores.",
+        "rationale": "GMP requiere reporting trimestral y evidencia para Informe Anual 2024; una plataforma operativa y procesos de gobernanza de datos resuelven esta necesidad y reducen riesgo reputacional.",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_6",
+          "stakeholder_2"
+        ],
+        "successFactors": [
+          "Integración segura con BMS/CMMS y cumplimiento de GDPR",
+          "KPIs y plantillas de reporting adaptadas al Informe Anual y requerimientos GRI/CSRD",
+          "Plan de formación y handover a equipo interno"
+        ]
+      },
+      {
+        "id": "play_4",
+        "name": "Co‑marketing & Investor Reporting Case (win the narrative)",
+        "description": "Acordar con GMP producción de un caso de éxito co‑brandeado (white paper + datos medidos) tras piloto, diseñado para el Informe Anual 2024 y para comunicación con inversores y mercados.",
+        "rationale": "Ofrecer retorno reputacional y tangibilizar resultados facilita la decisión del CEO y del comité; sirve también como palanca para acelerar CAPEX en activos secundarios.",
+        "targetStakeholders": [
+          "stakeholder_1",
+          "stakeholder_3"
+        ],
+        "successFactors": [
+          "Resultados medibles y auditables del pilotaje",
+          "Alineamiento legal y de compliance para publicación",
+          "Calendario sincronizado con deadlines de Informe Anual 2024"
+        ]
+      }
+    ],
+    "summary": "CBRE presenta un alto encaje para la RFP de GMP: combina consultoría en auditorías energéticas, experiencia en certificaciones LEED/BREEAM/WELL y capacidades de monitorización/validación que abordan los cuatro requisitos prioritarios. Para asegurar el cierre la propuesta debe incluir un pilotaje rápido, un fixed‑price bundle para los 12 activos prioritarios, y una solución de datos y reporting alineada a CSRD junto con un plan claro de CAPEX/payback para convencer al CFO y al comité. (ver referencias de competidores y capacidades de mercado). citeturn6search0turn7search7turn11search4"
+  },
+  "gapsAndQuestions": {
+    "gaps": [
+      {
+        "id": "gap_1",
+        "topic": "Histórico de consumos y submetering por activo",
+        "impact": "high",
+        "description": "Falta confirmación de si GMP dispone de históricos de consumo por punto (electricidad, gas, agua) y si existe submetering por planta/zona. Sin estos datos los modelos HVAC/iluminación y el CAPEX/payback tendrán mayor incertidumbre.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_2",
+        "topic": "Accesos BMS/CMMS y permisos de integraciones",
+        "impact": "high",
+        "description": "No está claro el nivel de acceso que el proveedor podrá obtener a BMS/CMMS ni el grado de estandarización entre edificios; esencial para calibrar gemelos digitales y dashboards.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_3",
+        "topic": "Presupuesto disponible y criterios de aprobación CAPEX",
+        "impact": "high",
+        "description": "No se ha indicado si existe un presupuesto marco para el programa ni umbrales/criterios que usa el CFO/Comité para aprobar inversiones (p.ej. payback máximo aceptable).",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_4",
+        "topic": "Estado actual de certificaciones y alcance LEED/WELL previos",
+        "impact": "medium",
+        "description": "Falta detalle sobre qué edificios ya tienen certificaciones (LEED O+M, WELL) o si hay documentación previa que agilice procesos de certificación.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_5",
+        "topic": "Plazo / deadline para entrega de evidencia en Informe Anual 2024",
+        "impact": "medium",
+        "description": "Aunque GMP pide reportar en Informe Anual 2024, no está explicitado el calendario interno (fechas límite para validación de cifras y aprobación por comité), necesario para programar pilotos y entregables trimestrales.",
+        "priorityLevel": "must"
+      }
+    ],
+    "questions": [
+      {
+        "id": "question_1",
+        "question": "¿Cuál es la fecha límite interna para tener datos verificados (kWh y tCO2e) incluidos en el Informe Anual 2024 y qué espera exactamente el Comité en la primera entrega trimestral?",
+        "context": "Necesario para dimensionar scope de pilotaje y calendario de deliverables; condiciona si se puede reportar resultados en 2024 o sólo evidencia de avance.",
+        "targetStakeholder": "stakeholder_3",
+        "isCritical": true
+      },
+      {
+        "id": "question_2",
+        "question": "¿Pueden proporcionar históricos de consumo (últimos 24 meses) por edificio y por fuente energética (electricidad, gas), y existen sub‑mediciones por planta o tenant?",
+        "context": "Datos históricos son imprescindibles para calibrar modelos HVAC/iluminación y para estimar payback con precisión.",
+        "targetStakeholder": "stakeholder_8",
+        "isCritical": true
+      },
+      {
+        "id": "question_3",
+        "question": "¿Qué umbral de payback/ROI acepta el Comité/CFO para aprobar medidas CAPEX en activos de oficinas (p.ej. máximo 3 años, 5 años)?",
+        "context": "Permite priorizar medidas y diseñar el roadmap CAPEX acorde al apetito financiero de GMP.",
+        "targetStakeholder": "stakeholder_2",
+        "isCritical": true
+      },
+      {
+        "id": "question_4",
+        "question": "¿Cuál es el estado actual de cada edificio respecto a certificaciones LEED O+M y WELL (si aplica), y existe documentación previa de auditorías energéticas (por ejemplo, ASHRAE Level I/II o informes técnicos)?",
+        "context": "Reduce duplicidad de trabajo y acelera la ruta a certificación si ya existe documentación; importante para estimar coste y timing.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": false
+      },
+      {
+        "id": "question_5",
+        "question": "¿Quién soporta el coste de instalación de metering y de cualquier equipo temporal necesario durante el pilotaje (GMP o se solicita que el proveedor lo incluya en su propuesta)?",
+        "context": "Aclarar riesgos comerciales y qué parte del CAPEX inicial deberá incluir la propuesta técnica/comercial.",
+        "targetStakeholder": "stakeholder_2",
+        "isCritical": true
+      },
+      {
+        "id": "question_6",
+        "question": "¿Hay restricciones contractuales con inquilinos que limiten intervenciones (acceso, horarios, upgrades a servicios comunes) en los 12 activos prioritarios?",
+        "context": "Impacta en planificación de works, posibilidad de desconvocar actuaciones nocturnas, y en la viabilidad de meter soluciones permanentes.",
+        "targetStakeholder": "stakeholder_5",
+        "isCritical": false
+      }
+    ],
+    "summary": "Los gaps críticos son la disponibilidad de datos históricos de consumo, accesos a BMS/CMMS, definición del presupuesto/CAPEX y el calendario exacto para el Informe Anual 2024. Responder a las preguntas listadas (deadline, datos, criterios de payback, roles de coste) es imprescindible para presentar una propuesta comercial y técnica que minimice incertidumbre y convenza al CFO y al Comité ESG. citeturn0search0turn4search3"
+  }
+}

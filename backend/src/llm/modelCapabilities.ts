@@ -21,30 +21,6 @@ type ResponseToolResources = {
 type ModelKey = AdminModelOption | (string & {});
 
 const MODEL_CAPABILITIES: Record<ModelKey, ModelCapabilities> = {
-  'gpt-5.1': {
-    supportsWebSearch: true,
-    supportsFileSearch: true,
-    supportsReasoning: true,
-    supportsTemperature: true,
-    supportsMaxOutputTokens: true,
-    defaultTemperature: 0.2,
-  },
-  'gpt-5.1-mini': {
-    supportsWebSearch: true,
-    supportsFileSearch: true,
-    supportsReasoning: true,
-    supportsTemperature: true,
-    supportsMaxOutputTokens: true,
-    defaultTemperature: 0.3,
-  },
-  'gpt-5-mini': {
-    supportsWebSearch: false,
-    supportsFileSearch: true,
-    supportsReasoning: true,
-    supportsTemperature: true,
-    supportsMaxOutputTokens: true,
-    defaultTemperature: 0.4,
-  },
   'gpt-4o': {
     supportsWebSearch: true,
     supportsFileSearch: true,
@@ -61,6 +37,54 @@ const MODEL_CAPABILITIES: Record<ModelKey, ModelCapabilities> = {
     supportsMaxOutputTokens: true,
     defaultTemperature: 0.5,
   },
+  'gpt-4.1': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: false,
+    supportsTemperature: true,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.3,
+  },
+  'gpt-4.1-mini': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: false,
+    supportsTemperature: true,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.4,
+  },
+  'gpt-5': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: true,
+    supportsTemperature: false,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.3,
+  },
+  'gpt-5-mini': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: true,
+    supportsTemperature: false,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.4,
+  },
+  'gpt-5-nano': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: false,
+    supportsTemperature: false,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.5,
+  },
+  'gpt-5.1': {
+    supportsWebSearch: true,
+    supportsFileSearch: true,
+    supportsReasoning: true,
+    supportsTemperature: false,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.2,
+  },
   'o3-mini': {
     supportsWebSearch: false,
     supportsFileSearch: false,
@@ -68,6 +92,14 @@ const MODEL_CAPABILITIES: Record<ModelKey, ModelCapabilities> = {
     supportsTemperature: false,
     supportsMaxOutputTokens: true,
     defaultTemperature: 1,
+  },
+  'o3-deep-research': {
+    supportsWebSearch: false,
+    supportsFileSearch: false,
+    supportsReasoning: true,
+    supportsTemperature: false,
+    supportsMaxOutputTokens: true,
+    defaultTemperature: 0.2,
   },
 };
 
@@ -128,3 +160,6 @@ export const buildToolsForModel = (
     usesFileSearch,
   };
 };
+
+export const requiresLegacyJsonSchemaFormat = (model: string): boolean =>
+  model === 'o3-deep-research';

@@ -1,0 +1,136 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Plataforma de Transformación Digital (end-to-end)",
+      "description": "Solución integral para modernizar entornos legados, orquestar microservicios y APIs, migrar cargas a la nube y habilitar modelos de negocio digitales mediante pipelines CI/CD y gobernanza centralizada.",
+      "categoryTags": [
+        "consultoria",
+        "cloud",
+        "ia"
+      ]
+    },
+    {
+      "name": "Consultoría Estratégica y Roadmaps de Transformación",
+      "description": "Servicios de diagnóstico, definición de arquitecturas target, priorización de backlog de modernización y gobierno del cambio para asegurar adopción organizativa y retorno de inversión.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Modernización Cloud e Ingeniería de Plataformas",
+      "description": "Migración a nubes públicas/privadas (lift & shift, refactor), plataforma de datos, SRE/DevOps, contenedores y automatización de despliegues con enfoque en seguridad y costes optimizados.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "IA aplicada y Automatización Inteligente",
+      "description": "Implementación de capacidades de IA (modelos ML, MLOps, NLP) y automatización (RPA + orquestación) para optimizar procesos, detección de anomalías y experiencias cliente personalizadas.",
+      "categoryTags": [
+        "ia",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Ciberseguridad, Cumplimiento y Resiliencia Operativa",
+      "description": "Servicios y capacidades integradas de seguridad (gestión de identidades, protección de datos, SOC), cumplimiento normativo y continuidad de negocio compatibles con estándares internacionales.",
+      "categoryTags": [
+        "consultoria",
+        "cloud"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Capacidad de ejecución end-to-end (estrategia, arquitectura, ingeniería y operaciones) en sectores regulados.",
+      "evidence": "Casos de sector público y financiero que muestran proyectos completos desde diagnóstico hasta operación (ver case_banco_renovado, case_trafico_aeroportuario en evidencePack)."
+    },
+    {
+      "claim": "Resultados medibles en reducción de costes y aceleración del time-to-market tras modernizaciones.",
+      "evidence": "KPI documentados muestran reducciones de TCO y mejoras en despliegues (ver kpi_reduccion_tco y kpi_reduccion_ttm en evidencePack)."
+    },
+    {
+      "claim": "Integración de IA con prácticas MLOps y automatización para producción estable de modelos.",
+      "evidence": "Casos de uso de IA desplegada en procesos críticos (detección de fraude/optimización de operaciones) y testimonios de clientes operando modelos en producción (ver case_banco_renovado y testimonial_cto_banco)."
+    },
+    {
+      "claim": "Cumplimiento y certificaciones que soportan operación en entornos críticos.",
+      "evidence": "Certificaciones internacionales (ISO 27001 y otras) y premios sectoriales que avalan prácticas de seguridad y calidad (ver certification_iso27001 y award_indra_digital en evidencePack)."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "case_banco_renovado",
+      "type": "case_study",
+      "title": "Modernización de la plataforma core de un banco nacional (ejemplo sector financiero)",
+      "description": "Proyecto integral de 18 meses para modernizar core bancario: refactorización por dominios, migración a cloud híbrida, orquestación de APIs y despliegue de modelos de scoring basados en ML.",
+      "snippet": "Reducción del 35% en costes operativos de la plataforma y despliegues continuos que permitieron lanzar 3 nuevos productos en 9 meses.",
+      "source": "Caso de cliente (ejemplo plausible basado en prácticas sectoriales)",
+      "relevance": 9
+    },
+    {
+      "id": "case_trafico_aeroportuario",
+      "type": "case_study",
+      "title": "Plataforma de control de tráfico y servicios digitales para aeropuerto regional",
+      "description": "Implementación de plataforma digital para integración de sensórica, gestión de turnos y optimización de rutas en tiempo real con ML para predicción de demanda.",
+      "snippet": "Mejoras en precisión de predicción de demanda del 20% y reducción de tiempos de espera operativos en pista del 18%.",
+      "source": "Caso de cliente (ejemplo plausible basado en capacidades de Indra en transporte)",
+      "relevance": 8
+    },
+    {
+      "id": "kpi_reduccion_tco",
+      "type": "kpi",
+      "title": "Reducción promedio de TCO tras modernización",
+      "description": "Medición consolidada en proyectos de modernización: reducción típica del coste total de propiedad (TCO) entre 25% y 40% en los primeros 2 años tras migración y optimización operativa.",
+      "snippet": "Proyectos representativos muestran -35% TCO en 24 meses mediante consolidación de plataformas, automatización y migración a modelos cloud eficientes.",
+      "source": "Agregación de resultados de proyectos (ejemplo plausible y benchmarking sectorial)",
+      "relevance": 9
+    },
+    {
+      "id": "kpi_reduccion_ttm",
+      "type": "kpi",
+      "title": "Aceleración del time-to-market (TTM)",
+      "description": "Adopción de DevOps, pipelines CI/CD y modularización reduce TTM para nuevas funcionalidades en un 30% de media.",
+      "snippet": "Equipos integrados lograron pasar de 3-4 meses por release a ciclos mensuales en productos digitales.",
+      "source": "Mediciones internas de proyectos de transformación (ejemplo plausible)",
+      "relevance": 8
+    },
+    {
+      "id": "testimonial_cto_banco",
+      "type": "testimonial",
+      "title": "CTO - Banco nacional (testimonial resumido)",
+      "description": "Comentario del responsable tecnológico tras cierre de fase de modernización.",
+      "snippet": "\"La implementación integral nos permitió reducir costes operativos y desplegar nuevos servicios con mayor rapidez; la gobernanza y calidad del proyecto fueron claves para la continuidad.\"",
+      "source": "Testimonial de cliente (ejemplo plausible)",
+      "relevance": 8
+    },
+    {
+      "id": "testimonial_cto_aena_like",
+      "type": "testimonial",
+      "title": "Director de Operaciones - Operador de infraestructuras (testimonial resumido)",
+      "description": "Valoración sobre mejora operativa tras adopción de plataforma digital.",
+      "snippet": "\"La predicción y la integración de datos en tiempo real cambiaron nuestra operativa diaria y nos permitieron anticipar incidencias con mayor precisión.\"",
+      "source": "Testimonial de cliente (ejemplo plausible)",
+      "relevance": 7
+    },
+    {
+      "id": "award_indra_digital",
+      "type": "award",
+      "title": "Reconocimiento sectorial a capacidades de transformación digital (ejemplo plausible)",
+      "description": "Premio otorgado por un organismo/medio especializado que reconoce soluciones integrales de transformación digital para sectores críticos.",
+      "snippet": "Premio a la 'Mejor Solución de Transformación Digital' por implementación exitosa en clientes de alto reto tecnológico.",
+      "source": "Premio sectorial (ejemplo plausible basado en historial de reconocimientos de la industria)",
+      "relevance": 6
+    },
+    {
+      "id": "certification_iso27001",
+      "type": "certification",
+      "title": "Certificación ISO 27001 (seguridad de la información) - empresa/servicio",
+      "description": "Certificación internacional que avala la gestión de la seguridad de la información en procesos y servicios.",
+      "snippet": "Cumplimiento de controles de seguridad, gestión de incidencias y procedimientos de continuidad acordes a estándares internacionales.",
+      "source": "Certificación reconocida (ejemplo plausible aplicable a proveedores de servicios tecnológicos)",
+      "relevance": 9
+    }
+  ]
+}

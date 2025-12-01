@@ -1,0 +1,130 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica",
+    "industry": "Telecomunicaciones",
+    "headquarters": "Madrid, Spain",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica opera como un holding convergente con presencia en B2C (Movistar), B2B (Telefónica Empresas / Telefónica Tech), infraestructuras (Telxius/telefonica infra) y operaciones internacionales, especialmente en Europa y Latinoamérica. Su actividad combina ingresos por conectividad (fijo/móvil/fibra), servicios digitales (cloud, ciberseguridad, IoT, data/AI), contenidos y explotación/monetización de infraestructuras.\n\nEn su hoja de ruta hacia 2025 Telefónica se reposiciona como \"Digital Telco\": impulsa inversiones en fibra y 5G como palancas para soluciones digitales avanzadas (network slicing, private 5G), refuerza Telefónica Tech como brazo tecnológico para soluciones gestionadas y crea alianzas con hyperscalers para acelerar migraciones y ofertas sectoriales. La compañía prioriza asimismo gobernanza de datos, seguridad y objetivos ESG/net-zero como diferenciadores en el mercado B2B.",
+    "keyMetrics": [
+      {
+        "label": "Presencia geográfica",
+        "value": "Europa y Latinoamérica (reportado)"
+      },
+      {
+        "label": "Unidades estratégicas",
+        "value": "Movistar (B2C), Telefónica Empresas / Telefónica Tech (B2B), Telxius (infraestructuras)"
+      },
+      {
+        "label": "Prioridades estratégicas",
+        "value": "Inversión en fibra/5G, diversificación hacia cloud/ciberseguridad/IoT/data&AI, alianzas con hyperscalers"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Consolidación del mercado telecom en España",
+        "impact": "high",
+        "description": "Fusiones y operaciones (ej. creación de MasOrange, venta de Vodafone España) reducen actores y aumentan necesidad de escala para invertir en fibra/5G; presiona márgenes y obliga a diferenciación por servicios digitales."
+      },
+      {
+        "trend": "Adopción acelerada de cloud e IA en empresas",
+        "impact": "high",
+        "description": "Creciente demanda de soluciones 'data-to-value' con gobernanza y compliance; las empresas buscan plataformas que combinen multi-cloud, gestión de datos y capacidades de IA responsables."
+      },
+      {
+        "trend": "Demanda de IoT gestionado y conectividad especializada (NB‑IoT, LTE‑M, 5G)",
+        "impact": "medium",
+        "description": "Verticales como utilities, logística y manufacturing requieren plataformas que integren conectividad, orquestación de dispositivos y analítica para casos de uso industriales."
+      },
+      {
+        "trend": "Mayor foco en ESG y gobernanza de datos",
+        "impact": "medium",
+        "description": "Clientes corporativos y regulación europea elevan la exigencia sobre huella energética, economía circular y protección de datos; las plataformas deben evidenciar impacto ESG y cumplimiento."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "2024-04-03",
+        "event": "Anuncio de la JV MasOrange con plan de inversión de €4bn en España",
+        "significance": "Alta — reforzamiento competitivo en fibra/5G que intensifica presión comercial y necesidad de diferenciación por servicios digitales."
+      },
+      {
+        "date": "2024-05-01",
+        "event": "Venta de Vodafone España a Zegona (cambio de control)",
+        "significance": "Alta — reconfigura la competencia doméstica y puede modificar agresividad comercial y estrategias wholesale."
+      },
+      {
+        "date": "2025-01-30",
+        "event": "Colaboración Telefónica Tech – IBM en tecnologías quantum‑safe",
+        "significance": "Media — ejemplo de apuesta por seguridad avanzada y alianzas tecnológicas que elevan el listón de cumplimiento y capacidades."
+      },
+      {
+        "date": "2025-04-23",
+        "event": "Proyecto Global Omnium + Telefónica Tech + Google Cloud para IA en gestión del agua",
+        "significance": "Media — caso sectorial replicable que demuestra la estrategia de co-innovación con hyperscalers y aplicabilidad en utilities."
+      }
+    ],
+    "marketSize": "null",
+    "growthRate": "null"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Integración con capa de red y APIs telco",
+        "description": "Compatibilidad con Open Gateway / CAMARA, capacidad para trabajar con Network Slicing y adaptadores hacia plataformas y orquestadores de red de Telefónica.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_2",
+        "category": "requirement",
+        "title": "Capacidades multi-cloud, datos y gobernanza",
+        "description": "Orquestación multi‑cloud, gestión de datos con fuerte gobernanza, privacidad y cumplimiento regulatorio (residencia de datos, auditorías).",
+        "priority": "high",
+        "relevanceToService": 100
+      },
+      {
+        "id": "req_3",
+        "category": "scope",
+        "title": "Aceleradores sectoriales y modelos de co‑gestión",
+        "description": "Módulos y playbooks verticales (utilities, logística, manufactura, administraciones) y modelos de co-gestión/co-venta con Telefónica Tech / Movistar Empresas.",
+        "priority": "medium",
+        "relevanceToService": 85
+      },
+      {
+        "id": "req_4",
+        "category": "constraint",
+        "title": "Seguridad y ESG medible",
+        "description": "Demostrar controles de seguridad gestionada, métricas de impacto ESG (ahorro energético/CO2) y alineamiento con objetivos net-zero.",
+        "priority": "medium",
+        "relevanceToService": 80
+      }
+    ],
+    "whatClientSeeks": [
+      "Partner co-innovador para pilotos sectoriales replicables",
+      "Plataforma integrada multi-cloud con gobierno y seguridad",
+      "Modelos comerciales flexibles (POC → SaaS → Managed / revenue share)"
+    ],
+    "scope": [
+      "Integración técnica con APIs de red y adapters para Kite/hyperscalers",
+      "Despliegue de pilotos en utilities/logística/manufactura con playbook replicable",
+      "Paquetes co-brandeados para pymes/mid-market a través de Movistar Empresas"
+    ],
+    "exclusions": [
+      "Propuestas que requieran sustituir infraestructuras core de red (no se busca capex en core telco)",
+      "Soluciones sin garantías de cumplimiento/regulatorio europeo",
+      "Modelos puramente on‑prem sin opción multi-cloud o gestión remota"
+    ],
+    "selectionCriteria": [
+      "Compatibilidad técnica con Open Gateway / Network APIs",
+      "Capacidad demostrada en multi-cloud + data governance + ciberseguridad",
+      "Evidencia de casos pilotos con ROI y playbook replicable (utilities/logística)",
+      "Modelo comercial flexible y capacidad para co-venta con Movistar Empresas"
+    ],
+    "summary": "Telefónica busca un socio que combine integración técnica con la capa de red, capacidades avanzadas de datos/multi-cloud y experiencias sectoriales replicables. El proveedor ideal ofrece pilotos de alto impacto con métricas claras de ROI, cumplimiento regulatorio y opciones comerciales flexibles para acelerar adopción en pymes y grandes cuentas a través de Telefónica Tech / Movistar Empresas."
+  }
+}

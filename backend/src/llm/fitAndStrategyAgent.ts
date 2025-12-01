@@ -16,7 +16,11 @@ import { llmConfig } from '../config/llm';
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
+import {
+  buildToolsForModel,
+  getModelCapabilities,
+  requiresLegacyJsonSchemaFormat,
+} from './modelCapabilities';
 
 export interface FitAndStrategyOutput {
   stakeholderMap: StakeholderMapSection;
@@ -284,7 +288,17 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
         'FitAndStrategyAgent generating analysis',
       );
 
-      const requestPayload = {
+      const jsonSchemaDefinition = {
+        name: fitAndStrategySchema.name,
+        schema: fitAndStrategySchema.schema,
+      };
+      const schemaFormat = {
+        type: 'json_schema' as const,
+        ...jsonSchemaDefinition,
+      };
+      const useLegacyResponseFormat = requiresLegacyJsonSchemaFormat(model);
+
+      const requestPayload: Record<string, unknown> = {
         model,
         ...(capabilities.supportsReasoning
           ? { reasoning: { effort: llmConfig.fitStrategyReasoningEffort } }
@@ -303,14 +317,18 @@ Genera un análisis estratégico completo con la siguiente estructura JSON:
             content: [{ type: 'input_text', text: userPrompt }],
           },
         ],
-        text: {
-          format: {
-            type: 'json_schema',
-            name: fitAndStrategySchema.name,
-            schema: fitAndStrategySchema.schema,
-          },
-        },
-      } as Record<string, unknown>;
+      };
+
+      if (useLegacyResponseFormat) {
+        requestPayload.response_format = {
+          type: 'json_schema',
+          json_schema: jsonSchemaDefinition,
+        };
+      } else {
+        requestPayload.text = {
+          format: schemaFormat,
+        };
+      }
 
       if (tools && tools.length) {
         requestPayload.tools = tools;

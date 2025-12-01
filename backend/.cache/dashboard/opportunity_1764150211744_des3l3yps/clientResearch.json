@@ -1,0 +1,139 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica",
+    "industry": "Telecomunicaciones",
+    "headquarters": "Madrid, Spain",
+    "employeeCount": "unknown",
+    "revenue": "€41,315 million (2024)",
+    "description": "Telefónica es un operador integrado con presencia internacional (España, Reino Unido/VMO2, Alemania, Brasil y Hispam) que combina un negocio regulado de conectividad (fijo y móvil) con una unidad de soluciones digitales (Telefónica Tech / Global Solutions). Su modelo es híbrido partner+build: opera infraestructura propia (redes, PoPs, data centers, cables submarinos) y orquesta servicios de hyperscalers y partners para ofrecer soluciones gestionadas, cloud, ciberseguridad, IoT y plataformas verticales.\n\nEn 2024/2025 Telefónica muestra ambición de migrar hacia ingresos de mayor margen mediante servicios digitales y plataformas multicloud (p. ej. TROS/OpenShift), mientras gestiona presión regulatoria, competencia local (creación de MasOrange) y necesidades de optimización de CAPEX. En este contexto busca acelerar transformación digital en 2025 y explorar alianzas estratégicas y modelos OPEX/managed services para escalar uptake en empresas y sector público.",
+    "keyMetrics": [
+      {
+        "label": "Ingresos 2024",
+        "value": "€41,315 million"
+      },
+      {
+        "label": "Mercados core",
+        "value": "España, Reino Unido (VMO2), Alemania, Brasil, Hispam"
+      },
+      {
+        "label": "Unidad digital clave",
+        "value": "Telefónica Tech / Global Solutions (cloud, ciberseguridad, IoT, data/AI)"
+      },
+      {
+        "label": "Participación estatal relevante",
+        "value": "SEPI adquirió 10% (mayo 2024) — mayor escrutinio político/regulatorio"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Multicloud e integración red+cloud",
+        "impact": "high",
+        "description": "Creciente demanda de soluciones gestionadas que integren conectividad, edge y multicloud por requisitos de latencia, rendimiento y cumplimiento; Telefónica apuesta por TROS/OpenShift y alianzas con hyperscalers."
+      },
+      {
+        "trend": "Aceleración de IA y gestión de datos",
+        "impact": "high",
+        "description": "Adopción de IA responsable y plataformas de datos gestionadas por integradores locales. Oferta de IA y datos es un vector esencial para capturar valor añadido en empresas."
+      },
+      {
+        "trend": "Ciberseguridad y resiliencia gestionada",
+        "impact": "high",
+        "description": "Mayor demanda de servicios gestionados de seguridad y cumplimiento (GDPR, DORA) como respuesta al aumento de amenazas y regulaciones sectoriales."
+      },
+      {
+        "trend": "Consolidación y competencia local",
+        "impact": "medium",
+        "description": "Fusiones/alianzas (p. ej. MasOrange) reconfiguran la competencia en España y aumentan presión en precios y despliegue de fibra/5G."
+      },
+      {
+        "trend": "Soberanía digital e infra local",
+        "impact": "medium",
+        "description": "Interés público-privado por regiones cloud locales y proveedores que garanticen residencia de datos y control soberano; oportunidad para ofertas 'local cloud' y PoPs."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "2025-02-27",
+        "event": "Telefónica publica resultados 2024 y guidance 2025",
+        "significance": "Confirma crecimiento de ingresos y continuidad del enfoque en optimización de CAPEX y expansión de servicios digitales."
+      },
+      {
+        "date": "2024-05-20",
+        "event": "La SEPI adquiere 10% de Telefónica",
+        "significance": "Aumenta el escrutinio político y riesgo regulatorio en decisiones estratégicas y M&A."
+      },
+      {
+        "date": "2024-12-13",
+        "event": "Creación de MasOrange (Orange + MásMóvil) consolidada",
+        "significance": "Reconfigura competencia en España; mayor presión comercial y de precios en fijo/móvil."
+      },
+      {
+        "date": "2025-07-30",
+        "event": "Anuncio sobre paralización del spin‑off de infraestructura de VMO2",
+        "significance": "Impacta planes de monetización de activos infraestructurales y la estrategia de infra en Reino Unido."
+      }
+    ],
+    "marketSize": "Mercado telecomunicaciones España ~€34.6B (facturación sector, 2023 CNMC); tamaño del mercado de servicios digitales/IA gestionada por integradores en España/Europa no especificado en el informe (unknown).",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Integración nativa red + plataforma multicloud",
+        "description": "La propuesta debe demostrar integración técnica y operativa entre conectividad (latencia/SLA/edge) y capacidades multicloud gestionadas (OpenShift/TROS, Azure, AWS, GCP).",
+        "priority": "high",
+        "relevanceToService": 0.95
+      },
+      {
+        "id": "req_2",
+        "category": "scope",
+        "title": "Soberanía y cumplimiento para sectores regulados",
+        "description": "Ofrecer garantías de residencia de datos, auditoría y cumplimiento (GDPR, DORA) usando PoPs y data centers locales.",
+        "priority": "high",
+        "relevanceToService": 0.9
+      },
+      {
+        "id": "req_3",
+        "category": "requirement",
+        "title": "Modelos OPEX / outcomes y servicios gestionados",
+        "description": "Diseñar modelos de consumo por suscripción y por resultado (TCO, time-to-market) para facilitar adopción por pymes y administración pública.",
+        "priority": "medium",
+        "relevanceToService": 0.85
+      },
+      {
+        "id": "req_4",
+        "category": "scope",
+        "title": "Verticalización rápida con casos de uso",
+        "description": "Paquetes plug‑and‑play para verticales (finanzas, manufactura, retail, movilidad) que incluyan IoT, datos y aceleradores de migración.",
+        "priority": "medium",
+        "relevanceToService": 0.8
+      }
+    ],
+    "whatClientSeeks": [
+      "Plataforma integrada que combine red, edge y multicloud gestionado",
+      "Garantías de soberanía y cumplimiento para clientes regulados",
+      "Modelos de consumo OPEX y servicios gestionados escalables"
+    ],
+    "scope": [
+      "Pilotos co‑brandeados con Telefónica Tech sobre TROS/OpenShift",
+      "Ofertas verticales plug‑and‑play (manufactura, retail, administración)",
+      "Servicios gestionados de seguridad, data/AI y modernización"
+    ],
+    "exclusions": [
+      "Competir con hyperscalers en IaaS puro (no se busca reemplazar Azure/AWS/GCP)",
+      "Despliegues sin integración con PoPs/data centers locales",
+      "Modelos capex‑intensivos sin opción de OPEX/managed"
+    ],
+    "selectionCriteria": [
+      "Capacidad demostrada de integración red+multicloud y SLAs",
+      "Experiencia en cumplimiento/soberanía y referencias en sectores regulados",
+      "Modelos de pricing OPEX y evidencia de reducción de TCO",
+      "Capacidad de co‑venta y habilitación para la fuerza comercial de Telefónica"
+    ],
+    "summary": "La oportunidad exige una plataforma que combine conectividad/edge con multicloud gestionado, garantice soberanía y cumplimiento, ofrezca modelos OPEX/outcomes y llegue al mercado mediante pilotos co‑brandeados y verticalización rápida. Priorizar integraciones técnicas con TROS y alianzas hyperscaler y preparar materiales de venta y referencias locales."
+  }
+}

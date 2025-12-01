@@ -1,0 +1,81 @@
+{
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Alianza nativa: Integración técnica y comercial con Kernel/Aura y Telefónica Tech",
+      "purpose": "Garantizar una integración plug‑and‑play que permita exponer y consumir APIs, pipelines de datos y capacidades de IA para acelerar un go‑to‑market conjunto y ofertas comerciales integradas.",
+      "suggestedContent": [
+        "Resumen ejecutivo de la propuesta de alianza (valor conjunto para Telefónica y clientes finales).",
+        "Arquitectura de referencia de integración (APIs, catálogo de servicios, contratos API, modelos de datos compartidos).",
+        "Mecanismos de integración técnica con Kernel/Aura: gateways, catalogación de APIs, pipelines de datos y orquestación IA.",
+        "Modelo comercial y operativo conjunto: canales, ofertas empaquetadas, reparto de ingresos y SLAs comerciales.",
+        "Roadmap de 0–12 meses: PoC de integración, pilotos clientes clave, entregables y hitos de go‑to‑market.",
+        "Quick wins y casos de uso prioritarios para lanzamiento rápido (lista de 2–3 casos para demo conjunta).",
+        "Gobernanza y modelo de soporte: comité técnico, acuerdos de N1/N2, runbooks y plan de escalado.",
+        "KPIs de éxito (integraciones activas, APIs productizadas, tiempo a primer cliente conjunto)."
+      ],
+      "linkedEvidenceIds": [
+        "cs-02",
+        "kpi-02",
+        "award-01"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Paquetes Quick‑Start: Migración cloud y modernización IT para PYMEs y Administraciones",
+      "purpose": "Entregar ofertas empaquetadas que reduzcan complejidad, cumplan requisitos regulatorios y habiliten SLAs y pricing por resultados para acelerar adopción en PYMEs y sector público.",
+      "suggestedContent": [
+        "Descripción de paquetes Quick‑Start (assessment, refactor mínimo viable, migración, operación gestionada).",
+        "Alcance por paquete (infraestructura, aplicaciones críticas, pipelines CI/CD, seguridad y cumplimiento).",
+        "Modelo de entrega: migración en fases, factory de migración, plantilla de runbooks y playbooks para PYMEs/administraciones.",
+        "SLA operativos y modelo de pricing por resultados (ej.: ahorro objetivo, disponibilidad, RTO/RPO).",
+        "Plan de compliance y certificaciones necesarias para contratación pública (documentación lista para licitación).",
+        "Hoja de ruta de adopción y escalado (30/90/180 días) con hitos para demostrar valor early‑stage.",
+        "Métricas de impacto esperadas (TCO, reducción de RTO, time‑to‑market) y casos de referencia relevantes.",
+        "Plan de comunicación comercial y plantillas de propuesta adaptadas a PYMEs y administraciones."
+      ],
+      "linkedEvidenceIds": [
+        "cs-01",
+        "kpi-01",
+        "kpi-02",
+        "t-01"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Regulatory & Security by Design: soberanía de datos, cumplimiento y auditoría",
+      "purpose": "Demostrar capacidad técnica y contractual para garantizar soberanía, gestión de consentimientos, auditoría y cumplimiento CNMC/UE, requisito crítico para contratos públicos y clientes regulados.",
+      "suggestedContent": [
+        "Principios de Security & Privacy by Design aplicados a la plataforma (segmentación, cifrado, control de accesos).",
+        "Modelo de soberanía de datos y despliegue (regiones, data residency, enclaves privados y cifrado en reposo/tránsito).",
+        "Framework de gestión de consentimientos y trazabilidad (registro de consentimientos, APIs de auditoría).",
+        "Matriz de cumplimiento (CNMC, normativa UE relevante, requisitos para contratación pública) y gap‑analysis inicial.",
+        "Procesos de auditoría y evidencias: logs inmutables, reporting automático y playbook para auditorías externas.",
+        "Controles operacionales y certificaciones a presentar (ej.: ISO/IEC, GDPR‑mapping) y cláusulas contractuales estándar.",
+        "Plan de pruebas y certificación: pentests, red team, PoC de demostración de soberanía y auditoría.",
+        "Impacto en ofertas: cómo el diseño de seguridad habilita pricing premium y minimiza riesgo contractual."
+      ],
+      "linkedEvidenceIds": [
+        "cs-01",
+        "cs-02",
+        "t-01"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Soluciones verticales empaquetadas: Private 5G + Edge para industria (PoC medibles)",
+      "purpose": "Proponer ofertas paquetizadas de Private 5G + Edge + orquestación IA orientadas a manufactura, logística y salud, con PoC con métricas claras para validar ROI y escalado.",
+      "suggestedContent": [
+        "Descripción del paquete vertical (Private 5G as a Service + edge compute + orquestación IA).",
+        "Casos de uso industriales prioritarios (control calidad con visión artificial, telemetría en logística, monitorización clínica remota).",
+        "Diseño de PoC y KPI medibles (latencia, throughput, disponibilidad, mejoras de eficiencia operativa).",
+        "Modelo de despliegue y operación (site‑prep, integración OT/IT, orquestador de edge y conexión con Kernel/Aura).",
+        "Propuesta de pricing y criterios de éxito para pasar de PoC a servicio gestionado.",
+        "Roadmap de pruebas piloto (cronograma 3–6 meses) y requisitos de clientes piloto (equipamiento, datos, puntos de contacto).",
+        "Estrategia de escalado industrial y modelo de partnership (integradores locales, OEMs, Telefónica Tech).",
+        "Riesgos clave y mitigaciones (regulación espectro, seguridad OT, interoperabilidad)."
+      ],
+      "linkedEvidenceIds": []
+    }
+  ]
+}

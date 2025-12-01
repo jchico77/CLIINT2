@@ -1,0 +1,168 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Plataforma de Transformación Digital (End‑to‑End)",
+      "description": "Solución integral que cubre desde la definición de la estrategia digital hasta el despliegue y operación gestionada de plataformas tecnológicas modernas. Incluye evaluación de madurez digital, diseño de roadmap, implementación de arquitecturas cloud/híbridas, automatización de procesos, analítica avanzada e IA, así como gobierno y ciberseguridad del entorno transformado.",
+      "categoryTags": [
+        "consultoria",
+        "ia",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Estrategia y Roadmap de Transformación Digital",
+      "description": "Servicios de consultoría para definir la visión digital, casos de uso prioritarios, arquitectura objetivo y roadmap de implementación. Incluye análisis de capacidades actuales, benchmark sectorial, diseño de modelos operativos digitales y planes de inversión escalonados.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Modernización de Aplicaciones y Plataforma Cloud Híbrida",
+      "description": "Diseño e implementación de arquitecturas cloud e híbridas, modernización de aplicaciones legadas (rehosting, refactoring, replatforming) y creación de capas de integración basadas en APIs y microservicios. Orientado a mejorar escalabilidad, resiliencia y time‑to‑market, manteniendo la continuidad de los sistemas core.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Automatización Inteligente de Procesos (RPA + IA)",
+      "description": "Identificación y automatización de procesos de negocio mediante RPA, orquestación de flujos y capacidades de IA (visión, NLP, decisiones asistidas). Incluye diseño del modelo de gobierno de la automatización, fábrica de bots y cuadros de mando de rendimiento operativo.",
+      "categoryTags": [
+        "ia",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Analítica Avanzada, IA y Plataformas de Datos",
+      "description": "Diseño e implantación de plataformas de datos (data lakehouse, streaming, MDM) y modelos analíticos avanzados (machine learning, modelos predictivos, recomendadores). Se orienta a casos de uso de negocio concretos (fraude, churn, mantenimiento predictivo, segmentación avanzada, etc.) con enfoque de valor medible.",
+      "categoryTags": [
+        "ia",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Gobierno, Seguridad y Cumplimiento en Entornos Digitales",
+      "description": "Definición de modelos de gobierno de la plataforma digital, incluyendo gestión de identidades, seguridad de la información, privacidad de datos, cumplimiento regulatorio sectorial y continuidad de negocio. Se integra con los procesos corporativos de riesgo y compliance.",
+      "categoryTags": [
+        "consultoria",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Gestión del Cambio y Adopción Digital",
+      "description": "Servicios de gestión del cambio organizativo asociados a la plataforma: rediseño de procesos, capacitación de usuarios, comunicación interna, definición de nuevos roles digitales y modelos de gobierno. Orientado a maximizar la adopción y el retorno de la inversión en la transformación digital.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Enfoque verdaderamente end‑to‑end desde la estrategia hasta la operación gestionada de la plataforma digital",
+      "evidence": "Modelo de caso de estudio CS1 y KPI1 muestran cómo un enfoque integral, que cubre estrategia, implementación y operación, permite capturar mejoras simultáneas en eficiencia, experiencia de cliente y time‑to‑market. La capacidad de ofrecer consultoría, integración y operación en un solo proveedor reduce fricciones en la ejecución del roadmap."
+    },
+    {
+      "claim": "Profunda especialización sectorial en banca, utilities, administración pública y otros sectores regulados",
+      "evidence": "Los modelos de casos de estudio CS1 (banca), CS2 (utilities) y CS3 (administración pública) ilustran cómo adaptar la plataforma de transformación digital a marcos regulatorios y particularidades de cada sector, priorizando casos de uso de alto impacto (cumplimiento, experiencia ciudadana, eficiencia de red, etc.)."
+    },
+    {
+      "claim": "Capacidad para modernizar legados complejos en entornos altamente regulados sin interrumpir el negocio",
+      "evidence": "El caso de referencia CS2 y el KPI2 muestran estrategias graduales de modernización (estrangulamiento de monolitos, APIs, coexistencia de sistemas) con reducciones significativas de incidencias y riesgo operativo. El set de certificaciones de referencia CERT1 refuerza la capacidad de operar en contextos regulados y críticos."
+    },
+    {
+      "claim": "Uso de aceleradores, frameworks y activos reutilizables que reducen el time‑to‑value de la transformación",
+      "evidence": "El KPI1 y el KPI3 recogen beneficios típicos asociados al uso de frameworks de referencia, librerías de procesos y componentes preconfigurados (p.ej. plantillas de journeys, modelos de datos y automations base), que permiten alcanzar reducciones relevantes en el tiempo de despliegue de releases y en el coste por caso de uso implementado."
+    },
+    {
+      "claim": "Escala y capacidades globales combinadas con presencia y delivery local",
+      "evidence": "El caso de referencia CS1 describe un escenario multinacional gestionado de forma coordinada entre equipos globales y locales. El ítem AW1 ofrece un ejemplo de reconocimiento sectorial que suele asociarse a proveedores con alcance internacional y capacidad de ejecución a gran escala."
+    },
+    {
+      "claim": "Fuerte foco en seguridad, gobierno de datos y cumplimiento desde el diseño de la plataforma",
+      "evidence": "Los modelos de casos CS2 y CS3 integran requisitos de seguridad y cumplimiento desde etapas tempranas (by‑design), y el conjunto típico de certificaciones recogidas en CERT1 ilustra el tipo de estándares (ISO/privacidad/continuidad) que se espera de un proveedor que opera plataformas digitales críticas."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "CS1",
+      "type": "case_study",
+      "title": "Modelo de caso de estudio – Banca universal europea",
+      "description": "Caso de uso de referencia (hipotético, basado en mejores prácticas) de una entidad de banca universal europea que adopta una Plataforma de Transformación Digital para unificar canales, modernizar su core de integración y desplegar automatización e IA en procesos clave (onboarding, gestión de reclamaciones, riesgos). Se estructura en tres fases: (1) definición de estrategia y roadmap omnicanal, (2) implantación de una plataforma cloud híbrida con capa de integración por APIs y automatización inteligente, y (3) operación gestionada y mejora continua basada en datos. Los resultados ilustrativos incluyen mejoras simultáneas en eficiencia operativa, experiencia de cliente y velocidad de lanzamiento de nuevos productos, coherentes con benchmarks de transformación digital en banca.",
+      "snippet": "Modelo de referencia: reducción del 25–35 % en tiempos de ciclo de procesos críticos de cliente, incremento del NPS en 10–15 puntos y reducción del 30–40 % en el time‑to‑market de nuevos productos digitales en un periodo de 18–24 meses (valores ilustrativos basados en benchmarks sectoriales).",
+      "source": "Caso de estudio modelo, no asociado a un cliente real. Elaborado a partir de benchmarks públicos de transformación digital en banca europea.",
+      "relevance": 9
+    },
+    {
+      "id": "CS2",
+      "type": "case_study",
+      "title": "Modelo de caso de estudio – Utility de energía (redes y comercializadora)",
+      "description": "Caso de referencia (hipotético) de una utility eléctrica que aborda la modernización de su ecosistema de aplicaciones para redes y comercialización. La Plataforma de Transformación Digital se utiliza para: (1) exponer capacidades del core legacy mediante APIs, (2) implantar procesos automatizados de alta y modificación de contratos, (3) habilitar analítica avanzada para predicción de demanda e incidencias. La migración se realiza en oleadas, minimizando paradas y garantizando cumplimiento regulatorio en facturación y protección de datos.",
+      "snippet": "Modelo de referencia: reducción del 40–50 % de errores en procesos de facturación y contratación, mejora del 20–30 % en la disponibilidad de aplicaciones críticas y disminución del 15–25 % de incidencias operativas relacionadas con sistemas legacy durante los primeros 12 meses (valores ilustrativos, alineados con mejores prácticas en el sector energético).",
+      "source": "Caso de estudio modelo, no asociado a un cliente real. Basado en patrones habituales de modernización en utilities europeas.",
+      "relevance": 8
+    },
+    {
+      "id": "CS3",
+      "type": "case_study",
+      "title": "Modelo de caso de estudio – Administración pública digital",
+      "description": "Caso de referencia (hipotético) para una administración pública nacional que busca digitalizar servicios al ciudadano (trámites online, expediente electrónico, notificaciones digitales). La Plataforma de Transformación Digital sirve como capa unificadora para integrar sistemas ministeriales, gestionar identidades y accesos, y orquestar procesos de back‑office. Se priorizan servicios de alto impacto ciudadano con métricas claras de uso y satisfacción.",
+      "snippet": "Modelo de referencia: aumento del 50–70 % en el uso de canales digitales frente a presenciales, reducción del 30–40 % en tiempos medios de resolución de expedientes y mejora de 15–20 puntos en satisfacción ciudadana sobre los servicios digitalizados (datos ilustrativos basados en iniciativas de e‑Government en Europa y LATAM).",
+      "source": "Caso de estudio modelo de e‑Government, no asociado a un organismo concreto. Inspirado en experiencias públicas documentadas.",
+      "relevance": 8
+    },
+    {
+      "id": "KPI1",
+      "type": "kpi",
+      "title": "Impacto típico de un enfoque end‑to‑end en banca",
+      "description": "Conjunto de KPIs de referencia que se pueden esperar en programas de transformación digital end‑to‑end en banca universal cuando se combinan estrategia, modernización tecnológica, automatización e IA bajo una misma plataforma y un único integrador. Los rangos se basan en benchmarks sectoriales y literatura de analistas.",
+      "snippet": "Resultados de referencia en 18–24 meses: (a) reducción de 25–35 % en coste operativo por transacción digital, (b) aumento del 10–15 % en ventas cruzadas digitales en segmentos retail, (c) disminución del 20–30 % en incidencias de TI relacionadas con integraciones entre canales y core (valores orientativos; calibrar con datos reales de cada cliente).",
+      "source": "Benchmark compuesto a partir de informes públicos de analistas y experiencias típicas en banca europea; no representa resultados garantizados.",
+      "relevance": 9
+    },
+    {
+      "id": "KPI2",
+      "type": "kpi",
+      "title": "Beneficios operativos en modernización de sistemas legacy",
+      "description": "KPIs de referencia para proyectos de modernización gradual de sistemas legacy en sectores regulados (banca, utilities, sector público), en los que se combina una estrategia de APIs, microservicios y coexistencia de plataformas durante la transición.",
+      "snippet": "Rangos típicos: (a) reducción del 15–25 % de incidencias críticas relacionadas con legacy en 12–18 meses, (b) mejora del 20–30 % en tiempos de respuesta de aplicaciones clave tras externalizar capacidades a servicios modernos, (c) reducción del 10–20 % del coste de mantenimiento correctivo a partir del segundo año (datos orientativos).",
+      "source": "Síntesis de benchmarks de modernización legacy publicados por analistas de mercado y casos sectoriales; cifras no vinculadas a un cliente concreto.",
+      "relevance": 8
+    },
+    {
+      "id": "KPI3",
+      "type": "kpi",
+      "title": "Efecto del uso de aceleradores y activos reutilizables",
+      "description": "Indicadores típicos del impacto de frameworks, aceleradores y activos preconfigurados (modelos de datos, plantillas de procesos, componentes de automatización) en la velocidad de implementación y costes de un programa de transformación digital.",
+      "snippet": "Rangos habituales: (a) reducción del 20–30 % en el esfuerzo de implementación del primer set de casos de uso, (b) reducción adicional del 30–50 % en el esfuerzo incremental por cada nuevo caso de uso sobre la misma plataforma, (c) mejora del 15–25 % en la calidad inicial (menos defectos en UAT) frente a desarrollos totalmente ad‑hoc.",
+      "source": "Estimaciones basadas en comparativas internas típicas de integradores globales y publicaciones de mejores prácticas de automatización; adaptar a métricas reales del cliente.",
+      "relevance": 7
+    },
+    {
+      "id": "TST1",
+      "type": "testimonial",
+      "title": "Testimonio modelo – Director de Operaciones (banca europea)",
+      "description": "Testimonio de ejemplo para propuestas, que refleja el tipo de beneficios que un Director de Operaciones de banca podría atribuir a la implantación de la Plataforma de Transformación Digital. No corresponde a una cita real, sino a un texto modelo alineado con los casos de uso descritos.",
+      "snippet": "\"La plataforma nos ha permitido unificar los procesos de atención al cliente en todos los canales y automatizar tareas que antes consumían miles de horas al año. En menos de dos años hemos reducido de forma significativa los tiempos de respuesta y hemos ganado la agilidad necesaria para lanzar nuevos productos digitales casi el doble de rápido que antes.\"",
+      "source": "Testimonio ficticio de referencia para material comercial; se debe sustituir por citas reales verificadas en cada caso.",
+      "relevance": 6
+    },
+    {
+      "id": "AW1",
+      "type": "award",
+      "title": "Ejemplo de reconocimiento sectorial para integradores digitales",
+      "description": "Ejemplo de cómo puede presentarse en propuestas la participación de un proveedor como Indra en rankings y reconocimientos sectoriales (líderes en servicios de TI, rankings de integradores en España/Europa, índices de sostenibilidad, etc.). El contenido es genérico y debe alinearse con los reconocimientos reales vigentes del proveedor en el momento de la propuesta.",
+      "snippet": "\"Reconocido de forma recurrente en rankings de integradores y proveedores de servicios de TI en Europa y LATAM, así como en índices de sostenibilidad corporativa, lo que refuerza la capacidad de ejecutar programas de transformación digital a gran escala con una visión de largo plazo.\"",
+      "source": "Texto genérico de ejemplo; sustituir o complementar con premios y rankings reales y actualizados de Indra (informes de analistas, índices bursátiles, premios sectoriales).",
+      "relevance": 5
+    },
+    {
+      "id": "CERT1",
+      "type": "certification",
+      "title": "Conjunto típico de certificaciones para operación de plataformas digitales críticas",
+      "description": "Listado de certificaciones de referencia que suelen acreditar los grandes integradores de tecnología que operan plataformas digitales críticas: ISO 27001 (seguridad de la información), ISO 20000 (gestión de servicios TI), ISO 22301 (continuidad de negocio), certificaciones de privacidad (p.ej. esquemas nacionales de seguridad) y certificaciones de principales hyperscalers cloud. El detalle exacto debe contrastarse con las certificaciones vigentes de Indra en cada país y unidad de negocio.",
+      "snippet": "\"El proveedor cuenta habitualmente con un porfolio de certificaciones alineado con los estándares internacionales de seguridad, gestión de servicios y continuidad (p.ej. ISO 27001, ISO 20000, ISO 22301), así como con certificaciones específicas de los principales proveedores cloud, lo que facilita el cumplimiento de requisitos regulatorios en banca, energía y sector público.\"",
+      "source": "Modelo de texto basado en prácticas habituales de integradores globales; verificar contra el inventario de certificaciones oficial de Indra antes de usar en propuestas formales.",
+      "relevance": 8
+    }
+  ]
+}

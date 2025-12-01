@@ -18,10 +18,12 @@ import {
   DashboardPhase,
   DashboardMetricsFilters,
   DashboardMetricsResponse,
+  VendorAnalysisRecord,
 } from './types';
 import { logger } from './logger';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const HARDCODED_ADMIN_TOKEN = 'cliint-admin-token';
 
 interface APIError {
   error: string;
@@ -93,6 +95,22 @@ export async function getVendor(vendorId: string): Promise<Vendor> {
 
 export async function getVendors(): Promise<Vendor[]> {
   return fetchAPI<Vendor[]>('/vendors');
+}
+
+export async function deleteVendor(vendorId: string): Promise<void> {
+  await fetchAPI<void>(`/vendors/${vendorId}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function getVendorAnalysis(vendorId: string): Promise<VendorAnalysisRecord> {
+  return fetchAPI<VendorAnalysisRecord>(`/vendors/${vendorId}/analysis`);
+}
+
+export async function reanalyzeVendor(vendorId: string): Promise<void> {
+  await fetchAPI<{ status: string }>(`/vendors/${vendorId}/analyze`, {
+    method: 'POST',
+  });
 }
 
 // Services
@@ -469,12 +487,10 @@ export async function retryDashboardPhase(
   );
 }
 
-function buildAdminHeaders(adminToken?: string): HeadersInit | undefined {
-  if (!adminToken) {
-    return undefined;
-  }
+function buildAdminHeaders(adminToken?: string): HeadersInit {
+  const token = adminToken || HARDCODED_ADMIN_TOKEN;
   return {
-    'x-admin-token': adminToken,
+    'x-admin-token': token,
   };
 }
 

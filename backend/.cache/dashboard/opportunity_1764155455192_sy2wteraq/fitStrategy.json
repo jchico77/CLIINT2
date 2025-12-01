@@ -1,0 +1,453 @@
+{
+  "stakeholderMap": {
+    "stakeholders": [
+      {
+        "id": "stakeholder_1",
+        "name": "Marc Murtra",
+        "role": "Chairman & CEO, Telefónica S.A.",
+        "department": "Comité Ejecutivo / Consejo de Administración",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Nombrado presidente ejecutivo en enero 2025; procede de Indra (presidente/CEO) y está liderando una revisión estratégica que prioriza consolidación europea, generación de caja y acelerar 5G/fibra. Su pasado en Indra facilita interlocución pero genera sensibilidad de gobernanza. citeturn2search0turn1view0",
+        "priorities": [
+          "Revisión estratégica 2025: generación de caja y reducción de deuda",
+          "Consolidación del sector europeo",
+          "Aceleración de despliegue de fibra y 5G (plataformas que permitan monetización)",
+          "Asegurar alineamiento con reguladores y objetivos ESG"
+        ]
+      },
+      {
+        "id": "stakeholder_2",
+        "name": "Sofía Collado Echaure",
+        "role": "CEO, Telefónica Tech",
+        "department": "Telefónica Tech (Cybersecurity, Cloud, IoT, Data/AI)",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Designada para liderar Telefónica Tech en 2025; viene de Indra/Minsait (CHRO y miembro del Comité de Dirección). Responsable de la cartera multi‑cloud, cloud native y ofertas gestionadas B2B. citeturn5search0turn5search4",
+        "priorities": [
+          "Acelerar ofertas multi‑cloud (TROS/OpenShift) y certificaciones hyperscaler",
+          "Escalar soluciones gestionadas B2B y co‑go‑to‑market con unidades operativas",
+          "Garantía de seguridad y cumplimiento para clientes regulados",
+          "Aceleradores verticales replicables (utilities, manufacturing, administraciones)"
+        ]
+      },
+      {
+        "id": "stakeholder_3",
+        "name": "Emilio Gayo",
+        "role": "Chief Operating Officer (COO)",
+        "department": "Operaciones / Unidades de negocio (España, Hispam, B2B oversight)",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Nombrado COO en marzo 2025; control operativo y responsable de KPIs operacionales (disponibilidad, MTTR) y supervisión de despliegues en España y LatAm. Enfocado en robustez operativa y reducción de costes/MTTR. citeturn4view0",
+        "priorities": [
+          "Disponibilidad de red y SLA (MTTR, NOC/SOC integrados)",
+          "Eficiencia operativa en despliegues de fibra y 5G",
+          "Programas escalables de mantenimiento preventivo y automatización",
+          "Integración segura de plataformas gestionadas con operaciones de red"
+        ]
+      },
+      {
+        "id": "stakeholder_4",
+        "name": "Andrea Folgueiras",
+        "role": "Global Chief Technology & Information Officer (GCTIO)",
+        "department": "GCTIO / Tecnología y Arquitectura de Red",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Incorporada al Comité Ejecutivo como GCTIO (efectiva 31-mar-2025). Responsable de la arquitectura cloud‑native, UNICA Next/5G core, y requisitos técnicos como network slicing y APIs. Prioriza arquitecturas abiertas y automatización. citeturn7search0turn10search0",
+        "priorities": [
+          "Evolución cloud‑native del core (UNICA Next) y orquestación",
+          "Integración de network slicing y APIs abiertas (Open Gateway/CAMARA)",
+          "Automatización (zero‑touch, intent‑driven orchestration)",
+          "Certificaciones y compatibilidad multi‑vendor"
+        ]
+      },
+      {
+        "id": "stakeholder_5",
+        "name": "Cayetano Carbajo",
+        "role": "Director Core, Transport & Service Platforms (GCTIO unit)",
+        "department": "GCTIO - Plataformas de Core y Transporte",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Responsable de Core, transporte y plataformas de servicio; interlocutor técnico clave para PoV de network slicing, orquestación y pruebas de integración con UNICA Next. Ha participado en pilotos y foros de estandarización. citeturn6search1turn7search4",
+        "priorities": [
+          "Operacionalización de servicios cloud‑native en red",
+          "Estándares y certificaciones (ETSI, TMForum)",
+          "Reducción de coste de certificación multi‑CaaS",
+          "Herramientas de observabilidad y closed‑loop automation"
+        ]
+      },
+      {
+        "id": "stakeholder_6",
+        "name": "Sebas Muriel",
+        "role": "Chief Digital Officer (CDO)",
+        "department": "Digital, Productos y Go‑to‑Market",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Reincorporado como CDO (mención en reorganización 2025); responsable de acelerar productos digitales y la comercialización junto a Telefónica Tech. Interlocutor para acuerdos de co‑venta y aceleradores verticales. citeturn5search4",
+        "priorities": [
+          "Acelerar time‑to‑market de ofertas digitales",
+          "Modelos go‑to‑market conjuntos (co‑venta y co‑gestión)",
+          "Escalado de aceleradores verticales replicables",
+          "Monetización de capacidades de red (slicing, private 5G)"
+        ]
+      },
+      {
+        "id": "stakeholder_7",
+        "name": "José Cerdán",
+        "role": "Ex‑CEO Telefónica Tech / Asesor senior",
+        "department": "Telefónica Tech / B2B (advisory)",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Tras liderar Telefónica Tech los últimos años ha pasado a apoyar la transición; valioso sponsor para modelos de co‑gestión B2B y aceleradores verticales. Buen interlocutor para acuerdos comerciales. citeturn0search2turn0search4",
+        "priorities": [
+          "Escalar la unidad B2B sin fricciones con operaciones",
+          "Asegurar alianzas con hyperscalers y partners locales",
+          "Simplicar modelos comerciales y acelerar ventas conjuntas"
+        ]
+      },
+      {
+        "id": "stakeholder_8",
+        "name": "Carlos Martínez",
+        "role": "Global Director - AI & Data Solutions & Services, Telefónica Tech",
+        "department": "Data, IA y Gobernanza",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Responsable global de soluciones de datos e IA; interlocutor clave en requisitos de gobernanza, residencia de datos y cumplimiento para propuestas multi‑cloud. citeturn6search3",
+        "priorities": [
+          "Política de gobernanza y catálogo de datos (Lineage, acceso, auditoría)",
+          "Residencia y soberanía de datos (especialmente Hispam/EU)",
+          "Plataformas de datos multi‑cloud y pipelines seguras",
+          "Casos de uso IA que preserven privacidad y explicabilidad"
+        ]
+      }
+    ],
+    "summary": "Mapa ejecutivo focalizado en los decisores técnicos y comerciales que gestionan la hoja de ruta 2025: CEO (Marc Murtra) marca la revisión estratégica; GCTIO (Andrea Folgueiras) y responsables de core/red (Cayetano Carbajo) son gatekeepers técnicos; Sofía Collado en Telefónica Tech decide alianzas multi‑cloud y co‑gestión; COO (Emilio Gayo) exige garantías operacionales y SLAs. Indra/Minsait tiene vínculos previos con varios directivos (riesgo/ventaja política que hay que gestionar explícitamente). citeturn2search0turn5search0turn4view0"
+  },
+  "competitiveLandscape": {
+    "clientCompetitors": [
+      {
+        "id": "comp_1",
+        "name": "Vodafone Group",
+        "type": "client_competitor",
+        "description": "Operador global con fuerte presencia en Europa y servicios B2B gestionados; compite en conectividad, soluciones cloud‑native y servicios IoT/edge.",
+        "strengths": [
+          "Escala en Europa y acuerdos infraestructurales (shares de redes y JV de fibra).",
+          "Ofertas de SD‑WAN, SASE y managed services para empresas."
+        ],
+        "weaknesses": [
+          "Presión de coste en algunos mercados europeos tras reestructuraciones.",
+          "Fragmentación de portafolio por operaciones separadas por país."
+        ]
+      },
+      {
+        "id": "comp_2",
+        "name": "Orange",
+        "type": "client_competitor",
+        "description": "Grupo europeo con fuerte apuesta por soluciones cloud y seguridad; competidor directo en B2B y soluciones sectoriales en Europa y África.",
+        "strengths": [
+          "Portfolio integrado de cloud, ciberseguridad y conectividad.",
+          "Posicionamiento en Europa con capacidades de gobernanza de datos."
+        ],
+        "weaknesses": [
+          "Menor presencia en algunos mercados de LatAm comparado con Telefónica.",
+          "Presiones regulatorias y necesidad de optimizar inversiones 5G/fibra."
+        ]
+      },
+      {
+        "id": "comp_3",
+        "name": "Deutsche Telekom (DT)",
+        "type": "client_competitor",
+        "description": "Operador paneuropeo con recursos importantes en redes, cloud y partnerships industriales; impulsor de iniciativas de APIs y estandarización.",
+        "strengths": [
+          "Capacidad técnica y financiera para proyectos a gran escala.",
+          "Participación activa en iniciativas de apertura de APIs (CAMARA/Open Gateway)."
+        ],
+        "weaknesses": [
+          "Modelo de negocio diversificado que puede ralentizar decisiones comerciales ágiles.",
+          "Menos foco en mercados latinos donde Telefónica es fuerte."
+        ]
+      },
+      {
+        "id": "comp_4",
+        "name": "América Móvil",
+        "type": "client_competitor",
+        "description": "Principal rival en Latinoamérica; fuerte base de clientes y experiencia en servicios empresariales regionales.",
+        "strengths": [
+          "Escala y capilaridad en LatAm, conocimiento regulatorio local.",
+          "Ofertas integradas de conectividad y servicios B2B."
+        ],
+        "weaknesses": [
+          "Menor presencia en Europa; portafolio cloud/IA menos integrado frente a Telefónica Tech.",
+          "Dependencia de dinámicas macroeconómicas regionales."
+        ]
+      }
+    ],
+    "vendorCompetitors": [
+      {
+        "id": "comp_5",
+        "name": "Accenture",
+        "type": "vendor_competitor",
+        "description": "Principal system integrator global con amplia experiencia en transformación telco, BSS/OSS cloud migrations y partnerships con vendors de red.",
+        "strengths": [
+          "Capacidad de entrega global a gran escala y experiencia en programas telco (BSS/OSS modernización).",
+          "Fuerte relación con hyperscalers y proveedores de red (ej. proyectos con Ericsson/Nokia)."
+        ],
+        "weaknesses": [
+          "Coste relativo alto; propuesta muy consultiva que puede necesitar complementar con capacidades locales.",
+          "A veces percibido como less‑hands‑on en ejecución frente a partners locales especializados."
+        ]
+      },
+      {
+        "id": "comp_6",
+        "name": "Capgemini (incluye Altran)",
+        "type": "vendor_competitor",
+        "description": "SI europeo con oferta en telecom, cloud, y experiencia sectorial en integraciones críticas y servicios gestionados.",
+        "strengths": [
+          "Fuerte presencia en Europa y experiencia en proyectos regulatorios y industria 4.0.",
+          "Capacidad de entregar integraciones complejas y servicios gestionados."
+        ],
+        "weaknesses": [
+          "Menor foco en mercados hispanohablantes comparado con Minsait/Indra.",
+          "Competencia intensa con otros SIs por talento especializado."
+        ]
+      },
+      {
+        "id": "comp_7",
+        "name": "IBM Global Business Services / Red Hat",
+        "type": "vendor_competitor",
+        "description": "Provedor de plataforma y servicios para cloud‑native telco (IBM Cloud Paks + Red Hat OpenShift); partner histórico en despliegue de UNICA Next para Telefónica.",
+        "strengths": [
+          "Capacidad tecnológica en cloud‑native network automation y experiencia probada con Telefónica (UNICA Next).",
+          "Ecosistema Red Hat/OpenShift, valioso para multi‑cloud TROS enfoque de Telefónica Tech."
+        ],
+        "weaknesses": [
+          "Posible solapamiento con Telefónica Tech/Red Hat/IBM alianzas; competencia en SI puede ser indirecta.",
+          "Costes y dependencia de un stack tecnológico específico."
+        ]
+      },
+      {
+        "id": "comp_8",
+        "name": "NTT Data / Everis (NTT Group)",
+        "type": "vendor_competitor",
+        "description": "SI con fuerte presencia en España y LatAm (everis), ahora parte de NTT; competidor en migraciones masivas a nube y proyectos BSS/OSS.",
+        "strengths": [
+          "Capacidad near‑shore y experiencia regional (España y LatAm).",
+          "Oferta competitiva en coste/ejecución con know‑how sectorial."
+        ],
+        "weaknesses": [
+          "Escala y posicionamiento en cloud‑native telco menos potente que Accenture/IBM en algunas áreas.",
+          "Necesidad de reforzar alianzas hyperscaler para grandes migraciones."
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "alt_1",
+        "name": "Build in‑house (Telefónica-led)",
+        "type": "alternative_solution",
+        "description": "Telefónica desarrolla internamente la Plataforma de Transformación Digital usando sus propios equipos/Telefónica Tech, aprovechando UNICA Next y acuerdos con hyperscalers. Alto control y soberanía pero mayor CAPEX y tiempo."
+      },
+      {
+        "id": "alt_2",
+        "name": "Alianza con hyperscalers (AWS/Azure/GCP) + boutique SI",
+        "type": "alternative_solution",
+        "description": "Usar ofertas cloud nativas/hyperscaler + un partner local para integración y gobernanza. Rápido en capacidades cloud y escalado, pero requiere trabajar gobernanza/soberanía de datos."
+      },
+      {
+        "id": "alt_3",
+        "name": "Contratar a un Tier‑1 SI (Accenture/Capgemini) para programa integral",
+        "type": "alternative_solution",
+        "description": "Equipo experimentado para transformar BSS/OSS y operaciones; ventaja en scale & delivery pero coste y dependencia elevada."
+      },
+      {
+        "id": "alt_4",
+        "name": "No hacer nada / enfoque incremental",
+        "type": "alternative_solution",
+        "description": "Continuar proyectos actuales y priorizar solo inversiones de red (5G/fibra) sin ampliar oferta plataforma. Menor coste inmediato pero riesgo competitivo y pérdida de ingresos B2B."
+      }
+    ],
+    "summary": "Telefónica compite con grandes operadores paneuropeos y latinos (Vodafone, Orange, DT, América Móvil). En la compra de plataforma de transformación digital, Indra/Minsait compite con SIs globales (Accenture, Capgemini, IBM, NTT) y con alternativas de build in‑house o alianzas directas con hyperscalers. Indra/Minsait tiene ventaja local (España/LatAm), capacidad de ejecución y partnerships con hyperscalers, pero debe demostrar integración especifica con UNICA Next/Red‑APIs, compatibilidad con Open Gateway/CAMARA y un modelo claro de co‑gestión con Telefónica Tech. citeturn8search1turn10search0turn11search5"
+  },
+  "vendorFitAndPlays": {
+    "overallFit": "high",
+    "fitScore": 78,
+    "fitDimensions": [
+      {
+        "dimension": "Technical Capability (cloud, IA, modernización aplicaciones)",
+        "score": 80,
+        "reasoning": "Minsait/Indra ha ejecutado migraciones masivas a cloud, modernización de core y aceleradores DevOps; partnerships con hyperscalers (AWS/GCP/Microsoft) y experiencia en proyectos sectoriales (banca, transporte) apoyan la capacidad técnica. Necesita mostrar integraciones específicas con plataformas telco (UNICA Next/RedHat OpenShift) en PoV. citeturn8search1turn8search5"
+      },
+      {
+        "dimension": "Network & API integration (Open Gateway / CAMARA / slicing)",
+        "score": 70,
+        "reasoning": "Indra tiene experiencia en proyectos con operadores, pero la integración profunda con APIs telco, network slicing y orquestadores de Telefónica exige pruebas técnicas y adaptadores específicos (gap a cerrar con PoV). La industria avanza hacia especificaciones CAMARA/Open Gateway; Telefónica ya trabaja con UNICA Next y Red Hat/OpenShift. citeturn11search5turn10search0"
+      },
+      {
+        "dimension": "Multi‑cloud, data & governance",
+        "score": 75,
+        "reasoning": "Minsait muestra capacidades de migración y servicios de datos; colaboración con hyperscalers y premios partner (ej. AWS) respaldan su experiencia. Telefónica prioriza gobernanza, residencia de datos y auditoría — se requiere alineación técnica y procesos de compliance. citeturn8search4turn8search3"
+      },
+      {
+        "dimension": "Security & ESG",
+        "score": 80,
+        "reasoning": "Indra ha integrado capacidades de ciberseguridad (adquisiciones y SIA) y casos de uso de optimización energética en clientes; puede ofrecer controles gestionados y métricas de ahorro, aunque hará falta estandarizar reporting conforme a KPIs de Telefónica. citeturn8search6"
+      },
+      {
+        "dimension": "Commercial / GTM & co‑gestión con Telefónica Tech",
+        "score": 60,
+        "reasoning": "Indra tiene relaciones históricas con ejecutivos clave pero la reciente llegada de ex‑Indra a Telefónica (riesgo de percepción de conflicto) obliga a un enfoque abierto, claro en gobernanza y modelos de revenue share/co‑venta. Debe negociar modelos de co‑gestión replicables y playbooks verticales. citeturn1view0turn5search4"
+      }
+    ],
+    "recommendedPlays": [
+      {
+        "id": "play_1",
+        "name": "PoV de Integración de Red (Network Integration PoV)",
+        "description": "Proyecto corto (6–10 semanas) para integrar la Plataforma de Transformación Digital de Indra con UNICA Next / GCTIO lab usando APIs Open Gateway/CAMARA y un caso de uso real de network slicing (p. ej. private 5G para industria). Incluye adaptadores, orquestación y pruebas de slice‑to‑application.",
+        "rationale": "Responderá al requisito 'Integración con capa de red y APIs telco' con evidencia técnica reproducible; reduce riesgo técnico y facilita apoyo del GCTIO y teams de core/network.",
+        "targetStakeholders": [
+          "stakeholder_4",
+          "stakeholder_5",
+          "stakeholder_3"
+        ],
+        "successFactors": [
+          "Laboratorio conjunto con acceso a UNICA Next sandbox o entornos equivalentes",
+          "Entrega de adaptadores API compatibles CAMARA/Open Gateway y documentación con tests automatizados",
+          "Métricas acordadas (latencia, slice isolation, provisioning time) y reporte ejecutivo"
+        ]
+      },
+      {
+        "id": "play_2",
+        "name": "Factory Multi‑Cloud & Gobernanza de Datos (Pilot)",
+        "description": "Implementación de una 'Data & Multi‑Cloud Factory' en 3 fases (diseño, pilot, escalado) que demuestre residencia de datos, lineage, auditoría y pipelines seguros entre cloud locales/hyperscalers y Telefónica TROS/OpenShift.",
+        "rationale": "Telefónica prioriza orquestación multi‑cloud y gobernanza. Mostrar un patrón reutilizable acelera adopción por parte de Telefónica Tech y reduce barreras regulatorias en mercados clave.",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_8",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Soporte y co‑certificación con al menos un hyperscaler (OpenShift compatibilidad confirmada)",
+          "Política de residencia y pruebas de auditoría (log, data lineage) implementadas",
+          "Caso de uso vertical (p. ej. utilities) con KPIs de negocio y reducción de TCO probada"
+        ]
+      },
+      {
+        "id": "play_3",
+        "name": "Acelerador Vertical Co‑gestionado (Utilities / Manufacturing)",
+        "description": "Diseño de un paquete producto + playbook para un vertical concreto (ej. utilities) donde Indra aporta la plataforma, Telefónica aporta conectividad gestionada (private 5G/IoT) y Telefónica Tech co‑gestiona venta/operación.",
+        "rationale": "Productos sectoriales replicables permiten co‑venta rápida y evidencias de negocio (time‑to‑market, referencias). Favorece el modelo de co‑gestión que Telefónica busca.",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_6",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Paquete comercial claro (SLA, pricing, revenue share)",
+          "Piloto con cliente final y métricas comerciales (ARR, churn reduction)",
+          "Playbook operativo (roles, runbooks, soporte 24x7)"
+        ]
+      },
+      {
+        "id": "play_4",
+        "name": "Security & ESG Measurable Offer",
+        "description": "Servicio gestionado que incluya SOC/NOC integrado, reporting de cibercontroles y métricas de ahorro energético/CO2 (baseline + dashboard) ligado a SLAs operacionales.",
+        "rationale": "Cubre prioridad media de Telefónica en seguridad y ESG; aporta diferenciador en ofertas B2B al demostrar ahorros operativos y cumplimiento.",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_2",
+          "stakeholder_8"
+        ],
+        "successFactors": [
+          "Certificaciones (ISO27001, SOC2) y evidencias de controles operativos",
+          "Medición estandarizada de KPIs ESG (kWh/transaction, CO2 estimado)",
+          "Integración con reporting corporativo de Telefónica y capacidad de auditoría"
+        ]
+      }
+    ],
+    "summary": "Encaje fuerte: Indra/Minsait dispone de capacidades técnicas y experiencia local en España/LatAm que encajan con Telefónica (multi‑cloud, modernización, seguridad). Para convertir encaje en contrato es imprescindible entregar pruebas técnicas concretas (PoV network slicing, adapters CAMARA/Open Gateway, pilot de gobernanza de datos) y un modelo comercial claro de co‑gestión y co‑venta que mitigue riesgos de gobernanza por la relación histórica entre las compañías. citeturn8search1turn11search5turn10search0"
+  },
+  "gapsAndQuestions": {
+    "gaps": [
+      {
+        "id": "gap_1",
+        "topic": "Compatibilidad específica con Open Gateway / CAMARA / UNICA Next",
+        "impact": "high",
+        "description": "Falta evidencia técnica documentada y certificaciones sobre adaptadores que permitan exponer/consumir APIs de red (CAMARA/Open Gateway) y la integración con UNICA Next (core 5G) en entornos Telefónica.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_2",
+        "topic": "Pruebas de network slicing y orquestación end‑to‑end",
+        "impact": "high",
+        "description": "No hay un caso de uso público que demuestre integración de la plataforma de Indra con orquestadores de red para provisioning/SLAs de slicing; necesario para aceptar la solución en producción.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_3",
+        "topic": "Requisitos y certificaciones multi‑cloud exigidas por Telefónica Tech",
+        "impact": "medium",
+        "description": "Se desconoce la lista exacta de certificaciones/hyperscaler‑stacks (OpenShift versions, ACM, security baselines) y la expectativa de co‑certificación con Telefónica Tech/Hyperscaler.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_4",
+        "topic": "Modelo comercial y de gobernanza para co‑venta/co‑gestión",
+        "impact": "medium",
+        "description": "No hay claridad sobre cómo Telefónica quiere estructurar revenue share, SLAs, responsabilidades operativas y escalado comercial en un modelo co‑gestionado con un proveedor de plataforma.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_5",
+        "topic": "Base y métricas ESG exigidas (scope, baseline, reporting cadence)",
+        "impact": "low",
+        "description": "Telefónica solicita métricas de impacto ESG/net‑zero; falta conocer formatos, periodicidad y KPIs específicos (p. ej. kWh/transaction, CO2 evitado) que esperan integrar en reportes corporativos.",
+        "priorityLevel": "nice"
+      }
+    ],
+    "questions": [
+      {
+        "id": "question_1",
+        "question": "¿Podemos obtener acceso a un sandbox/entorno UNICA Next o un laboratorio GCTIO para ejecutar un PoV de network slicing (6–10 semanas) que incluya provisioning API, orquestación y métricas definidas (latencia, isolation, provisioning time)?",
+        "context": "Validar interoperabilidad técnica con core 5G y demostrar adaptadores hacia APIs telco (requisito HIGH del cliente).",
+        "targetStakeholder": "stakeholder_4",
+        "isCritical": true
+      },
+      {
+        "id": "question_2",
+        "question": "¿Cuál es la lista mínima de certificaciones técnicas y stacks aceptados por Telefónica Tech para integraciones multi‑cloud (ej. OpenShift version, Kubernetes ACM, cifrado/Key Management requirements, residencia de datos)?",
+        "context": "Necesario para preparar la 'Data & Multi‑Cloud Factory' y asegurar compatibilidad con TROS/OpenShift y requisitos regulatorios.",
+        "targetStakeholder": "stakeholder_2",
+        "isCritical": true
+      },
+      {
+        "id": "question_3",
+        "question": "Para un piloto vertical (utilities/manufacturing), ¿qué KPIs comerciales y operativos requieren Telefónica y el cliente final para validar un acelerador (ARR objetivo, reducción TTM, SLA de disponibilidad y MTTR)?",
+        "context": "Permite diseñar un paquete comercial replicable y justificar inversión piloto.",
+        "targetStakeholder": "stakeholder_6",
+        "isCritical": true
+      },
+      {
+        "id": "question_4",
+        "question": "¿Qué modelo de gobernanza prefieren (modelo RACI detallado) para una solución co‑gestionada entre Telefónica Tech e Indra (operaciones, incident management, billing, soporte 24x7)?",
+        "context": "Define responsabilidad legal/operativa y es precondición para firmar SLAs y contrato marco.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": false
+      },
+      {
+        "id": "question_5",
+        "question": "¿Cuáles son los requisitos de auditoría y reporting (frecuencia, data retention, evidencias) para cumplir con la residencia de datos y regulaciones locales en mercados objetivo (España, Brasil, UK, Alemania)?",
+        "context": "Importante para diseñar pipelines y acuerdos de procesamiento de datos con hyperscalers y para el cumplimiento normativo.",
+        "targetStakeholder": "stakeholder_8",
+        "isCritical": true
+      },
+      {
+        "id": "question_6",
+        "question": "Respecto a ESG, ¿qué métricas espera Telefónica integrar en un dashboard de proveedor (p. ej. kWh/transaction, CO2 estimado, % renewable energy) y con qué periodicidad deben reportarse para incorporarlas en los KPI corporativos?",
+        "context": "Permite dimensionar sensores/telemetría y metodología de cálculo para demostrar impacto net‑zero.",
+        "targetStakeholder": "null",
+        "isCritical": false
+      }
+    ],
+    "summary": "Para transformar un encaje técnico en contrato comercial los cinco gaps críticos son: acceso a laboratorios UNICA Next (must), pruebas de network slicing (must), lista de certificaciones multi‑cloud (should), modelo de gobernanza co‑gestionada (should) y detalle de métricas ESG (nice). Proponer un PoV conjunto (network + data governance) y clarificar la gobernanza comercial reducirá significativamente el riesgo de la operación."
+  }
+}

@@ -1,9 +1,11 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { VendorService } from '../../domain/services/vendorService';
 import { CreateVendorInput } from '../../domain/models/vendor';
 import { logger } from '../../lib/logger';
+import { VendorDeepResearchService } from '../../domain/services/vendorDeepResearchService';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {
@@ -46,6 +48,49 @@ router.get('/:vendorId', async (req: Request, res: Response) => {
     return res.json(vendor);
   } catch (error) {
     logger.error({ err: error, vendorId: req.params.vendorId }, 'Error getting vendor');
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/:vendorId/analysis', async (req: Request, res: Response) => {
+  try {
+    const { vendorId } = req.params;
+    const report = await VendorDeepResearchService.getReport(vendorId);
+    if (!report) {
+      return res.status(404).json({ error: 'Vendor analysis not found' });
+    }
+    return res.json(report);
+  } catch (error) {
+    logger.error({ err: error, vendorId: req.params.vendorId }, 'Error getting vendor analysis');
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/:vendorId/analyze', async (req: Request, res: Response) => {
+  try {
+    const { vendorId } = req.params;
+    await VendorDeepResearchService.enqueueAnalysis(vendorId);
+    return res.status(202).json({ status: 'queued' });
+  } catch (error) {
+    logger.error({ err: error, vendorId: req.params.vendorId }, 'Error enqueueing vendor analysis');
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/:vendorId', async (req: Request, res: Response) => {
+  try {
+    const { vendorId } = req.params;
+    const vendor = await VendorService.getById(vendorId);
+
+    if (!vendor) {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    await VendorService.delete(vendorId);
+    logger.info({ vendorId }, 'Vendor deleted');
+    return res.status(204).send();
+  } catch (error) {
+    logger.error({ err: error, vendorId: req.params.vendorId }, 'Error deleting vendor');
     return res.status(500).json({ error: 'Internal server error' });
   }
 });

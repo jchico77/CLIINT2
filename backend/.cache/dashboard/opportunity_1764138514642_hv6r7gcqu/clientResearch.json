@@ -1,0 +1,143 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica (España)",
+    "industry": "Telecomunicaciones y servicios digitales B2B",
+    "headquarters": "unknown",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica es el operador histórico de telecomunicaciones en España y uno de los principales grupos telco integrados de Europa, con alrededor de 388 millones de accesos globales a cierre de 2023. En el mercado español opera principalmente bajo la marca Movistar, combinando servicios fijos, móviles, banda ancha, TV de pago y soluciones digitales avanzadas para clientes residenciales, empresas y administraciones públicas.\n\nA través de Telefónica Tech, el grupo ha consolidado una segunda vertical de crecimiento en servicios digitales (cloud, ciberseguridad, IoT, datos e IA, blockchain), con fuerte presencia en grandes corporaciones, sector público y un foco creciente en pymes. Telefónica Innovación Digital actúa como motor interno de I+D, IA y desarrollo de plataformas, reforzando el giro hacia un modelo de \"network & digital services platform\".\n\nLa compañía está ejecutando un plan estratégico 2025–2030 centrado en la reducción de deuda, disciplina financiera y migración desde negocios legacy de conectividad hacia servicios de mayor valor añadido basados en plataformas, automatización e inteligencia artificial, manteniendo como mercados core España, Alemania, Reino Unido y Brasil mientras desinvierte en parte de Latinoamérica.",
+    "keyMetrics": [
+      {
+        "label": "Accesos globales (2023)",
+        "value": "≈388 millones de accesos a nivel grupo"
+      },
+      {
+        "label": "Ingresos Telefónica Tech",
+        "value": ">2.000 M€ anuales, con crecimiento de +10% en 2024 y >9% en 1S 2025"
+      },
+      {
+        "label": "Deuda financiera y objetivo de desapalancamiento",
+        "value": ">28.000 M€ de deuda; objetivo reducir ratio deuda/EBITDA de ~2,9x a 2,5x en el plan 2025–2030"
+      },
+      {
+        "label": "Objetivo de reducción de opex",
+        "value": "Reducción de opex de ~25% apoyada en IA y eficiencia operativa"
+      },
+      {
+        "label": "Foco geográfico estratégico",
+        "value": "Prioridad en Europa (España, Alemania, Reino Unido) y Brasil; proceso de desinversión en varios países de Latinoamérica"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Digitalización transversal impulsada por fondos europeos",
+        "impact": "high",
+        "description": "Los fondos Next Generation EU y la agenda de digitalización española aceleran proyectos en administración pública, sanidad, educación, infraestructuras y pymes, creando una demanda sostenida de conectividad avanzada y plataformas digitales donde Telefónica ya está bien posicionada vía Telefónica Tech y programas como Kit Digital."
+      },
+      {
+        "trend": "Convergencia cloud + datos + IA en entornos híbridos/multicloud",
+        "impact": "high",
+        "description": "Las organizaciones migran cargas a modelos híbridos y multicloud, priorizando seguridad, soberanía del dato y gobierno. Telefónica se posiciona como integrador y operador de cloud confidencial y servicios gestionados de datos/IA apoyado en alianzas con Microsoft, Google Cloud, Oracle, IBM y otros vendors."
+      },
+      {
+        "trend": "Ciberseguridad como requisito estructural y regulatorio",
+        "impact": "high",
+        "description": "El aumento de ciberataques y las exigencias regulatorias en sectores críticos disparan la demanda de MSSP, threat intelligence y arquitecturas SASE/SSE. Telefónica Tech es ya uno de los mayores MSSP globales y da servicio a gran parte del IBEX-35, lo que refuerza la necesidad de plataformas que integren seguridad by design."
+      },
+      {
+        "trend": "Redes 5G, edge y apertura de la red (network-as-a-platform)",
+        "impact": "high",
+        "description": "La evolución hacia redes programables con APIs abiertas, slices 5G y edge computing permite monetizar capacidades de red (latencia, QoS, seguridad) en verticales como industria 4.0, smart cities y salud. Telefónica avanza en 5G y automatización de red con IA, abriendo espacio a modelos de \"network platform\" y monetización vía APIs."
+      },
+      {
+        "trend": "Presión por eficiencia, automatización y simplificación del portfolio",
+        "impact": "high",
+        "description": "La saturación del mercado de conectividad, la guerra de precios y el elevado capex obligan a reducir opex mediante automatización intensiva (IA en red, atención, procesos) y a racionalizar la oferta. El nuevo plan de Telefónica explicita una reducción de opex del 25% basada en IA y simplificación organizativa."
+      },
+      {
+        "trend": "Sostenibilidad y regulación ESG en infraestructuras digitales",
+        "impact": "medium",
+        "description": "La regulación y la presión social sobre huella de carbono y eficiencia energética impulsan soluciones de optimización (smart cities, smart water, smart energy). Telefónica ya explora este espacio con proyectos como la alianza con Global Omnium y Google Cloud, lo que refuerza el valor de plataformas de datos e IA con foco ESG."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "2025-11-04",
+        "event": "Anuncio del nuevo plan estratégico 2025–2030 y recorte del dividendo",
+        "significance": "Telefónica comunica un plan centrado en reducir deuda, contener capex y recortar el dividendo, apoyándose en una reducción de opex del 25% gracias a la IA y la automatización; cualquier iniciativa debe demostrar impacto rápido en eficiencia y cash flow."
+      },
+      {
+        "date": "2025-03-31",
+        "event": "Posicionamiento público de Telefónica a favor de la consolidación en España, Alemania y Reino Unido",
+        "significance": "La compañía declara que estudiará operaciones de consolidación en sus mercados clave y continuará la desinversión en Latinoamérica, lo que aumenta la relevancia de plataformas que faciliten integraciones, carve-outs y sinergias operativas."
+      },
+      {
+        "date": "2025-04-19",
+        "event": "Digi supera el 10% de cuota en banda ancha y se refuerza como líder low cost en España",
+        "significance": "La ganancia de cuota de operadores low cost incrementa la presión competitiva sobre ARPU y márgenes, reforzando la necesidad de que Telefónica diferencie su oferta con servicios digitales de valor añadido y gane eficiencia operativa."
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [
+      {
+        "id": "req_1",
+        "category": "requirement",
+        "title": "Demostrar reducción material de opex y mejora de cash flow mediante automatización e IA",
+        "description": "El plan 2025–2030 fija una reducción de opex del ~25% apoyada en IA y eficiencia operativa, en un contexto de deuda elevada y presión competitiva en España. La plataforma que se proponga debe enfocarse en casos de uso de automatización con ahorros cuantificables, ciclos de despliegue cortos y mínimo capex incremental, integrándose con los sistemas existentes.",
+        "priority": "high",
+        "relevanceToService": 98
+      },
+      {
+        "id": "req_2",
+        "category": "requirement",
+        "title": "Orquestar y acelerar el lanzamiento de servicios digitales B2B de Telefónica Tech",
+        "description": "Telefónica Tech es el principal vector de crecimiento en cloud, ciberseguridad, IoT y datos/IA, pero opera sobre un ecosistema complejo de productos y partners. Se requiere una capa de orquestación que unifique catálogo, pricing, provisioning, monitorización y soporte para nuevas soluciones digitales B2B/B2G, reduciendo el time-to-market y el coste de integrar nuevos partners.",
+        "priority": "high",
+        "relevanceToService": 95
+      },
+      {
+        "id": "req_3",
+        "category": "requirement",
+        "title": "Reforzar el gobierno de datos, seguridad y cumplimiento en despliegues de IA y multicloud",
+        "description": "La adopción de IA (incluida generativa) y modelos multicloud exige un gobierno sólido del dato, alta ciberseguridad y cumplimiento regulatorio, especialmente en sector público y sectores regulados. La solución debe facilitar linaje, calidad, seguridad, privacidad y control de accesos, minimizando el riesgo de vendor lock-in y de integraciones costosas.",
+        "priority": "high",
+        "relevanceToService": 90
+      },
+      {
+        "id": "req_4",
+        "category": "requirement",
+        "title": "Escalar la digitalización de pymes y sector público sin disparar costes comerciales",
+        "description": "Telefónica participa activamente en la digitalización de pymes (Kit Digital, Tu Empresa Segura) y en grandes programas públicos, pero la oferta sigue fragmentada y con fuerte intensidad comercial. Se necesita una plataforma que permita empaquetar soluciones por segmento/vertical, habilitar journeys guiados y alto grado de autoservicio/asistencia remota para escalar ingresos sin aumentar proporcionalmente los costes de ventas y soporte.",
+        "priority": "medium",
+        "relevanceToService": 85
+      }
+    ],
+    "whatClientSeeks": [
+      "Un partner estratégico con una plataforma de transformación digital end-to-end (consultoría + tecnología + automatización/IA) alineada con el plan 2025–2030 y orientada a resultados financieros.",
+      "Capacidad de generar ahorros de opex y nuevos ingresos medibles en negocios B2B/B2G (Telefónica Tech, Telefónica Empresas, pymes), con casos de uso replicables entre países y unidades.",
+      "Solución que se integre con el ecosistema actual de hyperscalers, vendors de ciberseguridad y sistemas internos (SOCs/DOCs, BSS/OSS, CRM) sin proyectos de sustitución core de alto riesgo."
+    ],
+    "scope": [
+      "Foco inicial en Telefónica España y Telefónica Tech, principalmente en negocio B2B/B2G y pymes dentro del mercado español.",
+      "Casos de uso prioritarios en eficiencia operacional (red, atención al cliente, operaciones de campo, soporte interno) y en la orquestación de ofertas digitales B2B.",
+      "Capacidad futura de extender la plataforma a otros países del grupo y de soportar integraciones/carve-outs en potenciales operaciones de consolidación."
+    ],
+    "exclusions": [
+      "No se detallan exclusiones explícitas en el dossier; se asume priorización de iniciativas con bajo capex incremental y retorno rápido.",
+      "No se menciona la sustitución completa de sistemas BSS/OSS o CRM; la plataforma debería operar de forma complementaria e integrada sobre el landscape actual.",
+      "No se observan requisitos específicos ligados a nueva infraestructura física de red o data centers en esta oportunidad; el foco está en capas de software, datos e IA."
+    ],
+    "selectionCriteria": [
+      "Historial demostrado de reducción de opex y mejora de eficiencia en operadores telco mediante automatización e IA, con KPIs claros y referencias relevantes.",
+      "Fortaleza en gobierno de datos, ciberseguridad y cumplimiento regulatorio, especialmente en entornos multicloud y en proyectos con administraciones públicas y sectores regulados.",
+      "Capacidad para integrar y orquestar ecosistemas complejos de partners tecnológicos (hyperscalers, fabricantes de ciberseguridad, ISVs) en un modelo de plataforma.",
+      "Modelo de colaboración flexible basado en pilotos y escalado progresivo, que minimice el riesgo inicial y permita capturar rápidamente el valor generado."
+    ],
+    "summary": "Telefónica busca en 2025 un partner estratégico capaz de aportar una plataforma de transformación digital que combine consultoría, tecnología y automatización/IA para apoyar su plan 2025–2030. Las prioridades clave son: reducir opex de forma material y rápida, escalar Telefónica Tech como plataforma de servicios digitales B2B/B2G, reforzar el gobierno de datos y la seguridad en entornos de IA y multicloud, y escalar la digitalización de pymes y sector público sin aumentar de forma proporcional los costes comerciales. Cualquier propuesta debe integrarse con el ecosistema actual de socios y sistemas de Telefónica, requerir un capex contenido y demostrar un ROI claro y medible a corto plazo."
+  }
+}

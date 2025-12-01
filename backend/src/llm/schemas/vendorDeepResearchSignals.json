@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_signals_phase",
+  "type": "object",
+  "properties": {
+    "newsHighlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "source": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "summary": { "type": "string" },
+          "impact": { "type": "string" }
+        },
+        "required": ["title", "source", "date", "url", "summary", "impact"],
+        "additionalProperties": false
+      }
+    },
+    "videoHighlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "channel": { "type": "string" },
+          "publishedAt": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "description": { "type": "string" },
+          "angle": { "type": "string" }
+        },
+        "required": ["title", "channel", "publishedAt", "url", "description", "angle"],
+        "additionalProperties": false
+      }
+    },
+    "socialSignals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": { "type": "string" },
+          "summary": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "relevance": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          }
+        },
+        "required": ["platform", "summary", "date", "url", "relevance"],
+        "additionalProperties": false
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "snippet": { "type": "string" }
+        },
+        "required": ["title", "url", "snippet"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["newsHighlights", "videoHighlights", "socialSignals", "sources"],
+  "additionalProperties": false
+}
+

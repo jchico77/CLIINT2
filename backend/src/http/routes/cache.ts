@@ -1,8 +1,9 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { LLMCache } from '../../domain/services/llmCache';
 import { logger } from '../../lib/logger';
 
-export const cacheRouter = Router();
+export const cacheRouter: ExpressRouter = Router();
 
 // GET /api/cache/stats - Get cache statistics
 cacheRouter.get('/stats', (_req: Request, res: Response) => {

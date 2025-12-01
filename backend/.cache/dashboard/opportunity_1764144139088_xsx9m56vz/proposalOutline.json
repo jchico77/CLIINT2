@@ -1,0 +1,77 @@
+{
+  "sections": [
+    {
+      "id": "sec_1",
+      "title": "Propuesta de valor ejecutiva",
+      "purpose": "Alinear prioridades estratégicas con resultados medibles y presentar el posicionamiento del partner para acelerar la transformación digital de Telefónica en 2025.",
+      "suggestedContent": [
+        "Elevator pitch: qué entregamos (Plataforma integral: modernización, automatización e IA) y por qué somos el partner estratégico.",
+        "Objetivos de negocio a 12–24 meses (time-to-value, reducción de costes operativos, mejoras de experiencia cliente).",
+        "Beneficios esperados y rangos de mejora (referenciar benchmarks y métricas objetivo).",
+        "Propuesta de modelo de colaboración (governance, SLAs, KPIs compartidos y mecanismos de riesgo/mitigación).",
+        "Llamado a la acción: propuesta de piloto mínimo viable y próximos pasos para compromiso rápido."
+      ],
+      "linkedEvidenceIds": [
+        "kpi_001",
+        "kpi_002",
+        "testimonial_001"
+      ]
+    },
+    {
+      "id": "sec_2",
+      "title": "Hoja de ruta priorizada y quick wins (90/180/365 días)",
+      "purpose": "Presentar una ruta implementable por fases que entregue resultados tempranos, reduzca riesgo y prepare la plataforma para escalado masivo.",
+      "suggestedContent": [
+        "Fases propuestas: 0) Discovery & assessment; 1) Foundation (cloud híbrida, seguridad, pipelines); 2) Modernización por dominios (core, microservicios); 3) Plataforma de datos e IA; 4) Operación y optimización continua.",
+        "Entregables y milestones por fase (artefactos, checkpoints de aceptación, roles responsables).",
+        "Quick wins priorizados (p. ej. automatización RPA en procesos back-office, migración gradual de servicios no críticos, modelos de IA para casos de uso de alto ROI).",
+        "Plan de adopción y capacitación (upskilling, cambio organizacional, KPI de adopción).",
+        "Riesgos clave y contramedidas (dependencias legacy, compliance, continuidad de negocio)."
+      ],
+      "linkedEvidenceIds": [
+        "case_study_001",
+        "case_study_002",
+        "kpi_001",
+        "kpi_002"
+      ]
+    },
+    {
+      "id": "sec_3",
+      "title": "Arquitectura target y modelo de entrega",
+      "purpose": "Describir el blueprint técnico y operativo que soporta la transformación: arquitectura híbrida/cloud, microservicios, automatización CI/CD, datos e IA, y seguridad integrada.",
+      "suggestedContent": [
+        "Diagrama de alto nivel de la arquitectura target (capas: infraestructura híbrida, plataforma de contenedores, mesh de servicios, plataforma de datos, capa IA, observabilidad y seguridad).",
+        "Patrones de modernización recomendados (strangler pattern, refactor por bounded contexts, migración gradual al cloud).",
+        "Capacidades de automatización: pipelines CI/CD, IaC, pruebas automatizadas, RPA y automatización inteligente para back-office.",
+        "Modelo operativo: DevOps/SRE, gobernanza de datos, seguridad integrada (IAM, cifrado, compliance), run & operate (SLA/TO/monitoring).",
+        "Requisitos de integración con ecosistema Telefónica (OSS/BSS, redes, proveedores cloud) y propuesta de herramientas/plataformas abiertas.",
+        "Consideraciones de escalabilidad, resiliencia y costes operativos."
+      ],
+      "linkedEvidenceIds": [
+        "case_study_001",
+        "case_study_002",
+        "award_001"
+      ]
+    },
+    {
+      "id": "sec_4",
+      "title": "Impacto económico, métricas y referencias",
+      "purpose": "Cuantificar el impacto esperado, presentar casos de éxito y ofrecer el paquete comercial y próximos pasos para cerrar el piloto/contrato marco.",
+      "suggestedContent": [
+        "Modelo de impacto y ROI: ahorros operativos, reducción TCO, impacto en ingresos y NPS — template para insertar cifras específicas (baseline + escenarios).",
+        "KPIs propuestos para seguimiento (tiempo de despliegue, MTTR, % automatización de procesos, ahorro de Opex, mejora en SLA).",
+        "Casos de referencia y evidencia de resultados (resumen de lessons-learned y métricas observadas).",
+        "Estructura comercial sugerida: piloto pagado, fases contractuales, modelos de pricing (capex vs opex, outcome-based).",
+        "Propuesta de próximos pasos concretos: alcance del piloto (objetivos medibles), equipo inicial, timeline y decisión esperada."
+      ],
+      "linkedEvidenceIds": [
+        "kpi_001",
+        "kpi_002",
+        "case_study_001",
+        "case_study_002",
+        "testimonial_001",
+        "award_001"
+      ]
+    }
+  ]
+}

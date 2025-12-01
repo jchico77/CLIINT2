@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_portfolio_phase",
+  "type": "object",
+  "properties": {
+    "servicePortfolio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "categoryTags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "keyFeatures": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "maturity": {
+            "type": "string",
+            "enum": ["beta", "ga", "legacy", "unknown"]
+          }
+        },
+        "required": ["name", "description", "categoryTags", "keyFeatures", "maturity"],
+        "additionalProperties": false
+      }
+    },
+    "differentiators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": { "type": "string" },
+          "evidence": { "type": "string" },
+          "proofPoint": { "type": "string" },
+          "sourceUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^https?://[^\\s\"]+$"
+              },
+              { "type": "null" }
+            ]
+          }
+        },
+        "required": ["claim", "evidence", "proofPoint", "sourceUrl"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["servicePortfolio", "differentiators"],
+  "additionalProperties": false
+}
+

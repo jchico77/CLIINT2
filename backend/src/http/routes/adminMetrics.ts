@@ -1,10 +1,11 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { DashboardRunStatus } from '@prisma/client';
 import { requireAdminAuth } from '../middleware/adminAuth';
 import { DashboardMetricsQueryService } from '../../domain/services/dashboardMetricsQueryService';
 import { logger } from '../../lib/logger';
 
-const adminMetricsRouter = Router();
+const adminMetricsRouter: ExpressRouter = Router();
 
 const parseDate = (value?: string): Date | null => {
   if (!value) {

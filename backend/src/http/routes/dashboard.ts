@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { DashboardService } from '../../domain/services/dashboardService';
 import { CreateOpportunityDashboardInput } from '../../domain/models/clientIntelDashboard';
 import { CreateOpportunityDashboardInputSchema } from '../../domain/validators/dashboardValidators';
@@ -9,7 +10,7 @@ import { deletePhase } from '../../utils/dashboardCache';
 import type { DashboardPhase } from '../../llm/phaseLogger';
 
 // Router for POST /api/vendors/:vendorId/dashboard
-export const dashboardCreateRouter = Router();
+export const dashboardCreateRouter: ExpressRouter = Router();
 const DASHBOARD_PHASES: DashboardPhase[] = [
   'deepResearch',
   'clientResearch',
@@ -197,7 +198,7 @@ dashboardCreateRouter.post(
 );
 
 // Router for GET /api/dashboard/:dashboardId and GET /api/dashboards
-export const dashboardGetRouter = Router();
+export const dashboardGetRouter: ExpressRouter = Router();
 
 // GET /api/dashboards - List all dashboards
 dashboardGetRouter.get('/dashboards', async (req: Request, res: Response) => {

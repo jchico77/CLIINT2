@@ -1,8 +1,9 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { ClientService } from '../../domain/services/clientService';
 import { CreateClientAccountInput } from '../../domain/models/clientAccount';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {

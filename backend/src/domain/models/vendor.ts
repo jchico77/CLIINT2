@@ -1,3 +1,5 @@
+import { VendorDeepResearchStatus } from './vendorDeepResearchReport';
+
 export interface Vendor {
   id: string;
   name: string;
@@ -5,6 +7,11 @@ export interface Vendor {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  analysisStatus?: VendorDeepResearchStatus;
+  analysisStartedAt?: string | null;
+  analysisCompletedAt?: string | null;
+  analysisErrorMessage?: string | null;
+  analysisModelUsed?: string | null;
 }
 
 export interface CreateVendorInput {

@@ -3,28 +3,35 @@ export type AdminPhaseId =
   | 'clientResearch'
   | 'vendorResearch'
   | 'fitAndStrategy'
-  | 'proposalOutline';
+  | 'proposalOutline'
+  | 'vendorDeepResearch';
 
 export type AdminModelOption =
-  | 'gpt-5.1'
-  | 'gpt-5.1-mini'
-  | 'gpt-5-mini'
   | 'gpt-4o'
   | 'gpt-4o-mini'
-  | 'o3-mini';
+  | 'gpt-4.1'
+  | 'gpt-4.1-mini'
+  | 'gpt-5'
+  | 'gpt-5-mini'
+  | 'gpt-5-nano'
+  | 'gpt-5.1'
+  | 'o3-mini'
+  | 'o3-deep-research';
 export type AdminReasoningEffort = 'low' | 'medium' | 'high';
-export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy';
+export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy' | 'vendorDeepResearch';
 export type AdminFeatureToggleId = 'webSearch' | 'fileSearch' | 'dossierContext' | 'proposalBeta';
 export type AdminTokenLimitId =
   | 'deepResearchTokens'
   | 'clientResearchTokens'
   | 'vendorResearchTokens'
-  | 'fitStrategyTokens';
+  | 'fitStrategyTokens'
+  | 'vendorDeepResearchTokens';
 export type AdminTemperatureId =
   | 'deepResearchTemp'
   | 'clientResearchTemp'
   | 'vendorResearchTemp'
-  | 'fitStrategyTemp';
+  | 'fitStrategyTemp'
+  | 'vendorDeepResearchTemp';
 export type AdminSectionLimitId =
   | 'maxStakeholders'
   | 'maxCompetitors'
@@ -55,5 +62,14 @@ export interface AdminSettings {
   dashboardVisibility: Record<AdminDashboardSectionId, boolean>;
   sandboxMode: boolean;
   preferredLanguage: AdminLanguageOption;
+  vendorAnalysis: {
+    autoRunOnCreate: boolean;
+  };
+  vendorDeepResearchParallel: {
+    gpt4ParallelEnabled: boolean;
+    gpt5ParallelEnabled: boolean;
+    maxConcurrentPhases: number;
+    interPhaseDelayMs: number;
+  };
 }
 

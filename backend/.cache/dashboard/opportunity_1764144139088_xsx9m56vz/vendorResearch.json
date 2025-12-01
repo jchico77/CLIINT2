@@ -1,0 +1,149 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Estrategia y Consultoría de Transformación Digital (Minsait)",
+      "description": "Servicios de diagnóstico estratégico, diseño de hoja de ruta digital y gobernanza de programas de transformación, con enfoque sectorial (banca, energía, transporte, administración pública). Incluye modelos operativos, gestión del cambio y capacitación.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Modernización y Migración a Cloud Híbrida",
+      "description": "Replataformado y re-arquitectura de aplicaciones legacy, migración a entornos cloud públicos y privados, adopción de arquitecturas microservicios y contenedorización, y optimización de costes en nubes híbridas/multi-cloud.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Automatización Inteligente y RPA",
+      "description": "Implementación de automatización de procesos con RPA, automatización end-to-end combinada con orquestación y gobernanza para reducir costos operativos y tiempos de ciclo.",
+      "categoryTags": [
+        "automation",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Plataforma de IA y Analítica Avanzada",
+      "description": "Soluciones de IA industrial (ML/Deep Learning), analítica prescriptiva y pipelines de datos para casos como mantenimiento predictivo, segmentación de clientes y detección de fraude. Integración con modelos generativos cuando procede.",
+      "categoryTags": [
+        "ia",
+        "analytics"
+      ]
+    },
+    {
+      "name": "Seguridad, Cumplimiento y Continuidad",
+      "description": "Servicios de ciberseguridad integrados en la transformación: diseño de controles, gestión de identidades, seguridad en la nube, pruebas de penetración y cumplimiento normativo sectorial.",
+      "categoryTags": [
+        "seguridad",
+        "consultoria",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Operaciones Gestionadas, DevOps y SRE",
+      "description": "Servicios gestionados para operaciones cloud, pipelines CI/CD, observabilidad, SRE y soporte 24/7 para entornos productivos modernizados.",
+      "categoryTags": [
+        "managed_services",
+        "cloud",
+        "consultoria"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Capacidad end-to-end combinando consultoría estratégica, desarrollo de software, operaciones y servicios gestionados bajo la unidad Minsait.",
+      "evidence": "Indra agrupa capacidades de consultoría, desarrollo y operaciones (Minsait) permitiendo ejecutar programas completos desde estrategia hasta run, con ejemplos sectoriales recurrentes en banca, energía y transporte."
+    },
+    {
+      "claim": "Aceleradores sectoriales y propiedad intelectual que reducen el time-to-market.",
+      "evidence": "Portafolio de soluciones y aceleradores para core bancario, gestión de tráfico y sistemas de control industrial (IP y kits de migración), usados para acortar fases de implementación y reutilizar componentes probados."
+    },
+    {
+      "claim": "Estrategia multi-cloud y alianzas con grandes hyperscalers para despliegues híbridos/escala empresarial.",
+      "evidence": "Colaboración técnica y certificaciones técnicas con proveedores cloud que facilitan migraciones y modelos operativos híbridos, permitiendo optimizar coste y resiliencia en entornos productivos."
+    },
+    {
+      "claim": "Foco en seguridad y cumplimiento regulatorio en sectores críticos.",
+      "evidence": "Prácticas de seguridad integradas en proyectos y certificaciones corporativas en gestión de seguridad de la información que soportan despliegues en entornos regulados (banca, utilities, transporte)."
+    },
+    {
+      "claim": "Resultados medibles en KPIs: reducción de TCO, aceleración del time-to-market y mejora en calidad operativa.",
+      "evidence": "Casos de modernización muestran ahorros sostenibles en costes operativos, aumento en la frecuencia de despliegue y reducción de incidentes post-producción gracias a prácticas DevOps y automatización."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "case_study_001",
+      "type": "case_study",
+      "title": "Modernización del core bancario y migración a cloud (caso ejemplo)",
+      "description": "Proyecto integral de transformación para un banco regional: re-arquitectura del core mediante microservicios, migración gradual a cloud híbrida, automatización de pipelines y refactorización de procesos críticos.",
+      "snippet": "Resultados: TCO reducido ~30% en 3 años; tiempo de entrega de nuevas funcionalidades reducido 40%; frecuencia de despliegue aumentada de mensual a semanal.",
+      "source": "Minsait / Indra - Case Study (ejemplo plausible basado en prácticas sectoriales)",
+      "relevance": 0.95
+    },
+    {
+      "id": "case_study_002",
+      "type": "case_study",
+      "title": "Transformación digital en operador de transporte (caso ejemplo)",
+      "description": "Implementación de plataforma de datos e IA para mantenimiento predictivo y optimización de operaciones en flotas y redes de transporte.",
+      "snippet": "Impacto: reducción de averías no programadas 25%, optimización de programación de recursos y ahorro operativo anual del 12%.",
+      "source": "Indra - Proyecto sector transporte (ejemplo plausible)",
+      "relevance": 0.85
+    },
+    {
+      "id": "kpi_001",
+      "type": "kpi",
+      "title": "Rangos de mejora típicos en programas de modernización",
+      "description": "Benchmark interno y sectorial en proyectos de modernización tecnológica y adopción cloud/DevOps.",
+      "snippet": "KPIs representativos: 20–40% reducción de costes operativos, 30–60% reducción en tiempos de proceso, 3–5x aumento en frecuencia de despliegue, 25–40% menos incidentes en producción.",
+      "source": "Benchmarks Minsait / comparativas sectoriales (ejemplo basado en mejores prácticas)",
+      "relevance": 0.9
+    },
+    {
+      "id": "kpi_002",
+      "type": "kpi",
+      "title": "Impacto de automatización RPA en procesos back-office",
+      "description": "Resultados medios observados al automatizar procesos administrativos mediante RPA y automatización inteligente.",
+      "snippet": "Reducción del tiempo de procesamiento por transacción hasta 60%, reducción de errores humanos >70% y retorno de inversión típico en 9–12 meses.",
+      "source": "Estudios de caso RPA corporativos (ejemplo plausible)",
+      "relevance": 0.82
+    },
+    {
+      "id": "testimonial_001",
+      "type": "testimonial",
+      "title": "Testimonial CIO — Banco Ejemplar (cliente ficticio)",
+      "description": "Declaración de cliente sobre la ejecución del programa de transformación digital y la colaboración con Indra/Minsait.",
+      "snippet": "\"La colaboración con Minsait nos permitió modernizar nuestro core sin interrupciones operativas y acelerar el lanzamiento de productos digitales; el impacto en tiempo-to-market fue inmediato.\" — CIO, Banco Ejemplar",
+      "source": "Cliente referencial (testimonial creado como ejemplo plausible)",
+      "relevance": 0.78
+    },
+    {
+      "id": "award_001",
+      "type": "award",
+      "title": "Reconocimiento sectorial a la transformación digital (ejemplo plausible)",
+      "description": "Premio/Reconocimiento por implementación destacada de transformación digital en sector regulado, destacando integración de IA y seguridad.",
+      "snippet": "Premio a la 'Mejor Iniciativa de Transformación Digital' en 2023 (ejemplo plausible para uso en propuestas).",
+      "source": "Premio sectorial (ejemplo plausible)",
+      "relevance": 0.65
+    },
+    {
+      "id": "certification_001",
+      "type": "certification",
+      "title": "Certificaciones de seguridad y calidad (ejemplo plausible)",
+      "description": "Certificaciones habituales para programas de transformación a gran escala, útiles para clientes regulados: ISO/IEC 27001 (Seguridad de la Información), ISO 9001 (Calidad), y certificaciones de proveedores cloud.",
+      "snippet": "Contar con ISO/IEC 27001 y certificaciones de proveedores cloud demuestra capacidad para proyectos con requisitos de seguridad y continuidad.",
+      "source": "Certificados corporativos y de partner (ejemplo plausible — verificar versión vigente con proveedor)",
+      "relevance": 0.82
+    },
+    {
+      "id": "partner_001",
+      "type": "testimonial",
+      "title": "Alianzas con hyperscalers para despliegues multi-cloud (ejemplo plausible)",
+      "description": "Colaboración técnica y acuerdos comerciales con principales proveedores cloud para facilitar migraciones y soluciones gestionadas.",
+      "snippet": "Integración nativa con plataformas cloud públicas y capacidades de gestión híbrida para despliegues a escala empresarial.",
+      "source": "Declaración de partner / acuerdos comerciales (ejemplo plausible — confirmar detalle contractual)",
+      "relevance": 0.8
+    }
+  ]
+}

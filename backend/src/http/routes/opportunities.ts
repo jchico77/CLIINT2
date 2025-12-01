@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { createOpportunitySchema } from '../../domain/validators/opportunityValidators';
 import { ValidationError, NotFoundError } from '../../domain/errors/AppError';
 import { VendorService } from '../../domain/services/vendorService';
@@ -6,8 +7,8 @@ import { ClientService } from '../../domain/services/clientService';
 import { ServiceOfferingService } from '../../domain/services/serviceOfferingService';
 import { OpportunityService } from '../../domain/services/opportunityService';
 
-const vendorOpportunitiesRouter = Router({ mergeParams: true });
-const opportunityRouter = Router();
+const vendorOpportunitiesRouter: ExpressRouter = Router({ mergeParams: true });
+const opportunityRouter: ExpressRouter = Router();
 
 const assertVendorParam = async (vendorId?: string): Promise<string> => {
   if (!vendorId) {

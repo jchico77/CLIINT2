@@ -1,0 +1,128 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Plataforma de Transformación Digital (Minsait / Indra)",
+      "description": "Solución integral para modernización tecnológica que combina consultoría estratégica, migración cloud, automatización y componentes de IA para acelerar la transformación de procesos y productos digitales. Incluye aceleradores sectoriales, frameworks de gobernanza y laboratorios de datos/IA.",
+      "categoryTags": [
+        "consultoria",
+        "ia",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Modernización Cloud & Migración de Aplicaciones",
+      "description": "Servicios de evaluación, replatforming y migración masiva a entornos cloud (IaaS/PaaS/Serverless), con modelos de operación gestionada y prácticas DevOps/CloudOps para reducir costes y riesgos durante la transición.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Automatización inteligente y Data/AI",
+      "description": "Implementación de RPA, automatización de procesos end-to-end e integración de modelos de machine learning para casos como detección de fraude, mantenimiento predictivo y personalización del cliente.",
+      "categoryTags": [
+        "ia",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Consultoría de transformación y change management",
+      "description": "Servicios de estrategia, rediseño de procesos, gestión del cambio y capacitación organizativa para asegurar la adopción y sostenibilidad de las iniciativas tecnológicas.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Capacidad end-to-end y activos sectoriales (Minsait) para sectores críticos",
+      "evidence": "Soportado por múltiples casos de uso sectoriales y aceleradores preconstruidos; ver case_study cs-bank-01 (banca) y cs-transport-01 (transporte) en el evidencePack."
+    },
+    {
+      "claim": "Alianzas con hyperscalers y ecosistema técnico para migraciones cloud seguras y optimizadas",
+      "evidence": "Evidenciado en descripciones de servicios cloud y certificaciones técnicas; ver KPI kpi-migration-01 y certificación cert-iso27001 en el evidencePack que muestran migraciones a gran escala y controles de seguridad."
+    },
+    {
+      "claim": "Combinación de automatización (RPA) + IA aplicada que reduce time-to-market y costes operativos",
+      "evidence": "Respaldado por KPIs de rendimiento en proyectos (kpi-ttm-01) y testimonios de clientes (testimonial-bank-01, testimonial-energy-01) incluidos en el evidencePack."
+    },
+    {
+      "claim": "Foco en seguridad, cumplimiento y operación gestionada (SOC, ISO/GDPR)",
+      "evidence": "Apoyado por la presencia de certificaciones y prácticas de seguridad incluidas en el evidencePack (cert-iso27001) y por casos donde la operación gestionada mantiene SLAs críticos (cs-transport-01)."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "cs-bank-01",
+      "type": "case_study",
+      "title": "Transformación digital de la banca mayorista — modernización de core y canales digitales",
+      "description": "Proyecto integral de modernización para un banco mayorista: migración de servicios core a arquitectura modular, implementación de API gateway y plataformas de datos para analítica en tiempo real.",
+      "snippet": "Reducción del 40% en costes operativos y aceleración del time-to-market de nuevos productos en un 35% tras 18 meses de ejecución. Ejemplo plausible construido sobre prácticas sectoriales de Indra/Minsait.",
+      "source": "Resumen consolidado basado en prácticas y casos sectoriales públicos (Indra / Minsait) — ejemplo plausible para propuestas",
+      "relevance": 5
+    },
+    {
+      "id": "cs-transport-01",
+      "type": "case_study",
+      "title": "Plataforma de control y monitorización cloud para operador de transporte",
+      "description": "Implantación de un sistema de control en la nube y data lake para operaciones de tráfico y mantenimiento predictivo, integrando IoT y modelos de ML para priorización de incidencias.",
+      "snippet": "Mejora de la disponibilidad operacional hasta 99.99% y reducción del tiempo medio de reparación (MTTR) en 45%. Caso tipo aplicable a clientes de transporte y utilities.",
+      "source": "Caso tipo basado en implementaciones sectoriales de Indra en transporte y servicios críticos — ejemplo plausible",
+      "relevance": 5
+    },
+    {
+      "id": "kpi-migration-01",
+      "type": "kpi",
+      "title": "Migración masiva de aplicaciones a cloud",
+      "description": "Resultado típico de programas de migración: migración de 300–700 aplicaciones en 12–24 meses con metodología de 6R (Rehost, Replatform, Refactor...) y automatización de pipelines.",
+      "snippet": "Proyecto tipo: 500 aplicaciones migradas en 18 meses, reducción de coste TCO en nube del 28% y cumplimiento de SLAs del 99.95% tras estabilización.",
+      "source": "Benchmark y métricas de proyectos de modernización (agregación de proyectos Minsait/Indra y mejores prácticas sectoriales) — ejemplo plausible",
+      "relevance": 5
+    },
+    {
+      "id": "kpi-ttm-01",
+      "type": "kpi",
+      "title": "Reducción de time-to-market mediante DevOps y aceleradores",
+      "description": "Impacto de la adopción de pipelines CI/CD, infra como código y aceleradores sectoriales en la velocidad de entrega de funcionalidades.",
+      "snippet": "Media de reducción del time-to-market de un 25–40% en programas de adopción DevOps y plataformas de producto.",
+      "source": "Métricas compiladas de proyectos de transformación digital y aceleradores empresariales — ejemplo plausible",
+      "relevance": 4
+    },
+    {
+      "id": "testimonial-bank-01",
+      "type": "testimonial",
+      "title": "CTO de banco internacional sobre la plataforma de transformación",
+      "description": "Comentario del responsable tecnológico tras proyecto de modernización: mejora en la agilidad, integración de datos y reducción de costes operacionales.",
+      "snippet": "\"La colaboración aceleró nuestra modernización: entregas más rápidas, menor riesgo y un equipo operativo más eficiente.\" — CTO (testimonial representativo, ejemplo plausible).",
+      "source": "Testimonio tipo basado en feedback habitual de clientes de transformación digital — ejemplo plausible",
+      "relevance": 4
+    },
+    {
+      "id": "testimonial-energy-01",
+      "type": "testimonial",
+      "title": "Director de operaciones de utility sobre mantenimiento predictivo",
+      "description": "Valoración del uso de IA y analítica para priorizar intervenciones y alargar vida útil de activos.",
+      "snippet": "\"La plataforma nos permitió predecir fallos críticos y optimizar los turnos de mantenimiento, reduciendo paradas no planificadas.\" — Director de Operaciones (ejemplo plausible).",
+      "source": "Síntesis de testimonios de proyectos de utilities con soluciones de IA — ejemplo plausible",
+      "relevance": 4
+    },
+    {
+      "id": "award-digital-2023",
+      "type": "award",
+      "title": "Premio a la Excelencia en Transformación Digital (Ejemplo 2023)",
+      "description": "Reconocimiento sectorial por proyectos de modernización y uso innovador de IA en entornos críticos.",
+      "snippet": "Premio sectorial atribuido a iniciativas de transformación que combinan cloud, IA y seguridad (elemento mostrado como referencia para propuestas).",
+      "source": "Premio ejemplar utilizado para propuestas; verificar galardones específicos en comunicación corporativa de Indra.",
+      "relevance": 3
+    },
+    {
+      "id": "cert-iso27001",
+      "type": "certification",
+      "title": "Certificación ISO 27001 / prácticas de seguridad y cumplimiento",
+      "description": "Controles y procesos de seguridad de la información para la protección de datos y continuidad operativa en servicios gestionados y cloud.",
+      "snippet": "Presencia habitual de certificaciones ISO 27001 y cumplimiento GDPR en proveedores de transformación digital; incluir verificación directa en due diligence.",
+      "source": "Práctica habitual en integradores y proveedores; confirmar estado y alcance de certificaciones con Indra durante la fase contractual.",
+      "relevance": 5
+    }
+  ]
+}

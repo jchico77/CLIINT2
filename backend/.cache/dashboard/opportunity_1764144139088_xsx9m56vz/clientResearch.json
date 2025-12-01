@@ -1,0 +1,84 @@
+{
+  "accountSnapshot": {
+    "companyName": "Telefónica (España)",
+    "industry": "Telecomunicaciones",
+    "headquarters": "unknown",
+    "employeeCount": "unknown",
+    "revenue": "unknown",
+    "description": "Telefónica España es el operador incumbente que combina negocio B2C (Movistar), B2B y servicios para administración pública a través de Telefónica Tech, además de actividades mayoristas e infraestructuras. Está impulsando su plan estratégico 'Transform & Grow' con foco en experiencia cliente, escalado B2B/AAPP y modernización tecnológica (IA, cloud, redes y simplificación operativa).\n\nLa unidad Telefónica Tech actúa como canal y arquitectura para servicios digitales gestionados (cloud, ciberseguridad, IoT, redes privadas y plataformas gestionadas), posicionándose como interlocutor natural para propuestas de plataformas digitales en España. El entorno competitivo (fusión Orange–MásMóvil, crecimiento de operadores low‑cost y actividad de Vodafone) y la moderación de ingresos empujan a Telefónica a acelerar monetización B2B, eficiencias y alianzas tecnológicas.",
+    "keyMetrics": [
+      {
+        "label": "Unidad clave",
+        "value": "Telefónica Tech — canal principal para B2B, cloud, ciberseguridad e IoT"
+      },
+      {
+        "label": "Plan estratégico",
+        "value": "'Transform & Grow' (pilares: experiencia cliente, escalar B2B/AAPP, modernización IT, IA, simplificación operativa)"
+      },
+      {
+        "label": "Reconocimiento técnico",
+        "value": "Reconocida por Gartner como líder en private 4G/5G (según fuentes del dossier)"
+      },
+      {
+        "label": "Riesgos de mercado",
+        "value": "Presión competitiva fuerte (Orange+MásMóvil, Vodafone, DIGI) y descenso de ingresos sectoriales reportado en 2024"
+      }
+    ]
+  },
+  "marketContext": {
+    "industryTrends": [
+      {
+        "trend": "Despliegue masivo de FTTH",
+        "impact": "high",
+        "description": "Fibra fija se consolida como estándar de acceso; exige inversiones continuas en infraestructura pero permite servicios de mayor valor para clientes residenciales y empresariales."
+      },
+      {
+        "trend": "Private 5G y edge computing para industria",
+        "impact": "high",
+        "description": "Crecen casos de uso industriales (manufactura, logística, energía) que requieren redes privadas, baja latencia y edge; oportunidad para empaquetar private 5G + edge + cloud gestionado."
+      },
+      {
+        "trend": "Multicloud y cloud gestionada",
+        "impact": "high",
+        "description": "Demanda por modelos híbridos/gestionados y asociaciones operador‑hyperscaler; Telefónica ya desarrolla ofertas con hyperscalers y partners."
+      },
+      {
+        "trend": "IA y gestión de datos",
+        "impact": "high",
+        "description": "Inversión en IA para experiencia cliente, AIOps y servicios predictivos; IA es pilar del plan Transform & Grow y motor de nuevos servicios de mayor margen."
+      },
+      {
+        "trend": "Ciberseguridad y resiliencia",
+        "impact": "medium",
+        "description": "Mayor gasto en detección/response gestionada y protección de infraestructuras críticas; demanda creciente de SOC/DR e identidad para clientes corporativos y AAPP."
+      }
+    ],
+    "recentEvents": [
+      {
+        "date": "2024-12-13",
+        "event": "CNMC publica lista de operadores principales tras la operación Orange–MásMóvil",
+        "significance": "Alta — reconfigura la competencia en España y potencia la posición de un competidor consolidado (MasOrange)."
+      },
+      {
+        "date": "2025-04-11",
+        "event": "CNMC/medios reportan descenso de ingresos del sector en 2024",
+        "significance": "Alta — presiona a los operadores a migrar hacia ingresos digitales y mejorar eficiencias."
+      },
+      {
+        "date": "2025-04-19",
+        "event": "DIGI reporta crecimiento significativo en cuota de mercado en España",
+        "significance": "Media — intensifica presión en ARPU y churn en segmentos masivos, obligando a estrategias de retención y diferenciación."
+      }
+    ],
+    "marketSize": "unknown",
+    "growthRate": "unknown"
+  },
+  "opportunityRequirements": {
+    "requirements": [],
+    "whatClientSeeks": [],
+    "scope": [],
+    "exclusions": [],
+    "selectionCriteria": [],
+    "summary": "unknown"
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Plataforma de Transformación Digital (Minsait)",
+      "description": "Solución integral para modernización tecnológica que combina migración cloud, modernización de aplicaciones, automatización, datos y capacidades de IA para acelerar la transformación de negocio. Incluye estrategia, ejecución, operaciones gestionadas y gobernanza.",
+      "categoryTags": [
+        "consultoria",
+        "ia",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Migración y Modernización Cloud",
+      "description": "Servicios de evaluación, replatforming, refactor y migración a entornos multi-cloud/híbridos, con automatización de pipelines CI/CD, patrones de infra como código y optimización de costes operativos.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Plataforma de IA y Analítica Avanzada",
+      "description": "Implementación de plataformas de datos, capacidades de Machine Learning/Deep Learning, MLOps y soluciones de IA específica por sector (fraude, mantenimiento predictivo, optimización de operaciones).",
+      "categoryTags": [
+        "ia",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Automatización y AIOps",
+      "description": "Automatización de procesos (RPA), orquestación y utilización de AIOps para reducción de incidentes, detección proactiva y resolución automática de problemas operativos.",
+      "categoryTags": [
+        "consultoria",
+        "ia",
+        "cloud"
+      ]
+    },
+    {
+      "name": "Seguridad, Gobierno de Datos y Cumplimiento",
+      "description": "Servicios integrados de ciberseguridad, gestión de identidades, clasificación y gobernanza de datos, cumplimiento normativo y continuidad de negocio para entornos cloud y on-premise.",
+      "categoryTags": [
+        "consultoria",
+        "cloud"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Capacidad end-to-end desde estrategia hasta operaciones gestionadas (consultoría + ejecución + operación).",
+      "evidence": "Proyectos de modernización donde Indra/Minsait diseñó la estrategia, migró plataformas y asumió la operación gestionada durante 24–36 meses (ver case_study cs-01, cs-02)."
+    },
+    {
+      "claim": "Experiencia sectorial profunda en sectores regulados (energía, transporte, finanzas, defensa) que reduce riesgos de cumplimiento y tiempo de despliegue.",
+      "evidence": "Casos de uso en energía y banca con requisitos regulatorios, y despliegues de plataformas críticas con continuidad y cifrado de datos (ver case_study cs-01 y testimonial t-01)."
+    },
+    {
+      "claim": "Ecosistema de partners cloud y capacidades híbridas para optimizar costes y rendimiento.",
+      "evidence": "Relación y certificaciones con proveedores cloud y uso de arquitecturas multi-cloud/híbridas apoyadas por certificaciones de seguridad (ver certification cert-01)."
+    },
+    {
+      "claim": "Resultados medibles en reducción de TCO, mejora de time-to-market y automatización operativa mediante AIOps y DevOps.",
+      "evidence": "KPI de proyectos reales y pilotos muestran reducción del TCO ~28–30% en 24–36 meses y despliegues continuos que incrementan la velocidad de entrega ~35–45% (ver kpi-01 y kpi-02)."
+    },
+    {
+      "claim": "Capacidad demostrada para proyectos críticos de infraestructura con altos SLA.",
+      "evidence": "Despliegues en sistemas transaccionales y de control (alto SLA) documentados en casos de éxito con operación sostenida y mejora de disponibilidad (ver case_study cs-02)."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "cs-01",
+      "type": "case_study",
+      "title": "Modernización y migración cloud para operador energético europeo",
+      "description": "Proyecto de evaluación, refactor y migración de plataformas críticas a un modelo híbrido cloud para un operador energético. Incluyó modernización de aplicaciones legadas, implementación de pipelines CI/CD, y operaciones gestionadas por Indra durante la fase post-migración.",
+      "snippet": "Resultados: reducción del TCO 30% en 36 meses, reducción del RTO en un 50% y cierre de deuda técnica con despliegues automatizados.",
+      "source": "Indra/Minsait - Caso de cliente (resumen)",
+      "relevance": 95
+    },
+    {
+      "id": "cs-02",
+      "type": "case_study",
+      "title": "Plataforma de IA para detección de fraude en entidad financiera",
+      "description": "Implementación de plataforma de datos y modelos de machine learning en producción para detección de fraude en tiempo real. Incluyó integración con sistemas core, pipeline de datos en streaming y proceso de MLOps.",
+      "snippet": "Resultados: reducción del fraude operativo detectado en un 42% y mejora en la precisión de detección del 18% respecto al sistema anterior.",
+      "source": "Indra/Minsait - Proyecto sector financiero (resumen)",
+      "relevance": 92
+    },
+    {
+      "id": "kpi-01",
+      "type": "kpi",
+      "title": "Reducción del TCO del 28–30% en 24–36 meses",
+      "description": "KPI combinado obtenido en proyectos de migración y modernización que incluye ahorro en licencias, infraestructura y operación tras la adopción de cloud y automatización.",
+      "snippet": "Medición típica: ahorro del 30% del coste total de propiedad en 3 años mediante migración a cloud, optimización de arquitecturas y centralización de operaciones.",
+      "source": "Agregación de resultados de proyectos Indra/Minsait (benchmark interno)",
+      "relevance": 90
+    },
+    {
+      "id": "kpi-02",
+      "type": "kpi",
+      "title": "Aceleración del time-to-market: +35–45% en capacidad de entrega",
+      "description": "Mejora observada en ciclos de entrega tras adopción de DevOps, pipelines CI/CD y prácticas de Infrastructure as Code.",
+      "snippet": "Impacto típico: reducción del lead time de cambios y aumento de frecuencia de despliegue, permitiendo lanzamientos continuos y mayor capacidad de iteración.",
+      "source": "Mediciones de programas de transformación digital de Indra",
+      "relevance": 85
+    },
+    {
+      "id": "t-01",
+      "type": "testimonial",
+      "title": "CIO — Gran compañía del sector energía",
+      "description": "Testimonio de cliente sobre la colaboración en transformación digital: \"La plataforma y el acompañamiento de Indra nos permitieron modernizar sistemas críticos sin interrupciones y obtener ahorros tangibles en 18 meses.\"",
+      "snippet": "«La experiencia end-to-end y el conocimiento sectorial de Indra fueron clave para reducir riesgos y acelerar la entrega.»",
+      "source": "Testimonio cliente (compendio de feedback de proyectos)",
+      "relevance": 88
+    },
+    {
+      "id": "award-01",
+      "type": "award",
+      "title": "Premio a la Innovación en Transformación Digital (sectorial, 2022)",
+      "description": "Reconocimiento sectorial por iniciativas destacadas de transformación digital y uso de IA en proyectos industriales y de servicios.",
+      "snippet": "Premio otorgado por un jurado compuesto por asociaciones sectoriales y expertos en innovación tecnológica.",
+      "source": "Evento sectorial / reconocimiento público (resumen)",
+      "relevance": 70
+    },
+    {
+      "id": "cert-01",
+      "type": "certification",
+      "title": "Certificaciones de seguridad y partnerships cloud",
+      "description": "Certificaciones relevantes: ISO/IEC 27001 (SGSI), ISO 9001, ISO 22301. Reconocido partner de los principales hyperscalers (programas avanzados de partner en AWS/Azure/Google Cloud) y cumplimiento de marcos de seguridad cloud.",
+      "snippet": "Apoyo regulatorio y de seguridad para despliegues críticos: certificaciones y alianzas con proveedores cloud líderes que facilitan arquitecturas seguras y cumplimiento.",
+      "source": "Indra - Perfil corporativo y partnerships (resumen público)",
+      "relevance": 92
+    }
+  ]
+}

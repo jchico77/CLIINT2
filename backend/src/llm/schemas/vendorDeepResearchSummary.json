@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_summary_phase",
+  "type": "object",
+  "properties": {
+    "vendorName": {
+      "type": "string"
+    },
+    "websiteUrl": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^https?://[^\\s\"]+$"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "businessModel": {
+      "type": "string"
+    },
+    "valueProposition": {
+      "type": "string"
+    },
+    "marketSegments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "vendorName",
+    "websiteUrl",
+    "summary",
+    "businessModel",
+    "valueProposition",
+    "marketSegments"
+  ],
+  "additionalProperties": false
+}
+

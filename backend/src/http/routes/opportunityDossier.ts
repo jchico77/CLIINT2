@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import multer from 'multer';
 import { createDossierTextChunkSchema } from '../../domain/validators/opportunityDossierValidators';
 import { OpportunityDossierService } from '../../domain/services/opportunityDossierService';
@@ -6,7 +7,7 @@ import { ValidationError } from '../../domain/errors/AppError';
 import { logger } from '../../lib/logger';
 import { FileSearchService } from '../../llm/fileSearchService';
 
-const opportunityDossierRouter = Router({ mergeParams: true });
+const opportunityDossierRouter: ExpressRouter = Router({ mergeParams: true });
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {

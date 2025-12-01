@@ -7,7 +7,11 @@ import {
 import { LLMError } from '../domain/errors/AppError';
 import { logger } from '../lib/logger';
 import { logPhaseStart } from './phaseLogger';
-import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
+import {
+  buildToolsForModel,
+  getModelCapabilities,
+  requiresLegacyJsonSchemaFormat,
+} from './modelCapabilities';
 
 const openai = new OpenAI({
   apiKey: llmConfig.openaiApiKey,
@@ -227,6 +231,16 @@ export async function runClientDeepResearch(
     );
   }, HEARTBEAT_INTERVAL_MS);
 
+  const jsonSchemaDefinition = {
+    name: 'client_deep_research_report',
+    schema: reportSchema,
+  };
+  const schemaFormat = {
+    type: 'json_schema' as const,
+    ...jsonSchemaDefinition,
+  };
+  const useLegacyResponseFormat = requiresLegacyJsonSchemaFormat(model);
+
   try {
     const response = (await withTimeout(
       openai.responses.create(
@@ -246,13 +260,18 @@ export async function runClientDeepResearch(
               content: [{ type: 'input_text', text: buildPrompt(input) }],
             },
           ],
-          text: {
-            format: {
-              type: 'json_schema',
-              name: 'client_deep_research_report',
-              schema: reportSchema,
-            },
-          },
+          ...(useLegacyResponseFormat
+            ? {
+                response_format: {
+                  type: 'json_schema',
+                  json_schema: jsonSchemaDefinition,
+                },
+              }
+            : {
+                text: {
+                  format: schemaFormat,
+                },
+              }),
         } as unknown as OpenAI.Responses.ResponseCreateParams,
       ),
       timeoutMs,

@@ -80,6 +80,108 @@ export interface CreateOpportunityInput {
 }
 
 // Vendor
+export type VendorDeepResearchStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
+
+export interface VendorDeepResearchNewsItem {
+  title: string;
+  source: string;
+  date: string;
+  url?: string;
+  summary: string;
+  impact?: string;
+}
+
+export interface VendorDeepResearchVideoItem {
+  title: string;
+  channel: string;
+  publishedAt: string;
+  url: string;
+  description: string;
+  angle?: string;
+}
+
+export interface VendorDeepResearchSocialSignal {
+  platform: string;
+  summary: string;
+  date?: string;
+  url?: string;
+  relevance?: 'high' | 'medium' | 'low';
+}
+
+export interface VendorDeepResearchService {
+  name: string;
+  description: string;
+  categoryTags: string[];
+  keyFeatures: string[];
+  maturity?: string;
+}
+
+export interface VendorDeepResearchCaseStudy {
+  title: string;
+  client: string;
+  challenge: string;
+  solution: string;
+  results: string[];
+  metrics?: string[];
+  source?: string;
+}
+
+export interface VendorDeepResearchPartnership {
+  partner: string;
+  type: string;
+  description: string;
+  announcedAt?: string;
+}
+
+export interface VendorDeepResearchAward {
+  name: string;
+  organization?: string;
+  year?: string;
+  description?: string;
+}
+
+export interface VendorDeepResearchSource {
+  title: string;
+  url?: string;
+  snippet: string;
+}
+
+export interface VendorDeepResearchReport {
+  vendorName: string;
+  websiteUrl: string;
+  summary: string;
+  businessModel: string;
+  valueProposition: string;
+  marketSegments: string[];
+  servicePortfolio: VendorDeepResearchService[];
+  caseStudies: VendorDeepResearchCaseStudy[];
+  differentiators: Array<{
+    claim: string;
+    evidence: string;
+    proofPoint?: string;
+    sourceUrl?: string;
+  }>;
+  partnerships: VendorDeepResearchPartnership[];
+  awards: VendorDeepResearchAward[];
+  newsHighlights: VendorDeepResearchNewsItem[];
+  videoHighlights: VendorDeepResearchVideoItem[];
+  socialSignals: VendorDeepResearchSocialSignal[];
+  sources: VendorDeepResearchSource[];
+}
+
+export interface VendorAnalysisRecord {
+  id: string;
+  vendorId: string;
+  status: VendorDeepResearchStatus;
+  errorMessage?: string | null;
+  report?: VendorDeepResearchReport | null;
+  llmModelUsed?: string | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Vendor {
   id: string;
   name: string;
@@ -87,6 +189,11 @@ export interface Vendor {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  analysisStatus?: VendorDeepResearchStatus;
+  analysisStartedAt?: string | null;
+  analysisCompletedAt?: string | null;
+  analysisErrorMessage?: string | null;
+  analysisModelUsed?: string | null;
 }
 
 export interface CreateVendorInput {
@@ -409,28 +516,35 @@ export type AdminPhaseId =
   | 'clientResearch'
   | 'vendorResearch'
   | 'fitAndStrategy'
-  | 'proposalOutline';
+  | 'proposalOutline'
+  | 'vendorDeepResearch';
 
 export type AdminModelOption =
-  | 'gpt-5.1'
-  | 'gpt-5.1-mini'
-  | 'gpt-5-mini'
   | 'gpt-4o'
   | 'gpt-4o-mini'
-  | 'o3-mini';
+  | 'gpt-4.1'
+  | 'gpt-4.1-mini'
+  | 'gpt-5'
+  | 'gpt-5-mini'
+  | 'gpt-5-nano'
+  | 'gpt-5.1'
+  | 'o3-mini'
+  | 'o3-deep-research';
 export type AdminReasoningEffort = 'low' | 'medium' | 'high';
-export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy';
+export type AdminTimeoutId = 'deepResearch' | 'agent' | 'fitStrategy' | 'vendorDeepResearch';
 export type AdminFeatureToggleId = 'webSearch' | 'fileSearch' | 'dossierContext' | 'proposalBeta';
 export type AdminTokenLimitId =
   | 'deepResearchTokens'
   | 'clientResearchTokens'
   | 'vendorResearchTokens'
-  | 'fitStrategyTokens';
+  | 'fitStrategyTokens'
+  | 'vendorDeepResearchTokens';
 export type AdminTemperatureId =
   | 'deepResearchTemp'
   | 'clientResearchTemp'
   | 'vendorResearchTemp'
-  | 'fitStrategyTemp';
+  | 'fitStrategyTemp'
+  | 'vendorDeepResearchTemp';
 export type AdminSectionLimitId =
   | 'maxStakeholders'
   | 'maxCompetitors'
@@ -461,6 +575,15 @@ export interface AdminSettings {
   dashboardVisibility: Record<AdminDashboardSectionId, boolean>;
   sandboxMode: boolean;
   preferredLanguage: AdminLanguageOption;
+  vendorAnalysis: {
+    autoRunOnCreate: boolean;
+  };
+  vendorDeepResearchParallel: {
+    gpt4ParallelEnabled: boolean;
+    gpt5ParallelEnabled: boolean;
+    maxConcurrentPhases: number;
+    interPhaseDelayMs: number;
+  };
 }
 
 export interface DashboardMetricsFilters {
@@ -528,6 +651,78 @@ export interface DashboardMetricsResponse {
     status?: DashboardRunStatus;
     from: string | null;
     to: string | null;
+  };
+  vendorDeepResearch: {
+    summary: {
+      totalAnalyses: number;
+      completed: number;
+      failed: number;
+      avgDurationMs: number | null;
+    };
+    models: Array<{
+      model: string;
+      totalAnalyses: number;
+      avgDurationMs: number | null;
+    }>;
+    recent: Array<{
+      id: string;
+      vendorId: string;
+      vendorName: string;
+      status: VendorDeepResearchStatus;
+      llmModelUsed: string | null;
+      durationMs: number | null;
+      startedAt: string | null;
+      completedAt: string | null;
+      errorMessage: string | null;
+      analysisId: string | null;
+    }>;
+    timings: {
+      phases: Array<{
+        phase: 'overview' | 'portfolio' | 'proofPoints' | 'signals';
+        phaseLabel: string;
+        avgDurationMs: number | null;
+        samples: number;
+        subPhases: Array<{
+          subPhase:
+            | 'summary'
+            | 'portfolio'
+            | 'evidence-cases'
+            | 'evidence-partnerships'
+            | 'evidence-awards'
+            | 'signals-news'
+            | 'signals-videos'
+            | 'signals-social';
+          subPhaseLabel: string;
+          avgDurationMs: number | null;
+          samples: number;
+        }>;
+      }>;
+    };
+    recentPhaseRuns: Array<{
+      analysisId: string;
+      vendorId: string;
+      vendorName: string;
+      llmModelUsed: string | null;
+      status: VendorDeepResearchStatus;
+      completedAt: string | null;
+      phases: Array<{
+        phase: 'overview' | 'portfolio' | 'proofPoints' | 'signals';
+        phaseLabel: string;
+        subPhases: Array<{
+          subPhase:
+            | 'summary'
+            | 'portfolio'
+            | 'evidence-cases'
+            | 'evidence-partnerships'
+            | 'evidence-awards'
+            | 'signals-news'
+            | 'signals-videos'
+            | 'signals-social';
+          subPhaseLabel: string;
+          durationMs: number | null;
+        }>;
+      }>;
+    }>;
   };
 }
 

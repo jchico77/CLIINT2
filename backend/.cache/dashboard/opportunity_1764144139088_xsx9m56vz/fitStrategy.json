@@ -1,0 +1,413 @@
+{
+  "stakeholderMap": {
+    "stakeholders": [
+      {
+        "id": "stakeholder_1",
+        "name": "Marc Murtra",
+        "role": "Executive Chairman & CEO",
+        "department": "Group Executive Committee",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Nombrado presidente ejecutivo en 2025; procedente de la presidencia de Indra, aporta visión para consolidación europea y alianzas industriales. Probable interés en relaciones estratégicas con proveedores nacionales y en acelerar eficiencia y consolidación. citeturn0news13turn1search6",
+        "priorities": [
+          "Revisión estratégica 'Transform & Grow'",
+          "Consolidación y alianzas industriales en Europa",
+          "Rentabilidad y disciplina en inversiones"
+        ]
+      },
+      {
+        "id": "stakeholder_2",
+        "name": "Emilio Gayo",
+        "role": "Chief Operating Officer (COO)",
+        "department": "Operations / gCTIO oversight",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Nombrado COO en marzo 2025; responsable operativo de unidades clave (incluye Telefónica Tech y B2B). Alto poder de decisión sobre proyectos de modernización y delivery. citeturn1search6turn1news12",
+        "priorities": [
+          "Eficiencias operativas",
+          "Escalar B2B y Telefónica Tech",
+          "Modernización tecnológica de plataformas y redes"
+        ]
+      },
+      {
+        "id": "stakeholder_3",
+        "name": "Sofía Collado",
+        "role": "CEO, Telefónica Tech",
+        "department": "Telefónica Tech (B2B & AAPP channel)",
+        "influence": "high",
+        "stance": "champion",
+        "notes": "Se incorporó al Comité Ejecutivo en abril 2025 como CEO de Telefónica Tech; proviene de Indra (CHRO/Minsait), por lo que existe afinidad con capacidades y equipo de Indra/Minsait. Actúa además como canal natural para propuestas de plataformas digitales gestionadas. citeturn1search1turn1search3",
+        "priorities": [
+          "Escalar cartera de servicios gestionados (cloud, seguridad, IoT)",
+          "Acelerar monetización B2B",
+          "Aumentar time-to-market y operaciones gestionadas"
+        ]
+      },
+      {
+        "id": "stakeholder_4",
+        "name": "Sebas Muriel",
+        "role": "Chief Digital Officer (CDO)",
+        "department": "Digital / Platforms / Open Gateway",
+        "influence": "high",
+        "stance": "supporter",
+        "notes": "Desde abril 2025 es CDO y lidera estrategia de plataformas, datos e innovación (incluye Open Gateway). Será interlocutor clave en propuestas de plataformas digitales, APIs y modelos de monetización digital. citeturn1search0turn1search2",
+        "priorities": [
+          "Plataformas (Open Gateway) y API-driven offerings",
+          "Data & AI para monetización de servicios",
+          "Resultados comerciales sobre iniciativas de innovación"
+        ]
+      },
+      {
+        "id": "stakeholder_5",
+        "name": "Borja Ochoa",
+        "role": "CEO Telefónica España",
+        "department": "Telefónica España (local P&L)",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Asumió la dirección de Telefónica España en la reorganización de 2025; previo paso por Indra. Interés en iniciativas que reduzcan TCO y mejoren experiencia cliente en mercado español. citeturn0search2turn1news12",
+        "priorities": [
+          "Mejorar ARPU y retención en B2C",
+          "Asegurar eficiencia en operaciones en España",
+          "Colaboraciones con proveedores con presencia local"
+        ]
+      },
+      {
+        "id": "stakeholder_6",
+        "name": "Óscar Candiles",
+        "role": "Chief Revenue Officer / Director de Ingresos (Telefónica España)",
+        "department": "Revenue / Commercial",
+        "influence": "medium",
+        "stance": "supporter",
+        "notes": "Nuevo director de ingresos en la filial española; responsable de alinear comercial y monetización (residencial, empresas, mayorista). Clave para propuestas con objetivos de monetización B2B. citeturn1news13",
+        "priorities": [
+          "Monetización de productos y servicios B2B",
+          "Paquetes comerciales que aceleren ingresos",
+          "Maximizar ecosistema de partners para acelerar ventas"
+        ]
+      },
+      {
+        "id": "stakeholder_7",
+        "name": "Juan Azcue",
+        "role": "Chief Strategy & Development Officer",
+        "department": "Strategy & M&A",
+        "influence": "medium",
+        "stance": "neutral",
+        "notes": "Involucrado en la definición de roadmaps estratégicos y posibles alianzas y transacciones corporativas; evaluará el encaje estratégico y riesgos regulatorios. citeturn0search3",
+        "priorities": [
+          "Revisión estratégica y prioridad de inversiones",
+          "Alineamiento con objetivo de consolidación en Europa",
+          "Mitigación de riesgo regulatorio y alineamiento con SEPI"
+        ]
+      },
+      {
+        "id": "stakeholder_8",
+        "name": "Head of Procurement / TI (realistic: Responsable de Compras TI España)",
+        "role": "Head of Procurement - IT & Strategic Sourcing",
+        "department": "Procurement / IT Sourcing",
+        "influence": "high",
+        "stance": "skeptic",
+        "notes": "Interlocutor clave en modelos contractuales, marcos de contratación y condiciones de riesgo/política de proveedores nacionales vs. internacionales. Su prioridad es gobernanza, precio y cumplimiento (ENS/GDPR).",
+        "priorities": [
+          "Framework agreements y cumplimiento regulatorio",
+          "Optimización de coste total (TCO) y SLAs",
+          "Mitigación de riesgo contractual y continuidad de servicio"
+        ]
+      }
+    ],
+    "summary": "Mapa de stakeholders centrado en el nuevo comité ejecutivo de Telefónica (2025), con Marc Murtra a la cabeza y figuras clave operativas y digitales (Emilio Gayo, Sofía Collado, Sebas Muriel). Telefónica Tech (liderada por Sofía Collado) es el canal natural para propuestas de plataformas gestionadas; el equipo comercial y de estrategia (Óscar Candiles, Juan Azcue) y procurement decidirán condi-ciones comerciales y modelos de venta. Muchas de las personas clave tienen historial o vínculos con Indra/Minsait, lo que facilita el diálogo inicial pero no anula requisitos formales de procurement y gobernanza. citeturn0news13turn1search6turn1search1"
+  },
+  "competitiveLandscape": {
+    "clientCompetitors": [
+      {
+        "id": "comp_1",
+        "name": "MásOrange (Orange España + MásMóvil consolidated)",
+        "type": "client_competitor",
+        "description": "Entidad resultante de la fusión entre Orange España y MásMóvil (operación aprobada por reguladores) que ha reforzado la competencia en España y acelera ofertas convergentes y fibra. Tiene alcance nacional y ambición de liderazgo en fibra y bundles. citeturn2search0turn2search1",
+        "strengths": [
+          "Escala de red y base de clientes ampliada",
+          "Acceso a capital y sinergias tras la fusión",
+          "Oferta convergente agresiva en precio/FTTH"
+        ],
+        "weaknesses": [
+          "Proceso de integración post-fusión con retos operativos",
+          "Necesidad de desinversiones/spectrum divestments que generan complejidad"
+        ]
+      },
+      {
+        "id": "comp_2",
+        "name": "Vodafone España (Zegona-owned)",
+        "type": "client_competitor",
+        "description": "Operador con fuerte foco en servicios empresariales y recientes reestructuraciones; participa en alianzas de infraestructura de fibra y está profesionalizando su oferta B2B. citeturn2search7turn2search6",
+        "strengths": [
+          "Oferta sólida en IoT/enterprise y presencia internacional",
+          "Capacidad de inversión en redes y partnerships"
+        ],
+        "weaknesses": [
+          "Reestructuración y necesidad de mejorar rentabilidad",
+          "Dependencia de decisiones de su nuevo owner en UK/mercado"
+        ]
+      },
+      {
+        "id": "comp_3",
+        "name": "Digi (MVNO / challenger)",
+        "type": "client_competitor",
+        "description": "Operador alternativo y MVNO que gana presión competitiva en precios y en segmentos como móvil low-cost; puede frenar crecimiento de ARPU para incumbentes. citeturn2search0turn2search3",
+        "strengths": [
+          "Modelo de coste bajo y ofertas agresivas",
+          "Crecimiento rápido en segmentos sensibles al precio"
+        ],
+        "weaknesses": [
+          "Menor oferta convergente y capacidad de inversión en infraestructura propia"
+        ]
+      }
+    ],
+    "vendorCompetitors": [
+      {
+        "id": "comp_v1",
+        "name": "Accenture",
+        "type": "vendor_competitor",
+        "description": "Consultora global con práctica fuerte en telecom y experiencia en modernización de core, cloud y AI para operadores. Fuerte capacidad de integración y partnerships cloud. citeturn5search3turn5search7",
+        "strengths": [
+          "Fuerte músculo de consultoría estratégica y transformación",
+          "Amplia experiencia en telcos globales y ecosistema cloud"
+        ],
+        "weaknesses": [
+          "Costes premium; enfoque global que a veces prioriza plataformas propietarias",
+          "Competencia por talento local en España"
+        ]
+      },
+      {
+        "id": "comp_v2",
+        "name": "IBM",
+        "type": "vendor_competitor",
+        "description": "Proveedor de servicios cloud híbrido, AI y consultoría para operadores; participa en iniciativas públicas sobre modelos core y AI en España. citeturn5search7",
+        "strengths": [
+          "Capacidades en infraestructura híbrida, AI empresarial y proyectos a gran escala",
+          "Relaciones con administraciones públicas y grandes clientes"
+        ],
+        "weaknesses": [
+          "Transformación de marca y reorganización que pueden impactar velocidad de delivery",
+          "Competencia con partners cloud hyperscaler"
+        ]
+      },
+      {
+        "id": "comp_v3",
+        "name": "Capgemini / Atos / NTT Data (regional SIs)",
+        "type": "vendor_competitor",
+        "description": "Grupos europeos y regionales que ofrecen integración, cloud, ciber y consultoría para telcos. En España compiten por grandes contratos de modernización y outsourcing. citeturn5search1turn3search0",
+        "strengths": [
+          "Fuerte presencia local/regional y conocimiento regulatorio",
+          "Portafolio de servicios integrados (BPO, cloud, ciber)"
+        ],
+        "weaknesses": [
+          "Capacidad variable en innovación rápida en IA nativa",
+          "Presión de precio y margin squeeze en grandes contratos"
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "alt_1",
+        "name": "Build in-house (Telefónica Tech-led)",
+        "type": "alternative_solution",
+        "description": "Telefónica utiliza su own Telefónica Tech como proveedor principal (plataformas gestionadas). Ventaja de control y captura de margen interior; riesgo de coste y tiempo si faltan capacidades específicas."
+      },
+      {
+        "id": "alt_2",
+        "name": "Consortium liderado por hyperscaler + SI",
+        "type": "alternative_solution",
+        "description": "Formar alianza entre un hyperscaler (AWS/Azure/Google) y otro SI (Accenture/IBM) para combinar cloud nativo y experiencia telco."
+      },
+      {
+        "id": "alt_3",
+        "name": "No hacer nada / incrementos tácticos",
+        "type": "alternative_solution",
+        "description": "Mejoras puntuales en lugar de plataforma integral: menor inversión inicial, pero riesgo de pérdida de competitividad y coste operativo acumulado."
+      }
+    ],
+    "summary": "El mercado español de telecoms se está consolidando (p. ej. fusión Orange–MásMóvil) y la presión competitiva (Vodafone, challengers como Digi) exige a Telefónica acelerar modernización y monetización B2B. Indra (Minsait) compite con grandes integradores globales (Accenture, IBM, Capgemini, Atos) pero tiene ventaja local, histórico de relaciones y casos en modernización; las alternativas incluyen el build-in-house vía Telefónica Tech o consorcios hyperscaler+SI. Para ganar la oportunidad, Indra debe explotar su posicionamiento local y relaciones ejecutivas al tiempo que demuestra capacidad cloud/AI escalable y modelos comerciales alineados con Telefónica Tech. citeturn2search0turn6view0turn5search7"
+  },
+  "vendorFitAndPlays": {
+    "overallFit": "high",
+    "fitScore": 78,
+    "fitDimensions": [
+      {
+        "dimension": "Technical Capability (cloud, IA, modernización core)",
+        "score": 80,
+        "reasoning": "Indra/Minsait dispone de capacidades demostradas en modernización de core, migración a cloud, automatización RPA y programas de transformación con KPIs medibles (TCO, frecuencia de despliegue). Además, Minsait opera en sectores regulados y de infraestructuras, alineado con requisitos telco. citeturn6view0"
+      },
+      {
+        "dimension": "Business Alignment (estrategia 'Transform & Grow')",
+        "score": 85,
+        "reasoning": "Al ser actor español con historial local y ejecutivos con doble vínculo (varios directivos de Telefónica provienen de Indra), Indra tiene fuerte alineamiento estratégico para ofrecer soluciones que prioricen eficiencia, monetización B2B y gobernanza local. Esto reduce fricción comercial y política. citeturn1search1turn0news13"
+      },
+      {
+        "dimension": "Delivery Scale & Operations",
+        "score": 75,
+        "reasoning": "Indra tiene experiencia en proyectos a gran escala (transportes, banca, infraestructuras). No obstante, frente a hyperscaler+grandes consultoras, puede necesitar refuerzos en capacidades cloud-native y ecosistema (AWS/Azure/Google) para cargas telco masivas. citeturn6view0turn3search0"
+      },
+      {
+        "dimension": "Commercial / Pricing Fit",
+        "score": 70,
+        "reasoning": "Indra compite en precio con SIs europeos y globales; su ventaja local puede justificar modelos de valor, pero Telefónica procurement será exigente en TCO/SLAs. Se requiere flexibilidad en modelos de riesgo compartido y outcome-based pricing."
+      },
+      {
+        "dimension": "Cultural & Political Fit",
+        "score": 72,
+        "reasoning": "Presencia local y vínculos con la nueva cúpula directiva facilitan la confianza, pero la proximidad también introduce riesgo de escrutinio por favoritismos o conflicto de intereses; es necesario saturar gobernanza y transparencia. citeturn0news13"
+      }
+    ],
+    "recommendedPlays": [
+      {
+        "id": "play_1",
+        "name": "Telefónica Tech Co‑Build & Channel Play",
+        "description": "Posicionar la Plataforma de Transformación Digital como oferta co‑desarrollada con Telefónica Tech: Indra aporta fábrica de modernización (core, automación, IA), Telefónica Tech gestiona la comercialización y operación gestionada a clientes B2B/AAPP.",
+        "rationale": "Telefónica Tech es canal y arquitectura natural; co‑build reduce fricción de procurement, acelera go‑to‑market y facilita venta cruzada a la cartera B2B. Además, aprovecha la relación personal entre equipos ejecutivos. citeturn1search1turn6view0",
+        "targetStakeholders": [
+          "stakeholder_3",
+          "stakeholder_4",
+          "stakeholder_2",
+          "stakeholder_6"
+        ],
+        "successFactors": [
+          "Memorandum de entendimiento (MoU) claro con Telefónica Tech que defina ownership comercial y reparto de ingresos",
+          "Piloto conjunto con cliente B2B vertical (p.ej. administración pública o sector financiero) que demuestre KPIs en 3–6 meses",
+          "Modelo contractual claro (SLA, IP, data governance) y transparencia hacia procurement"
+        ]
+      },
+      {
+        "id": "play_2",
+        "name": "Outcome‑based Modernization Pilot (core + cloud + CI/CD)",
+        "description": "Proponer un piloto de modernización 'Factory' para un dominio de negocio (p. ej. BSS/OSS o plataforma B2B mayorista) con objetivos medibles: TCO -25–30% en 36 meses, time-to-market -40% y despliegues x3.",
+        "rationale": "Case studies de Indra muestran mejoras similares; un piloto con objetivos contractuales reduce riesgo y crea referencia interna replicable. Permite demostrar ventajas técnicas y comerciales frente a SIs rivales. (Use los KPIs de casos previos para la baseline).",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_1",
+          "stakeholder_7"
+        ],
+        "successFactors": [
+          "Acceso a un dominio productivo con datos y equipo conjunto de delivery",
+          "SLA de negocio y métricas pre‑acordadas (TCO, MTTR, frecuencia de despliegue)",
+          "Financiación o modelo de riesgo compartido (capex vs opex, milestone payments)"
+        ]
+      },
+      {
+        "id": "play_3",
+        "name": "AI & Automation Ops for Network & Back‑office (RPA+AI Ops)",
+        "description": "Ofrecer una solución empaquetada de automatización RPA + AIOps para operaciones de red y back‑office (NOC/OSS y procesos comerciales), con retorno en 9–12 meses para operaciones donde Indra tiene experiencia.",
+        "rationale": "RPA y AIOps muestran ROI rápido y ayudan a Telefónica a reducir OPEX y mejorar SLA; encaja con prioridades de eficiencia operativa del COO. Los resultados rápidos facilitan la escalada comercial. citeturn6view0",
+        "targetStakeholders": [
+          "stakeholder_2",
+          "stakeholder_8",
+          "stakeholder_5"
+        ],
+        "successFactors": [
+          "Listado prioritario de procesos a automatizar con estimación de ahorro",
+          "Integración con herramientas OSS/BSS existentes y data pipelines",
+          "Piloto medible con KPIs de reducción de tiempos y errores"
+        ]
+      },
+      {
+        "id": "play_4",
+        "name": "Sovereign AI & Data Governance Joint Offer",
+        "description": "Proponer una oferta de 'sovereign AI' y modelos de datos en cloud europeo (cumpliendo ENS/GDPR) que combine modelos generativos de propósito telco con controles locales y gobierno compartido.",
+        "rationale": "Dado el foco en autonomía estratégica y la intervención pública (SEPI stake) Telefónica estará sensible a soluciones que garanticen soberanía de datos y cumplimiento; Indra puede posicionarse como partner local para este requisito. citeturn0news13turn6view0",
+        "targetStakeholders": [
+          "stakeholder_1",
+          "stakeholder_4",
+          "stakeholder_8"
+        ],
+        "successFactors": [
+          "Arquitectura técnica que demuestre data residency y controles ENS/GDPR",
+          "Casos de uso concretos (customer experience, fraud detection, network optimisation)",
+          "Alineamiento con responsables legales y de compliance de Telefónica"
+        ]
+      }
+    ],
+    "summary": "El encaje entre Indra y Telefónica es fuerte: Indra aporta capacidades técnicas y conocimiento regulatorio local, y varias figuras clave de Telefónica provienen de Indra, lo que facilita las conversaciones. Recomendamos plays centrados en co‑construcción con Telefónica Tech, pilotos outcome‑based con KPIs contractuales, automatización operativa con ROI rápido y una oferta de AI soberana para mitigar riesgos regulatorios y políticos. Cada play debe incluir un piloto de 3–6 meses, métricas de negocio claras y modelos comerciales de riesgo compartido."
+  },
+  "gapsAndQuestions": {
+    "gaps": [
+      {
+        "id": "gap_1",
+        "topic": "Presupuesto y roadmap 2025–2026 para Transformación Digital",
+        "impact": "high",
+        "description": "No hay visibilidad sobre el presupuesto asignado por Telefónica para plataformas de modernización en 2025–2026 ni prioridades temporales por unidad (Telefónica Tech vs. unidades operativas). Es crítico para dimensionar propuesta y modelo comercial.",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_2",
+        "topic": "Modelos de gobernanza y rol exacto de Telefónica Tech",
+        "impact": "high",
+        "description": "Falta claridad sobre si Telefónica Tech actuará como único integrador/operador gestionado o si Telefónica desea licenciar/operar soluciones con terceros; esto condiciona oferta conjunta (co‑build vs. subcontracting).",
+        "priorityLevel": "must"
+      },
+      {
+        "id": "gap_3",
+        "topic": "Incumbent contracts / marcos de proveedores",
+        "impact": "medium",
+        "description": "No se conoce la existencia de contratos marco o acuerdos preferentes (Accenture, IBM, Capgemini, hyperscalers) que puedan restringir la competencia o imponer condiciones específicas de subcontractación.",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_4",
+        "topic": "Regulatory & political constraints (involucramiento SEPI / posicionamiento soberano)",
+        "impact": "medium",
+        "description": "Dado el papel del estado y las sensibilidades sobre proveedores estratégicos, es necesario entender la postura de Telefónica ante proveedores locales vs. internacionales (exposición pública y requisitos de transparencia).",
+        "priorityLevel": "should"
+      },
+      {
+        "id": "gap_5",
+        "topic": "KPIs comerciales y timeline de decisiones",
+        "impact": "medium",
+        "description": "No hay visibilidad de KPIs exactos (TCO target, RTO/RPO, SLAs) que Telefónica exigirá ni del calendario (RFP windows, Q timelines) para adjudicación en 2025.",
+        "priorityLevel": "should"
+      }
+    ],
+    "questions": [
+      {
+        "id": "question_1",
+        "question": "¿Cuál es el presupuesto asignado a plataformas de modernización / cloud & AI (Telefónica Tech + unidades) para 2025–2026 y cómo está distribuido por unidades (España, B2B, Infraestructura)?",
+        "context": "Necesario para dimensionar alcance del piloto, evitar propuestas fuera de presupuesto y proponer modelos comerciales viables.",
+        "targetStakeholder": "stakeholder_7",
+        "isCritical": true
+      },
+      {
+        "id": "question_2",
+        "question": "¿Cuál será el rol comercial y operativo de Telefónica Tech en la entrega de la Plataforma de Transformación Digital: canal puro, socio co‑owner, o integrador/operador gestionado?",
+        "context": "Define estructura del go‑to‑market, reparto de ingresos, propiedad IP y modelo de servicio (managed services vs. licencias).",
+        "targetStakeholder": "stakeholder_3",
+        "isCritical": true
+      },
+      {
+        "id": "question_3",
+        "question": "¿Qué proveedores/hyperscalers y contratos incumbentes existen hoy sobre core, cloud y OSS/BSS que puedan condicionar la solución (por ejemplo acuerdos con Accenture, IBM, AWS, Azure)?",
+        "context": "Permite diseñar integraciones técnicas, evitar conflictos contractuales y proponer partnerships complementarios donde Indra actúe como lead o subcontratista.",
+        "targetStakeholder": "stakeholder_8",
+        "isCritical": true
+      },
+      {
+        "id": "question_4",
+        "question": "¿Qué KPIs concretos (TCO %, mejoras time-to-market, MTTR, NPS, ingresos B2B) considera Telefónica aceptables para aprobar un piloto y escalar a producción?",
+        "context": "Necesario para especificar objetivos del piloto outcome‑based y acordar métricas de éxito y milestones de pago.",
+        "targetStakeholder": "stakeholder_2",
+        "isCritical": true
+      },
+      {
+        "id": "question_5",
+        "question": "¿Existe alguna restricción o preferencia explícita por soluciones 'sovereign' / data residency que debamos incorporar en la arquitectura (por ejemplo requisitos ENS, colaboración con SEPI)?",
+        "context": "Define decisiones de arquitectura cloud (regional vs hyperscaler), controles de datos y partners locales requeridos.",
+        "targetStakeholder": "stakeholder_1",
+        "isCritical": false
+      },
+      {
+        "id": "question_6",
+        "question": "¿Qué verticales B2B prioriza Telefónica para 2025 (Administración Pública, Finanzas, Industria, Transporte) para escalar la plataforma y dónde necesitarían casos de referencia inmediatos?",
+        "context": "Permite proponer pilotos con impacto comercial rápido y adaptar los casos de uso (ej. facturación mayorista, eProcurement AAPP, servicios cloud para bancos).",
+        "targetStakeholder": "stakeholder_6",
+        "isCritical": false
+      }
+    ],
+    "summary": "Existen gaps críticos sobre presupuesto, rol de Telefónica Tech y contratos incumbentes que son 'must' para avanzar con una propuesta firme. Preguntas dirigidas al comité ejecutivo y procurement deben resolverse antes de avanzar con un pilot grande; respuestas permitirán ajustar alcance, modelo comercial y alianzas con hyperscalers o SIs complementarios."
+  }
+}

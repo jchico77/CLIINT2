@@ -10,7 +10,11 @@ import {
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
+import {
+  buildToolsForModel,
+  getModelCapabilities,
+  requiresLegacyJsonSchemaFormat,
+} from './modelCapabilities';
 
 const proposalOutlineSchema = loadDashboardSchema('proposalOutline') as Record<
   string,
@@ -150,7 +154,17 @@ Límites:
     );
 
     try {
-      const requestPayload = {
+      const jsonSchemaDefinition = {
+        name: 'proposal_outline_lite',
+        schema: proposalOutlineSchema,
+      };
+      const schemaFormat = {
+        type: 'json_schema' as const,
+        ...jsonSchemaDefinition,
+      };
+      const useLegacyResponseFormat = requiresLegacyJsonSchemaFormat(model);
+
+      const requestPayload: Record<string, unknown> = {
         model,
         ...(capabilities.supportsReasoning
           ? { reasoning: { effort: llmConfig.proposalOutlineReasoningEffort } }
@@ -163,14 +177,18 @@ Límites:
           { role: 'system', content: [{ type: 'input_text', text: systemPrompt }] },
           { role: 'user', content: [{ type: 'input_text', text: userPrompt }] },
         ],
-        text: {
-          format: {
-            type: 'json_schema',
-            name: 'proposal_outline_lite',
-            schema: proposalOutlineSchema,
-          },
-        },
-      } as Record<string, unknown>;
+      };
+
+      if (useLegacyResponseFormat) {
+        requestPayload.response_format = {
+          type: 'json_schema',
+          json_schema: jsonSchemaDefinition,
+        };
+      } else {
+        requestPayload.text = {
+          format: schemaFormat,
+        };
+      }
 
       if (tools && tools.length) {
         requestPayload.tools = tools;

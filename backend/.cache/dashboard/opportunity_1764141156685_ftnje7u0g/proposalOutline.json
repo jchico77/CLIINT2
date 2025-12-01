@@ -1,0 +1,74 @@
+{
+  "sections": [
+    {
+      "id": "sec-1",
+      "title": "Resumen ejecutivo y propuesta de valor",
+      "purpose": "Presentar en una página la oportunidad para Telefónica, el impacto esperado (negocio y técnico) y la decisión solicitada al comité para 2025.",
+      "suggestedContent": [
+        "Contexto del reto: acelerar transformación digital 2025 y necesidad de partner estratégico.",
+        "Propuesta de valor resumida: plataforma integral de modernización, automatización e IA con integración nativa al stack Telefónica.",
+        "Resultados objetivo cuantificables: reducción de costes operativos, mayor agilidad en despliegue, nuevos ingresos vía co-selling y marketplaces.",
+        "Principales beneficios para Telefónica: migración incremental sin interrupción, pilotos 5G/edge con ROI medible, seguridad y cumplimiento integrado.",
+        "Recomendación de decisión y next steps (p.ej. aprobar programa piloto y modelo comercial piloto en Q1 2025).",
+        "KPIs de éxito propuestos (TTV de pilotos, % reducción downtime, ahorro operativo, ARR co-selling)."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-001",
+        "award-001",
+        "test-001"
+      ]
+    },
+    {
+      "id": "sec-2",
+      "title": "Arquitectura de solución e integración nativa con el stack Telefónica",
+      "purpose": "Detallar la arquitectura, patrones de integración, y la estrategia de migración incremental para garantizar compatibilidad con OSS/BSS, IoT, NMS y marketplaces.",
+      "suggestedContent": [
+        "Diagrama lógico de plataforma: API Gateway, microservicios contenedorizados, orquestador de edge, data plane y capas de IA/analytics.",
+        "Conectores y APIs estándar para OSS/BSS, plataformas IoT, sistemas de gestión de red y marketplacess de Telefónica (patrones de integración: sync/async, events, adapters).",
+        "Estrategia de migración incremental: fases (pilot → coexistencia híbrida → cut‑over), patrón strangler, pruebas contractuales y rollback.",
+        "Soporte híbrido y multicloud: gestión de workloads on‑prem, at edge y en cloud pública, CI/CD y pipelines de despliegue.",
+        "Operaciones y observabilidad: logging centralizado, tracing distribuido, SRE/Runbooks y SLAs operativos.",
+        "Casos previos relevantes que validan el enfoque cloud‑native y migración incremental."
+      ],
+      "linkedEvidenceIds": [
+        "cs-001",
+        "kpi-001"
+      ]
+    },
+    {
+      "id": "sec-3",
+      "title": "Programa de pilotos 5G/edge por verticales con ROI demostrable",
+      "purpose": "Proponer pilotos rápidos y escalables en manufactura, logística y energía que demuestren valor económico y operacional para replicar y comercializar a gran escala.",
+      "suggestedContent": [
+        "Selección de pilotos prioritarios (ejemplos): mantenimiento predictivo en energía, telemetría en logística, control de calidad en manufactura.",
+        "Diseño de piloto: objetivos, alcance, duración (8–12 semanas), criterios de éxito (reducción downtime %, mejora OEE, ahorro operativo €).",
+        "Requerimientos técnicos: private 5G o slices, edge compute, integración con sensores/OT, ingestión de datos, modelos ML/IA acelerados en edge/cloud.",
+        "Plan de pruebas y medición: baseline operativo, KPIs concretos, validación económica (TCO/ROI), roadmap de escalado a producción.",
+        "Ruta de comercialización con Telefónica: empaquetado para marketplaces, co‑selling y white‑labeling, acuerdos de revenue share.",
+        "Estrategia de aceleración: plantillas de despliegue, kit de integración OSS/BSS y playbook para replicación en clientes finales."
+      ],
+      "linkedEvidenceIds": [
+        "cs-002",
+        "cs-003",
+        "kpi-001"
+      ]
+    },
+    {
+      "id": "sec-4",
+      "title": "Seguridad, cumplimiento y modelo comercial flexible (Go‑to‑Market)",
+      "purpose": "Asegurar que la plataforma incorpora seguridad y cumplimiento desde el diseño y ofrecer modelos comerciales que encajen con canales y financiación de Telefónica.",
+      "suggestedContent": [
+        "Seguridad integrada: gestión de identidades (IAM), Zero Trust, SASE, cifrado en tránsito y reposo, seguridad en CI/CD y hardening de imágenes.",
+        "Operaciones de seguridad: SOC integrado, monitoring 24/7, playbooks de respuesta y reporting para auditorías.",
+        "Cumplimiento y certificaciones: roadmap para GDPR, ISO/IEC y certificaciones nacionales relevantes; evidencias de gobernanza de datos.",
+        "Modelos comerciales propuestos: SaaS subscription, modelo consumption/usage, servicios gestionados, opciones white‑label/co‑brand y share de ingresos.",
+        "Propuesta de go‑to‑market: pilotos comerciales conjuntos, paquetes listos para marketplace Telefónica, formación a canales y plan de incentivos de co‑selling.",
+        "Gobernanza de la alianza: KPIs comerciales, SLA, roadmap de producto conjunto y plan de escalamiento contractual."
+      ],
+      "linkedEvidenceIds": [
+        "test-001",
+        "award-001"
+      ]
+    }
+  ]
+}

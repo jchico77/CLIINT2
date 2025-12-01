@@ -1,0 +1,134 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Plataforma de Transformación Digital (Minsait / Indra)",
+      "description": "Solución integral que combina consultoría estratégica, modernización de aplicaciones, migración a cloud, automatización inteligente y capacidades de IA para acelerar la transformación digital de organizaciones complejas.",
+      "categoryTags": [
+        "consultoria",
+        "ia",
+        "cloud",
+        "modernizacion",
+        "automacion"
+      ]
+    },
+    {
+      "name": "Migración y Modernización Cloud",
+      "description": "Servicios de evaluación, diseño y ejecución de migraciones a entornos cloud (IaaS/PaaS), refactorización a microservicios, y optimización de costes operativos en plataformas públicas, privadas e híbridas.",
+      "categoryTags": [
+        "cloud",
+        "consultoria",
+        "modernizacion"
+      ]
+    },
+    {
+      "name": "Automatización de Procesos e Inteligencia Artificial",
+      "description": "Implementación de RPA/IPA y modelos de IA (ML, visión/analítica avanzada) para automatizar procesos críticos, mejorar decisiones operativas y habilitar productos inteligentes.",
+      "categoryTags": [
+        "ia",
+        "consultoria",
+        "automacion"
+      ]
+    },
+    {
+      "name": "Integración y Modernización de Aplicaciones Críticas",
+      "description": "Re-arquitectura e integración de sistemas legados con APIs, plataformas de integración y patrones de arquitectura (event-driven) para mejorar escalabilidad y resiliencia.",
+      "categoryTags": [
+        "consultoria",
+        "cloud",
+        "integracion"
+      ]
+    },
+    {
+      "name": "Ciberseguridad, Compliance y Gestión del Cambio",
+      "description": "Servicios de seguridad aplicativa, gestión de identidades, cumplimiento normativo y programas de adopción/gestión del cambio para asegurar el valor de la transformación.",
+      "categoryTags": [
+        "consultoria",
+        "cloud",
+        "seguridad"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Capacidad end-to-end desde estrategia hasta operación",
+      "evidence": "Indra (y su unidad Minsait) posiciona su oferta como integral —incluye consultoría, desarrollo, integración, despliegue y gestión operativa— según la información corporativa (https://www.indracompany.com)."
+    },
+    {
+      "claim": "Experiencia sectorial en sectores críticos (transporte, energía, banca, administración pública)",
+      "evidence": "La compañía comunica un portfolio orientado a sectores regulados y de infraestructuras críticas, lo que permite soluciones con requisitos de disponibilidad y compliance propios de esos sectores (fuente: sitio corporativo de Indra / secciones sectoriales)."
+    },
+    {
+      "claim": "Ecosistema de partners hyperscaler y tecnologías de IA",
+      "evidence": "Grandes integradores como Indra habitualmente mantienen alianzas con proveedores cloud (AWS, Azure, Google) y con fabricantes de IA/analítica; esta estructura facilita migraciones seguras y adopción de servicios cloud nativos (ver secciones de partners en web corporativa o fichas de servicios)."
+    },
+    {
+      "claim": "Aceleradores, frameworks y oferta propia (p. ej. Minsait)",
+      "evidence": "Indra opera marcas/áreas especializadas en transformación digital (Minsait) que integran IP, aceleradores y metodologías para reducir tiempos de despliegue y riesgos en proyectos de modernización."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "cs-001",
+      "type": "case_study",
+      "title": "Modernización de plataforma de pagos para entidad financiera (Ejemplo plausible)",
+      "description": "Migración de plataforma core de pagos a arquitectura cloud nativa y microservicios, incluyendo API gateway, contenedores y pipelines CI/CD. Apertura de canales digitales y disminución de deuda técnica.",
+      "snippet": "Migración completa a cloud con reducción del TCO del 30% y reducción del time-to-market de nuevos productos en un 50% en 12 meses (ejemplo plausible basado en proyectos típicos del sector).",
+      "source": "Ejemplo plausible basado en proyectos de transformación digital de Indra/Minsait y benchmarks de la industria; validar con referencias del vendor.",
+      "relevance": 0.9
+    },
+    {
+      "id": "cs-002",
+      "type": "case_study",
+      "title": "Optimización operativa para operador ferroviario europeo (Ejemplo plausible)",
+      "description": "Implementación de plataforma de operaciones integradas con telemetría, analítica en tiempo real e IA para mantenimiento predictivo y control de trazabilidad.",
+      "snippet": "Mejora de la puntualidad en un 20% y una reducción del 40% en incidentes operativos en el primer año tras la implantación (estimación plausible).",
+      "source": "Ejemplo plausible basado en capacidades de Indra en transporte y casos del sector; pedir case study concreto al proveedor.",
+      "relevance": 0.85
+    },
+    {
+      "id": "kpi-001",
+      "type": "kpi",
+      "title": "Reducción promedio de costes operativos tras migración a cloud",
+      "description": "KPI consolidado aplicable a proyectos de migración que combina ahorro en infraestructura, mejoras operativas y automatización.",
+      "snippet": "Ahorro típico estimado: 25–40% en costes operativos en 18–24 meses tras migración y optimización (rango basado en benchmarks sectoriales).",
+      "source": "Benchmarks de la industria y proyectos de modernización; ejemplo plausible para propuestas comerciales.",
+      "relevance": 0.8
+    },
+    {
+      "id": "cs-003",
+      "type": "case_study",
+      "title": "Implementación de IA para mantenimiento predictivo en planta energética (Ejemplo plausible)",
+      "description": "Despliegue de modelos de machine learning sobre datos de sensores para anticipar fallos y optimizar ventanas de mantenimiento.",
+      "snippet": "Reducción de paradas no planificadas en un 25% y aumento de la vida útil de activos críticos en ~15% (estimación de proyecto representativo).",
+      "source": "Ejemplo plausible basado en soluciones de IA industrial aplicadas por integradores como Indra; confirmar detalles con referencia cliente.",
+      "relevance": 0.85
+    },
+    {
+      "id": "test-001",
+      "type": "testimonial",
+      "title": "Testimonial operativo (Ejemplo) — CIO de aseguradora",
+      "description": "Cita modelo que reflejaría la percepción de un cliente tras una transformación: mejora de agilidad y seguridad.",
+      "snippet": "\"La colaboración permitió lanzar canales digitales en meses, con control de riesgos y cumplimiento normativo\" (testimonio representativo; ejemplo).",
+      "source": "Testimonial ejemplar basado en casos sectoriales; solicitar testimonios reales del vendor para propuestas.",
+      "relevance": 0.75
+    },
+    {
+      "id": "award-001",
+      "type": "award",
+      "title": "Reconocimiento a innovación tecnológica (Ejemplo plausible)",
+      "description": "Premio regional/nacional a la innovación tecnológica por soluciones de transformación digital e IA (formato típico de reconocimiento a integradores).",
+      "snippet": "Premio a la innovación en proyectos de digitalización (ejemplo: reconocimiento sectorial a solución de mantenimiento predictivo).",
+      "source": "Ejemplo plausible — grandes integradores suelen acumular premios de innovación; confirmar galardones específicos con Indra.",
+      "relevance": 0.6
+    },
+    {
+      "id": "cert-001",
+      "type": "certification",
+      "title": "Certificaciones de seguridad y gestión TI (Ejemplo plausible: ISO 27001 / ISO 20000)",
+      "description": "Certificaciones estándar que acreditan prácticas de seguridad de la información y gestión de servicios TI, relevantes para proyectos críticos en cloud y transformación digital.",
+      "snippet": "Cumplimiento con estándares internacionales de seguridad y gestión TI para despliegues empresariales (verificar alcance y alcance por unidad).",
+      "source": "Certificaciones habituales en grandes integradores; confirmar versiones/alcance con el proveedor.",
+      "relevance": 0.9
+    }
+  ]
+}

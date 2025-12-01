@@ -467,6 +467,16 @@ export class DashboardService {
         await DashboardPhaseCacheService.savePhase(opportunityId, phase, payload);
       }
       savePhase(opportunityId, phase, payload);
+      
+      // Log phase result for analysis
+      if (opportunityId) {
+        const { logPhaseResult } = await import('../../utils/llmLogger');
+        logPhaseResult(opportunityId, phase, payload, {
+          vendorId: vendor.id,
+          clientId: client.id,
+          serviceId: service.id,
+        });
+      }
     };
 
     const markPhaseFailure = async (phase: DashboardPhase, message: string) => {

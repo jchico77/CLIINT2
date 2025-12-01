@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "vendorName",
+    "websiteUrl",
+    "summary",
+    "businessModel",
+    "valueProposition",
+    "marketSegments",
+    "servicePortfolio",
+    "caseStudies",
+    "differentiators",
+    "partnerships",
+    "awards",
+    "newsHighlights",
+    "videoHighlights",
+    "socialSignals",
+    "sources"
+  ],
+  "properties": {
+    "vendorName": { "type": "string" },
+    "websiteUrl": { "type": "string" },
+    "summary": { "type": "string" },
+    "businessModel": { "type": "string" },
+    "valueProposition": { "type": "string" },
+    "marketSegments": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "servicePortfolio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "description", "categoryTags", "keyFeatures", "maturity"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "categoryTags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "keyFeatures": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "maturity": { "type": "string" }
+        }
+      }
+    },
+    "caseStudies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "client", "challenge", "solution", "results", "metrics", "source"],
+        "properties": {
+          "title": { "type": "string" },
+          "client": { "type": "string" },
+          "challenge": { "type": "string" },
+          "solution": { "type": "string" },
+          "results": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "metrics": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source": { "type": "string" }
+        }
+      }
+    },
+    "differentiators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "evidence", "proofPoint"],
+        "properties": {
+          "claim": { "type": "string" },
+          "evidence": { "type": "string" },
+          "proofPoint": { "type": "string" }
+        }
+      }
+    },
+    "partnerships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["partner", "type", "description", "announcedAt"],
+        "properties": {
+          "partner": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "announcedAt": { "type": "string" }
+        }
+      }
+    },
+    "awards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "organization", "year", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "organization": { "type": "string" },
+          "year": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "newsHighlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "source", "date", "url", "summary", "impact"],
+        "properties": {
+          "title": { "type": "string" },
+          "source": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string" },
+          "summary": { "type": "string" },
+          "impact": { "type": "string" }
+        }
+      }
+    },
+    "videoHighlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "channel", "publishedAt", "url", "description", "angle"],
+        "properties": {
+          "title": { "type": "string" },
+          "channel": { "type": "string" },
+          "publishedAt": { "type": "string" },
+          "url": { "type": "string" },
+          "description": { "type": "string" },
+          "angle": { "type": "string" }
+        }
+      }
+    },
+    "socialSignals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["platform", "summary", "date", "url", "relevance"],
+        "properties": {
+          "platform": { "type": "string" },
+          "summary": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string" },
+          "relevance": { "type": "string" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url", "snippet"],
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "snippet": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+

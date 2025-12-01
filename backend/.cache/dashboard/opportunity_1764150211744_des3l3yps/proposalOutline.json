@@ -1,0 +1,75 @@
+{
+  "sections": [
+    {
+      "id": "S1",
+      "title": "Propuesta de valor ejecutiva",
+      "purpose": "Presentar en 1–2 páginas el valor concreto para Telefónica: aceleración de la transformación 2025 combinando red y multicloud, ahorros medibles y reducción del time‑to‑market para clientes regulados y PYMEs.",
+      "suggestedContent": [
+        "Mensaje clave (elevator pitch): qué resolvemos y por qué ahora (2025).",
+        "Resultados esperados cuantificados: reducción TCO 25–40% y aceleración TTM ~30%.",
+        "Beneficios diferenciales para Telefónica: integración nativa red+edge + multicloud gestionada; capacidad de soberanía y cumplimiento para sectores regulados.",
+        "Resumen de oferta: plataforma de transformación + servicios gestionados + modelos OPEX/outcomes + paquetes verticales plug‑and‑play.",
+        "Llamada a la acción (Siguiente paso): piloto industrial con métricas y cronograma."
+      ],
+      "linkedEvidenceIds": [
+        "kpi_reduccion_tco",
+        "kpi_reduccion_ttm"
+      ]
+    },
+    {
+      "id": "S2",
+      "title": "Arquitectura y operaciones — integración nativa Red + Multicloud",
+      "purpose": "Describir la solución técnica y operativa que demuestra la integración entre conectividad (latencia/SLA/edge/PoPs) y plataformas multicloud (OpenShift/TROS, Azure, AWS, GCP), y cómo se garantiza soberanía y cumplimiento.",
+      "suggestedContent": [
+        "Diagrama multicapas: conectividad (backbone, SD‑WAN, private links), PoPs/Edge, plataforma multicloud (OpenShift/TROS + hyperscalers) y capa de orquestación/observabilidad.",
+        "Mapa de latencias y SLAs objetivo por tipo de caso de uso (real‑time, near‑real‑time, batch) y diseño de placement de PoPs para residencia de datos.",
+        "Modelo operativo: gestión centralizada multicloud (control plane), pipelines CI/CD, IaC, runbooks de failover y playbooks de auditoría.",
+        "Seguridad y cumplimiento: controles para GDPR/DORA, cifrado en tránsito/ reposo, segmented tenancy, logging/auditoría y evidencias de residencia de datos.",
+        "Patrones de migración y refactorización (lift, replatform, refactor por dominios) y ejemplos técnicos (API gateway, mesh, ML pipelines).",
+        "Operaciones gestionadas: roles, SLAs operativos y KPIs (MTTR, disponibilidad, RTO/RPO)."
+      ],
+      "linkedEvidenceIds": [
+        "case_banco_renovado",
+        "case_trafico_aeroportuario",
+        "testimonial_cto_banco"
+      ]
+    },
+    {
+      "id": "S3",
+      "title": "Oferta comercial y modelos de consumo (OPEX / Outcomes)",
+      "purpose": "Presentar modelos de negocio que faciliten adopción masiva: suscripción, pagos por resultado y oferta gestionada para clientes corporativos, PYMEs y sector público.",
+      "suggestedContent": [
+        "Estructura de precios: suscripciones por niveles (infraestructura, plataforma, capacidades ML/IoT) y tarifas por uso/consumo.",
+        "Modelos outcome‑based: ejemplos de contratos ligados a reducción de TCO, mejora de TTM y KPIs operativos (ej.: % reducción TCO en 24 meses).",
+        "Catálogo de servicios gestionados (NOC/CloudOps, SRE, seguridad gestionada, compliance-as-a-service) y SLAs asociados.",
+        "Opciones de financiación e incentivos para migración (trial, créditos iniciales, shared‑risk pilots).",
+        "Oferta para PYMEs / Administraciones: paquetes preconfigurados y procesos de onboarding simplificados.",
+        "KPIs comerciales y métricas de éxito para seguimiento de adopción y churn."
+      ],
+      "linkedEvidenceIds": [
+        "kpi_reduccion_tco",
+        "kpi_reduccion_ttm",
+        "testimonial_cto_banco"
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "Roadmap de despliegue y aceleradores verticales plug‑and‑play",
+      "purpose": "Definir un roadmap ejecutable (piloto → escala) y el set de paquetes verticales con casos de uso rápidos que prueban la propuesta y generan referencias.",
+      "suggestedContent": [
+        "Roadmap por fases: Pilot (0–6 meses) con 1–2 verticales, Escala (6–18 meses) y Operación continua; hitos y entregables por fase.",
+        "Paquetes verticales plug‑and‑play (mínimo viable comercial): Finanzas (core modernizado + scoring ML), Manufactura (IoT + digital twin), Retail (analytics y omnicanal), Movilidad/Transportes (sensórica, optimización rutas).",
+        "Casos de uso rápidos y criterios de éxito (KPIs): reducción TCO, TTM, latencia, disponibilidad, impacto negocio.",
+        "Plan de gobernanza y adopción interna de Telefónica: roles, canal partners, accelerators técnicos y kit de ventas.",
+        "Evidencias y referencias planificadas (casos y testimonios) para cada vertical y hoja de ruta de cliente de referencia.",
+        "Propuesta de piloto: alcance sugerido, equipo requerido, cronograma y métricas de evaluación."
+      ],
+      "linkedEvidenceIds": [
+        "case_banco_renovado",
+        "case_trafico_aeroportuario",
+        "testimonial_cto_aena_like",
+        "testimonial_cto_banco"
+      ]
+    }
+  ]
+}

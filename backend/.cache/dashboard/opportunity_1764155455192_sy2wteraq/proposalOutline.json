@@ -1,0 +1,75 @@
+{
+  "sections": [
+    {
+      "id": "sec1",
+      "title": "Resumen ejecutivo y propuesta de valor para Telefónica (2025)",
+      "purpose": "Presentar en una página el valor diferenciado de la Plataforma de Transformación Digital: objetivos de negocio, beneficios cuantificables y decisión recomendada para acelerar la transformación en 2025.",
+      "suggestedContent": [
+        "Objetivo ejecutivo: acelerar la modernización tecnológica y la oferta de servicios digitales con un partner estratégico co‑gestionado con Telefónica.",
+        "Propuesta de valor: plataforma telco‑grade que conecta capa de red (Open Gateway/CAMARA), orquesta multi‑cloud, y entrega datos gobernados y capacidades de IA industrializadas.",
+        "Beneficios clave y KPIs propuestos: reducción de time‑to‑market, migración acelerada de aplicaciones (volúmenes y plazos), mejora de agilidad operativa, y métricas ESG (ahorro energético/CO2).",
+        "Resultados cuantitativos esperados (ejemplos): migración de 300–700 apps en 12–24 meses; reducción TTM mediante pipelines y aceleradores.",
+        "Llamado a la acción: propuesta de piloto (scope corto) + gobernanza ejecutiva conjunta y next steps (workshop técnico y business case)."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-migration-01",
+        "kpi-ttm-01",
+        "testimonial-bank-01"
+      ]
+    },
+    {
+      "id": "sec2",
+      "title": "Arquitectura de solución y compatibilidad con capa de red telco",
+      "purpose": "Describir la arquitectura técnica que garantiza integración con redes de Telefónica: cumplimiento Open Gateway / CAMARA, soporte de Network Slicing y adaptadores a orquestadores y plataformas de red.",
+      "suggestedContent": [
+        "Diagrama de arquitectura de alto nivel: capa de red (integración con Open Gateway/CAMARA), plano de control/orquestación, API gateway, plataforma de datos, capa de IA/servicios gestionados y UI/portales de clientes.",
+        "Detalles de integración telco: adaptadores hacia orquestadores de red de Telefónica, patrones de integración para Network Slicing y exposición de APIs compatibles con Open Gateway / CAMARA.",
+        "API management & gateway: políticas, versión/contratos API, catalogación y testing automatizado para consumo por B2B/partners Movistar Empresas.",
+        "Operacionalización: orquestación de servicios, CI/CD para funciones que tocan la red, monitorización end‑to‑end y playbooks de fallover/rollback.",
+        "Riesgos técnicos y mitigaciones: latencia, consistencia de estado entre orquestadores, pruebas de slicing en entornos pre‑prod."
+      ],
+      "linkedEvidenceIds": [
+        "cs-bank-01",
+        "cs-transport-01"
+      ]
+    },
+    {
+      "id": "sec3",
+      "title": "Plataforma multi‑cloud, datos, gobernanza y seguridad (incl. ESG medible)",
+      "purpose": "Exponer cómo la plataforma orquesta multi‑cloud, garantiza residencia y gobernanza de datos, aporta controles de seguridad gestionada y mide impacto ESG alineado con objetivos net‑zero.",
+      "suggestedContent": [
+        "Capacidades multi‑cloud: orquestación de workloads, políticas de placement, backup/DR, y conectividad segura entre clouds y red telco.",
+        "Gestión de datos y gobernanza: arquitectura de data platform (ingest, catalogue, data lake/mesh), lineage, políticas de privacidad, residencia de datos y soporte para auditorías regulatorias.",
+        "Seguridad gestionada: modelo de controles (IAM, KMS, registro/auditoría, detección y respuesta gestionada), SLAs de seguridad y playbooks de incident response.",
+        "Medición ESG: métricas operativas (consumo energético por workload, CO2 estimado), mecanismos de reporting, y ejemplos de reducción de huella mediante modernización/migración.",
+        "Cumplimiento y certificaciones: requisitos regulatorios aplicables y plan para evidenciar conformidad en auditorías."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-migration-01",
+        "testimonial-energy-01",
+        "testimonial-bank-01"
+      ]
+    },
+    {
+      "id": "sec4",
+      "title": "Modelo de entrega, aceleradores sectoriales y co‑gestión comercial",
+      "purpose": "Detallar el plan de despliegue y operación conjunto con Telefónica: fases, aceleradores verticales, modelo de co‑gestión/co‑venta, KPIs operativos y propuesta de piloto/roadmap.",
+      "suggestedContent": [
+        "Fases de entrega: piloto (8–12 semanas), fase de ‘lift & shift’ inicial, refactor/modernización por oleadas, y operación gestionada.",
+        "Metodología de migración: uso de 6R (Rehost, Replatform, Refactor...) con estimaciones de volumen y plazos (ej. 300–700 apps / 12–24 meses) y automatización de pipelines.",
+        "Aceleradores sectoriales y playbooks: paquetes verticales para utilities, logística, manufactura y administraciones (casos de uso, plantillas de datos, modelos ML previos).",
+        "Co‑gestión y go‑to‑market: modelo comercial con Telefónica Tech / Movistar Empresas (roles, revenue share, capacidades conjuntas de preventa y soporte).",
+        "KPIs, SLAs y gobernanza: métricas de negocio y técnica (TTM, MTTR, disponibilidad, ahorro energético), comité de dirección y plan de escalado.",
+        "Próximos pasos operativos: propuesta de piloto, equipo requerido (roles Telefónica y partner), hitos y entregables del primer trimestre."
+      ],
+      "linkedEvidenceIds": [
+        "kpi-migration-01",
+        "kpi-ttm-01",
+        "cs-transport-01",
+        "cs-bank-01",
+        "testimonial-bank-01",
+        "testimonial-energy-01"
+      ]
+    }
+  ]
+}

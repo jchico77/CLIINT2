@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_evidence_partnerships_phase",
+  "type": "object",
+  "properties": {
+    "partnerships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "partner": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "announcedAt": { "type": "string" }
+        },
+        "required": ["partner", "type", "description", "announcedAt"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["partnerships"],
+  "additionalProperties": false
+}
+

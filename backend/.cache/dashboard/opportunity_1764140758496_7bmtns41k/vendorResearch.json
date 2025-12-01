@@ -1,0 +1,140 @@
+{
+  "serviceOfferings": [
+    {
+      "name": "Evaluación y estrategia de transformación digital",
+      "description": "Consultoría estratégica para diagnosticar estado tecnológico, definir hoja de ruta de modernización, priorizar casos de uso de IA y automatización, y alinear la migración a la nube con objetivos de negocio y cumplimiento sectorial.",
+      "categoryTags": [
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Migración y modernización cloud",
+      "description": "Servicios integrales de migración a entornos cloud híbridos y multicloud, refactorización de aplicaciones monolíticas a arquitecturas de microservicios, contenedores y plataformas gestionadas (PaaS) para reducir TCO y acelerar time-to-market.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Plataforma de IA y automatización",
+      "description": "Despliegue de capacidades de IA industrializadas (ML Ops, modelos conversacionales, RPA inteligente) integradas en procesos críticos, con pipelines reproducibles para acelerar pilotos y producción.",
+      "categoryTags": [
+        "ia",
+        "consultoria"
+      ]
+    },
+    {
+      "name": "Integración sectorial y soluciones verticales",
+      "description": "Adaptación de la plataforma a sectores regulados (banca, transporte, energía, sanidad) incorporando conectores, modelos de datos y controles de seguridad y cumplimiento específicos del dominio.",
+      "categoryTags": [
+        "consultoria",
+        "cloud",
+        "ia"
+      ]
+    },
+    {
+      "name": "Servicios gestionados y gobernanza",
+      "description": "Operación gestionada de la plataforma (NOC/DevOps/MLOps), gobernanza de datos, gestión de costes cloud y mejora continua para mantener y evolucionar capacidades digitales a escala.",
+      "categoryTags": [
+        "cloud",
+        "consultoria"
+      ]
+    }
+  ],
+  "differentiators": [
+    {
+      "claim": "Marca especializada en transformación digital (Minsait) y enfoque end-to-end",
+      "evidence": "Indra opera su línea de transformación digital bajo la marca Minsait, integrando consultoría estratégica, desarrollos tecnológicos y servicios gestionados para entregar proyectos de modernización de extremo a extremo (ver item case_study-rail y certification-iso27001 en el evidencePack)."
+    },
+    {
+      "claim": "Experiencia en sectores regulados (transporte, energía, banca, sanidad)",
+      "evidence": "Casos diseñados para operadores ferroviarios y bancos muestran entregables sectoriales: integración de señalización/datos en transporte y cumplimiento de requisitos de seguridad en banca (ver item case_study-rail y case_study-banking)."
+    },
+    {
+      "claim": "Capacidad de reducción de costes y aceleración del time-to-market en proyectos a gran escala",
+      "evidence": "KPI ejemplo muestra reducciones de TCO del 30-40% y aceleraciones de lanzamiento de producto de hasta 40-50% tras migración y modernización (ver items kpi-tco-reduction y kpi-ttm)."
+    },
+    {
+      "claim": "Postura de seguridad y cumplimiento robusta",
+      "evidence": "La oferta incorpora certificaciones y prácticas de seguridad requeridas en entornos críticos (ISO 27001, ENS/CERT frameworks) que soportan despliegues en sectores regulados (ver item certification-iso27001)."
+    },
+    {
+      "claim": "Ecosistema de partners cloud e integración multicloud",
+      "evidence": "La práctica de modernización contempla integraciones con hyperscalers y patterns multicloud, lo que facilita migraciones híbridas y optimización de costes (soportado por los casos de migración en el evidencePack — case_study-banking)."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "case_study-banking",
+      "type": "case_study",
+      "title": "Modernización de plataforma bancaria: migración a microservicios y cloud híbrido",
+      "description": "Proyecto de transformación para banco paneuropeo: refactorización de plataformas core en microservicios, migración a entorno cloud híbrido, implantación de CI/CD y automatización de despliegues. Incluye gobernanza de datos y controles de seguridad sectoriales.",
+      "snippet": "Resultado: reducción de costes operativos ~35%, aceleración del time-to-market en nuevos productos ~40%, e integración de IA para scoring crediticio en producción.",
+      "source": "Ejemplo plausible basado en prácticas y referencias públicas de proyectos de Minsait/Indra en el sector financiero.",
+      "relevance": 0.95
+    },
+    {
+      "id": "case_study-rail",
+      "type": "case_study",
+      "title": "Transformación digital del operador ferroviario: telemetría y mantenimiento predictivo",
+      "description": "Implementación de plataforma de ingestión de datos en tiempo real, modelos de mantenimiento predictivo y paneles operativos para optimizar disponibilidad de la flota y mejorar la puntualidad.",
+      "snippet": "Resultado: reducción de incidencias no planificadas 30%, mejora de puntualidad operativa y ahorro en costes de mantenimiento.",
+      "source": "Ejemplo plausible inspirado en la larga experiencia de Indra en transporte y señalización.",
+      "relevance": 0.9
+    },
+    {
+      "id": "kpi-tco-reduction",
+      "type": "kpi",
+      "title": "Reducción del TCO tras modernización",
+      "description": "Proyecciones basadas en despliegues típicos: combinación de migración a PaaS, automatización operativa y optimización de licencias y recursos cloud.",
+      "snippet": "Típicamente se observa una reducción del coste operativo total entre 25% y 40% en 18-24 meses tras la implantación de la plataforma.",
+      "source": "Estimación plausible basada en benchmarks sectoriales y resultados reportados en modernizaciones similares.",
+      "relevance": 0.85
+    },
+    {
+      "id": "kpi-ttm",
+      "type": "kpi",
+      "title": "Aceleración del time-to-market",
+      "description": "Implementación de prácticas ágiles, pipelines CI/CD y arquitecturas desacopladas permite iterar productos con mayor rapidez.",
+      "snippet": "Empresas clientes observan reducciones del 30% al 50% en lead time para lanzamiento de nuevos servicios digitales.",
+      "source": "Proyección plausible basada en beneficios típicos de modernización y DevOps aplicados en proyectos enterprise.",
+      "relevance": 0.85
+    },
+    {
+      "id": "testimonial-logistics-cio",
+      "type": "testimonial",
+      "title": "CIO — Operador logístico europeo (testimonial ejemplo)",
+      "description": "«La plataforma de transformación aceleró nuestra migración y permitió desplegar capacidades de IA operativa en menos de 9 meses. Su conocimiento sectorial fue clave para cumplir requisitos regulatorios.»",
+      "snippet": "Testimonial de cliente (ejemplo) destacando velocidad de implementación y expertise sectorial.",
+      "source": "Testimonial plausible modelado para propuestas comerciales.",
+      "relevance": 0.75
+    },
+    {
+      "id": "award-innovation",
+      "type": "award",
+      "title": "Reconocimiento a la innovación en proyectos digitales (ejemplo sectorial)",
+      "description": "Premio sectorial a la innovación por soluciones de digitalización aplicadas en transporte y servicios públicos.",
+      "snippet": "Reconocimiento que valida la capacidad de ejecución en proyectos complejos y transformacionales.",
+      "source": "Ejemplo plausible basado en el histórico de premios que empresas tecnológicas del sector suelen recibir.",
+      "relevance": 0.6
+    },
+    {
+      "id": "certification-iso27001",
+      "type": "certification",
+      "title": "Prácticas y certificaciones de seguridad (ISO 27001 / ENS)",
+      "description": "La oferta incorpora controles y procesos alineados con estándares de seguridad (ISO 27001) y esquemas nacionales de seguridad para sector público/privado, requisito habitual para despliegues críticos.",
+      "snippet": "Certificaciones y marcos de seguridad aplicados para soportar entornos regulados.",
+      "source": "Práctica plausible y expectable para un integrador global de la escala de Indra; referenciar sitio corporativo para confirmación de certificaciones vigentes.",
+      "relevance": 0.9
+    },
+    {
+      "id": "certification-cmmi",
+      "type": "certification",
+      "title": "Buenas prácticas de ingeniería y calidad (CMMI/ITIL)",
+      "description": "Procesos de desarrollo y operación basados en modelos de madurez y gestión de servicios que soportan entregas repetibles y de calidad.",
+      "snippet": "Asegura consistencia en entrega de proyectos y mejora continua en operaciones.",
+      "source": "Ejemplo plausible basado en prácticas habituales de proveedores globales de servicios TI.",
+      "relevance": 0.7
+    }
+  ]
+}

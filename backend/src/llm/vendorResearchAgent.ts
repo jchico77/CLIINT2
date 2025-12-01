@@ -6,7 +6,11 @@ import { llmConfig } from '../config/llm';
 import { logger } from '../lib/logger';
 import { loadDashboardSchema } from './schemas';
 import { logPhaseStart } from './phaseLogger';
-import { buildToolsForModel, getModelCapabilities } from './modelCapabilities';
+import {
+  buildToolsForModel,
+  getModelCapabilities,
+  requiresLegacyJsonSchemaFormat,
+} from './modelCapabilities';
 
 export interface VendorResearchOutput {
   serviceOfferings: Array<{
@@ -163,7 +167,17 @@ Si no hay evidencias específicas disponibles, crea ejemplos plausibles para est
         'VendorResearchAgent starting analysis',
       );
 
-      const requestPayload = {
+      const jsonSchemaDefinition = {
+        name: vendorResearchSchema.name,
+        schema: vendorResearchSchema.schema,
+      };
+      const schemaFormat = {
+        type: 'json_schema' as const,
+        ...jsonSchemaDefinition,
+      };
+      const useLegacyResponseFormat = requiresLegacyJsonSchemaFormat(model);
+
+      const requestPayload: Record<string, unknown> = {
         model,
         ...(capabilities.supportsReasoning
           ? { reasoning: { effort: llmConfig.vendorResearchReasoningEffort } }
@@ -182,14 +196,18 @@ Si no hay evidencias específicas disponibles, crea ejemplos plausibles para est
             content: [{ type: 'input_text', text: userPrompt }],
           },
         ],
-        text: {
-          format: {
-            type: 'json_schema',
-            name: vendorResearchSchema.name,
-            schema: vendorResearchSchema.schema,
-          },
-        },
-      } as Record<string, unknown>;
+      };
+
+      if (useLegacyResponseFormat) {
+        requestPayload.response_format = {
+          type: 'json_schema',
+          json_schema: jsonSchemaDefinition,
+        };
+      } else {
+        requestPayload.text = {
+          format: schemaFormat,
+        };
+      }
 
       if (tools) {
         requestPayload.tools = tools;

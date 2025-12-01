@@ -2,12 +2,16 @@ import { z } from 'zod';
 import { AdminSettings } from '../models/adminSettings';
 
 const modelOptions = [
-  'gpt-5.1',
-  'gpt-5.1-mini',
-  'gpt-5-mini',
   'gpt-4o',
   'gpt-4o-mini',
+  'gpt-4.1',
+  'gpt-4.1-mini',
+  'gpt-5',
+  'gpt-5-mini',
+  'gpt-5-nano',
+  'gpt-5.1',
   'o3-mini',
+  'o3-deep-research',
 ] as const;
 const reasoningEffort = ['low', 'medium', 'high'] as const;
 const loggingLevels = ['silent', 'info', 'debug'] as const;
@@ -19,6 +23,7 @@ const modelConfigSchema = z.object({
   vendorResearch: z.enum(modelOptions),
   fitAndStrategy: z.enum(modelOptions),
   proposalOutline: z.enum(modelOptions),
+  vendorDeepResearch: z.enum(modelOptions),
 });
 
 const reasoningConfigSchema = z.object({
@@ -27,12 +32,14 @@ const reasoningConfigSchema = z.object({
   vendorResearch: z.enum(reasoningEffort),
   fitAndStrategy: z.enum(reasoningEffort),
   proposalOutline: z.enum(reasoningEffort),
+  vendorDeepResearch: z.enum(reasoningEffort),
 });
 
 const timeoutConfigSchema = z.object({
   deepResearch: z.number().int().positive().max(60 * 60 * 1000),
   agent: z.number().int().positive().max(30 * 60 * 1000),
   fitStrategy: z.number().int().positive().max(60 * 60 * 1000),
+  vendorDeepResearch: z.number().int().positive().max(60 * 60 * 1000),
 });
 
 const tokenConfigSchema = z.object({
@@ -40,6 +47,7 @@ const tokenConfigSchema = z.object({
   clientResearchTokens: z.number().int().min(1000).max(12000),
   vendorResearchTokens: z.number().int().min(1000).max(12000),
   fitStrategyTokens: z.number().int().min(1000).max(12000),
+  vendorDeepResearchTokens: z.number().int().min(1000).max(16000),
 });
 
 const temperatureConfigSchema = z.object({
@@ -47,6 +55,7 @@ const temperatureConfigSchema = z.object({
   clientResearchTemp: z.number().min(0).max(1),
   vendorResearchTemp: z.number().min(0).max(1),
   fitStrategyTemp: z.number().min(0).max(1),
+  vendorDeepResearchTemp: z.number().min(0).max(1),
 });
 
 const sectionLimitSchema = z.object({
@@ -82,6 +91,13 @@ const dashboardVisibilitySchema = z.object({
   showProposalOutline: z.boolean(),
 });
 
+const vendorDeepResearchParallelSchema = z.object({
+  gpt4ParallelEnabled: z.boolean(),
+  gpt5ParallelEnabled: z.boolean(),
+  maxConcurrentPhases: z.number().int().min(1).max(8),
+  interPhaseDelayMs: z.number().int().min(0).max(10_000),
+});
+
 export const AdminSettingsSchema: z.ZodType<AdminSettings> = z.object({
   modelConfig: modelConfigSchema,
   reasoningConfig: reasoningConfigSchema,
@@ -96,6 +112,10 @@ export const AdminSettingsSchema: z.ZodType<AdminSettings> = z.object({
   dashboardVisibility: dashboardVisibilitySchema,
   sandboxMode: z.boolean(),
   preferredLanguage: z.enum(languages),
+  vendorAnalysis: z.object({
+    autoRunOnCreate: z.boolean(),
+  }),
+  vendorDeepResearchParallel: vendorDeepResearchParallelSchema,
 });
 
 export type AdminSettingsValidated = z.infer<typeof AdminSettingsSchema>;

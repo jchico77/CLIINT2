@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "vendor_deep_research_signals_news_phase",
+  "type": "object",
+  "properties": {
+    "newsHighlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "source": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "summary": { "type": "string" },
+          "impact": { "type": "string" }
+        },
+        "required": ["title", "source", "date", "url", "summary", "impact"],
+        "additionalProperties": false
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string", "minLength": 1, "pattern": "^https?://[^\\s\"]+$" },
+          "snippet": { "type": "string" }
+        },
+        "required": ["title", "url", "snippet"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["newsHighlights", "sources"],
+  "additionalProperties": false
+}
+
